@@ -3,8 +3,14 @@
 
 enum StrategyType
 {
-    SDLStrategy,
-    VRJugglerStrategy
+    SDL_STRATEGY,
+    VRJUGGLER_STRATEGY
+};
+
+enum ReturnStatus
+{
+    RETURN_NORMAL,
+    RETURN_EXIT
 };
 
 #endif // CONSTANTS_H

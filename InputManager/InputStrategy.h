@@ -1,10 +1,12 @@
 #ifndef INPUTMANAGERSTRATEGY_H
 #define INPUTMANAGERSTRATEGY_H
 
+#include "Constants.h"
+
 class InputStrategy
 {
 public:
-    virtual void handleInput() = 0;
+    virtual ReturnStatus handleInput() = 0;
 };
 
 #endif // INPUTMANAGERSTRATEGY_H

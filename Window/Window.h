@@ -10,10 +10,9 @@ class Window
 {
 public:
     Window(StrategyType strategyType);
+    void draw();
 private:
     WindowStrategy *windowStrategy;
-    osg::ref_ptr<osgUtil::SceneView> sceneView;
-    osg::ref_ptr<osg::CameraNode> playerCamera;
 };
 
 #endif // SDLWINDOW_H

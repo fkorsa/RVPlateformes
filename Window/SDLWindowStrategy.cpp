@@ -12,9 +12,17 @@ SDLWindowStrategy::SDLWindowStrategy()
     sceneView->setDefaults();
     sceneView->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
 
-    playerCamera = sceneView->getCamera();
+    osg::ref_ptr<osg::Camera> playerCamera = sceneView->getCamera();
     playerCamera->setViewport(0, 0, 640, 480);
     playerCamera->setProjectionMatrixAsPerspective(45.0, playerCamera->getViewport()->aspectRatio(), 0.1, 1000.0);
     playerCamera->setClearColor(osg::Vec4(0.2, 0.2, 0.4, 0.0));
     sceneView->init();
+}
+
+void SDLWindowStrategy::draw()
+{
+    sceneView->update();
+    sceneView->cull();
+    sceneView->draw();
+    SDL_GL_SwapBuffers();
 }

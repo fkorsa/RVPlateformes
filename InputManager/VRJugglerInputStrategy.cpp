@@ -4,6 +4,6 @@ VRJugglerInputStrategy::VRJugglerInputStrategy()
 {
 }
 
-void VRJugglerInputStrategy::handleInput()
+ReturnStatus VRJugglerInputStrategy::handleInput()
 {
 }

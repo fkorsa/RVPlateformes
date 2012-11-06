@@ -2,5 +2,15 @@
 
 Controller::Controller()
 {    
-    window = new Window(SDLStrategy);
+    window = new Window(SDL_STRATEGY);
+    inputManager = new InputManager(SDL_STRATEGY);
+    while(true)
+    {
+        if(inputManager->handleInput() == RETURN_EXIT)
+        {
+            break;
+        }
+
+        window->draw();
+    }
 }

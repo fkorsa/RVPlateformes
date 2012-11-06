@@ -7,7 +7,7 @@ class VRJugglerInputStrategy : public InputStrategy
 {
 public:
     VRJugglerInputStrategy();
-    void handleInput();
+    ReturnStatus handleInput();
 };
 
 #endif // VRJUGGLERINPUTMANAGERSTRATEGY_H

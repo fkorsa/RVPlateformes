@@ -3,3 +3,7 @@
 VRJugglerWindowStrategy::VRJugglerWindowStrategy()
 {
 }
+
+void VRJugglerWindowStrategy::draw()
+{
+}
