@@ -4,18 +4,17 @@
 #include "Constants.h"
 #include "SDLInputStrategy.h"
 #include "VRJugglerInputStrategy.h"
+#include "Module.h"
 
 class InputStrategy;
 class SDLInputStrategy;
 class VRJugglerInputStrategy;
+class ModuleRegistry;
 
-class InputManager
+class InputManager : public Module
 {
 public:
-    InputManager(StrategyType strategyType);
-    ReturnStatus handleInput();
-private:
-    InputStrategy *inputStrategy;
+    InputManager();
 };
 
 #endif // INPUTMANAGER_H

@@ -5,8 +5,11 @@
 #include "Window/WindowStrategy.h"
 #include "Window/SDLWindowStrategy.h"
 #include "Window/VRJugglerWindowStrategy.h"
+#include "Module.h"
 
-class Window
+class ModuleRegistry;
+
+class Window : public Module
 {
 public:
     Window(StrategyType strategyType);

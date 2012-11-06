@@ -9,7 +9,8 @@ SDLInputStrategy::SDLInputStrategy()
 ReturnStatus SDLInputStrategy::handleInput()
 {
     SDL_Event event;
-    if (SDL_PollEvent(&event))
+    bool alreadyPolledMouse = false;
+    while(SDL_PollEvent(&event))
     {
         switch(event.type)
         {
@@ -20,8 +21,13 @@ ReturnStatus SDLInputStrategy::handleInput()
                 return handleKeyPressed(event);
 
             case SDL_MOUSEMOTION:
-                handleMouseMotion(event);
-                break;
+                // If there are several mouse event queued, we handle one and destroy the rest.
+                if(!alreadyPolledMouse)
+                {
+                    handleMouseMotion(event);
+                    alreadyPolledMouse = true;
+                }
+            break;
 
             default:
                 break;
