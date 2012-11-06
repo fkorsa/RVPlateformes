@@ -1,14 +1,17 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "SDLWindow.h"
+#include "Window/Window.h"
+#include "InputManager/InputManager.h"
+#include "Constants.h"
 
 class Controller
 {
 public:
     Controller();
 private:
-    Window sdlWindow;
+    Window *window;
+    InputManager *inputManager;
 };
 
 #endif // CONTROLLER_H

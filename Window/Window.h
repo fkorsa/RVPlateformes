@@ -1,15 +1,17 @@
 #ifndef SDLWINDOW_H
 #define SDLWINDOW_H
 
-#include <SDL/SDL.h>
-#include <osg/CameraNode>
-#include <osgUtil/SceneView>
+#include "Constants.h"
+#include "Window/WindowStrategy.h"
+#include "Window/SDLWindowStrategy.h"
+#include "Window/VRJugglerWindowStrategy.h"
 
 class Window
 {
 public:
-    Window();
+    Window(StrategyType strategyType);
 private:
+    WindowStrategy *windowStrategy;
     osg::ref_ptr<osgUtil::SceneView> sceneView;
     osg::ref_ptr<osg::CameraNode> playerCamera;
 };

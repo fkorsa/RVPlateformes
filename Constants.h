@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-enum InputStrategyType
+enum StrategyType
 {
     SDLStrategy,
     VRJugglerStrategy

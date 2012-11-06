@@ -1,24 +1,13 @@
-#include "Window.h"
+#include "SDLWindowStrategy.h"
 
-Window::Window(StrategyType strategyType)
+SDLWindowStrategy::SDLWindowStrategy()
 {
-    switch(strategyType)
-    {
-    case SDLStrategy:
-        windowStrategy = new SDLWindowStrategy();
-        break;
-    case VRJugglerStrategy:
-        windowStrategy = new VRJugglerWindowStrategy();
-        break;
-    }
-
     //SDL init
     SDL_Init(SDL_INIT_VIDEO);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_SetVideoMode(640, 480, 0, SDL_OPENGL);
-////////////////////////////////////////////////////////////////////////////////
-//OSG Initialization
 
+    //OSG init
     sceneView = new osgUtil::SceneView();
     sceneView->setDefaults();
     sceneView->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);

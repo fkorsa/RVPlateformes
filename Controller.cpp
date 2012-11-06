@@ -2,4 +2,5 @@
 
 Controller::Controller()
 {    
+    window = new Window(SDLStrategy);
 }

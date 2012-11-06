@@ -1,6 +1,5 @@
 SOURCES += \
     InputManager/InputManager.cpp \
-    InputManager/InputStrategy.cpp \
     InputManager/SDLInputStrategy.cpp \
     InputManager/VRJugglerInputStrategy.cpp
 HEADERS += \

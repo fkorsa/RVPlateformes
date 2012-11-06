@@ -1,0 +1,16 @@
+#include "Window.h"
+
+Window::Window(StrategyType strategyType)
+{
+    switch(strategyType)
+    {
+    case SDLStrategy:
+        windowStrategy = new SDLWindowStrategy();
+        break;
+    case VRJugglerStrategy:
+        windowStrategy = new VRJugglerWindowStrategy();
+        break;
+    }
+
+
+}
