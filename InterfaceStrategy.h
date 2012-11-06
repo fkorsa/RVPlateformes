@@ -3,11 +3,12 @@
 
 #include "InputManager.h"
 #include "Constants.h"
+#include "Window.h"
 
 class InterfaceStrategy
 {
 public:
-    InterfaceStrategy(InputStrategyType strategy, InputManager *inputManager, Window *window);
+    InterfaceStrategy(InputStrategyType strategy);
 private:
     InputManager *inputManager;
     Window *window;

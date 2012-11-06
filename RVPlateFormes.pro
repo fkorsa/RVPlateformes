@@ -1,13 +1,13 @@
+include(InputManager/InputManager.pri)
+
 SOURCES += \
     main.cpp \
     Controller.cpp \
-    InputManager.cpp \
     InterfaceStrategy.cpp \
     Window.cpp
 
 HEADERS += \
     Controller.h \
-    InputManager.h \
     Constants.h \
     InterfaceStrategy.h \
     Window.h
