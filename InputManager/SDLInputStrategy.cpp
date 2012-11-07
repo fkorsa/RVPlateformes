@@ -44,12 +44,16 @@ ReturnStatus SDLInputStrategy::handleKeyPressed(SDL_Event event)
         case SDLK_ESCAPE:
             return RETURN_EXIT;
         case SDLK_w:
+            moduleRegistry->getInputManager()->walk(FRONT, 0.5);
             break;
         case SDLK_a:
+            moduleRegistry->getInputManager()->walk(LEFT, 0.5);
             break;
         case SDLK_s:
+            moduleRegistry->getInputManager()->walk(BEHIND, 0.5);
             break;
         case SDLK_d:
+            moduleRegistry->getInputManager()->walk(RIGHT, 0.5);
             break;
         default:
             break;

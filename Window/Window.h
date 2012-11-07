@@ -12,7 +12,7 @@ class ModuleRegistry;
 class Window : public Module
 {
 public:
-    Window(StrategyType strategyType);
+    Window(StrategyType strategyType, ModuleRegistry *moduleRegistry);
     void draw();
 private:
     WindowStrategy *windowStrategy;

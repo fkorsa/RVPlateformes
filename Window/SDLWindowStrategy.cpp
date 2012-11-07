@@ -1,6 +1,6 @@
 #include "SDLWindowStrategy.h"
 
-SDLWindowStrategy::SDLWindowStrategy()
+SDLWindowStrategy::SDLWindowStrategy(ModuleRegistry *moduleRegistry)
 {
     //SDL init
     SDL_Init(SDL_INIT_VIDEO);
@@ -17,6 +17,9 @@ SDLWindowStrategy::SDLWindowStrategy()
     playerCamera->setProjectionMatrixAsPerspective(45.0, playerCamera->getViewport()->aspectRatio(), 0.1, 1000.0);
     playerCamera->setClearColor(osg::Vec4(0.2, 0.2, 0.4, 0.0));
     sceneView->init();
+
+    moduleRegistry->registerSceneView(sceneView);
+    moduleRegistry->registerCamera(playerCamera);
 }
 
 void SDLWindowStrategy::draw()

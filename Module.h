@@ -1,13 +1,13 @@
 #ifndef MODULE_H
 #define MODULE_H
 
-class ModuleRegistry;
+#include "ModuleRegistry.h"
 
 class Module
 {
 public:
     void setModuleRegistry(ModuleRegistry *moduleRegistry);
-private:
+protected:
     ModuleRegistry *moduleRegistry;
 };
 

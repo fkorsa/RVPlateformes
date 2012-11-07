@@ -5,11 +5,12 @@
 #include <osgUtil/SceneView>
 
 #include "Window/WindowStrategy.h"
+#include "ModuleRegistry.h"
 
 class SDLWindowStrategy : public WindowStrategy
 {
 public:
-    SDLWindowStrategy();
+    SDLWindowStrategy(ModuleRegistry *moduleRegistry);
     void draw();
 private:
     osg::ref_ptr<osgUtil::SceneView> sceneView;

@@ -1,20 +1,14 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
-#include "Constants.h"
-#include "SDLInputStrategy.h"
-#include "VRJugglerInputStrategy.h"
 #include "Module.h"
-
-class InputStrategy;
-class SDLInputStrategy;
-class VRJugglerInputStrategy;
-class ModuleRegistry;
+#include "Constants.h"
 
 class InputManager : public Module
 {
 public:
     InputManager();
+    void walk(Direction dir, float distance);
 };
 
 #endif // INPUTMANAGER_H

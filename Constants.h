@@ -13,4 +13,12 @@ enum ReturnStatus
     RETURN_EXIT
 };
 
+enum Direction
+{
+    LEFT,
+    RIGHT,
+    FRONT,
+    BEHIND
+};
+
 #endif // CONSTANTS_H

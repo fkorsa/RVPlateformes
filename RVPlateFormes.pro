@@ -5,13 +5,15 @@ SOURCES += \
     main.cpp \
     Controller.cpp \
     ModuleRegistry.cpp \
-    Module.cpp
+    Module.cpp \
+    Scene.cpp
 
 HEADERS += \
     Controller.h \
     Constants.h \
     ModuleRegistry.h \
-    Module.h
+    Module.h \
+    Scene.h
 
 LIBS += -L/usr/lib -lSDL -lSDL_image -lSDL_ttf
 LIBS += -L/usr/lib -losg -losgUtil -losgDB

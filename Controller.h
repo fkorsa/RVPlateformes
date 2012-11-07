@@ -6,6 +6,7 @@
 #include "InputManager/InputStrategy.h"
 #include "InputManager/SDLInputStrategy.h"
 #include "InputManager/VRJugglerInputStrategy.h"
+#include "Scene.h"
 #include "ModuleRegistry.h"
 #include "Constants.h"
 
@@ -17,6 +18,7 @@ private:
     Window *window;
     InputManager *inputManager;
     InputStrategy *inputStrategy;
+    Scene *scene;
 };
 
 #endif // CONTROLLER_H
