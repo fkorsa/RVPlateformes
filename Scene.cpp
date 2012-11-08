@@ -79,7 +79,7 @@ void Scene::createScene()
 }
 
 void Scene::run() {
-
+    //osg::notify( osg::ALWAYS ) << "coucou" << std::endl;
     dynamicsWorld->stepSimulation( 1/60, 4, 1/60/4. );
 
 }
