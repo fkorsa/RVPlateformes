@@ -15,8 +15,17 @@ HEADERS += \
     Module.h \
     Scene.h
 
+
+# SDL
 LIBS += -L/usr/lib -lSDL -lSDL_image -lSDL_ttf
 LIBS += -L/usr/lib -losg -losgUtil -losgDB
-
 INCLUDEPATH = /usr/include/SDL
 
+
+# BULLET
+LIBS += -L/usr/local/lib/ -lBulletDynamics -lBulletCollision -lLinearMath
+INCLUDEPATH += /usr/local/include/bullet
+
+# OSGBULLET
+LIBS += -L/usr/local/lib/ -losgbDynamics -losgbCollision
+LIBS += -L/usr/local/lib64/ -lOpenThreads

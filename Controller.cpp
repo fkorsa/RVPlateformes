@@ -30,6 +30,8 @@ Controller::Controller()
             break;
         }
 
+        scene->run();
+
         window->draw();
     }
 }
