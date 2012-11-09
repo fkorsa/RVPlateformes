@@ -6,6 +6,7 @@
 #include <osg/PositionAttitudeTransform>
 #include <osg/ShapeDrawable>
 #include <osg/Geode>
+#include <osg/LightSource>
 
 #include <osgbDynamics/MotionState.h>
 #include <osgbCollision/CollisionShapes.h>

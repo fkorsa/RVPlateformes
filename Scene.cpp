@@ -64,14 +64,44 @@ void Scene::createScene()
     // How to add a model to the scene
     osg::Node *  model = osgDB::readNodeFile("data/starthing.obj");
     osg::PositionAttitudeTransform * modelPAT = new osg::PositionAttitudeTransform();
-    modelPAT->setPosition(osg::Vec3d(0, 0, -20));
+    modelPAT->setPosition(osg::Vec3d(0, 0, -200));
     modelPAT->addChild(model);
     rootNode->addChild(modelPAT);
+
+    // Add light
+    osg::Light* light = new osg::Light();
+    light->setLightNum(0);
+    // we set the light's position via a PositionAttitudeTransform object
+    light->setPosition(osg::Vec4f(1000.0, 1000.0, -200, 1.0));
+    light->setDiffuse(osg::Vec4f(1, 0.0, 0, 0.5));
+    light->setSpecular(osg::Vec4f(1.0, 1.0, 1.0, 1.0));
+    light->setAmbient(osg::Vec4f(0.0, 0.0, 0.0, 1.0));
+    osg::LightSource* lightsource = new osg::LightSource();
+    lightsource->setLight(light);
+    rootNode->addChild(lightsource);
+
+    light = new osg::Light();
+    light->setLightNum(1);
+    // we set the light's position via a PositionAttitudeTransform object
+    light->setPosition(osg::Vec4f(-1000.0, -1000.0, -200, 1.0));
+    light->setDiffuse(osg::Vec4f(0, 1.0, 0, 0.5));
+    light->setSpecular(osg::Vec4f(1.0, 1.0, 1.0, 1.0));
+    light->setAmbient(osg::Vec4f(0.0, 0.0, 0.0, 1.0));
+    lightsource = new osg::LightSource();
+    lightsource->setLight(light);
+    rootNode->addChild(lightsource);
+
+    osg::StateSet* stateset = rootNode->getOrCreateStateSet();
+    lightsource->setStateSetModes(*stateset, osg::StateAttribute::ON);
 
     // Test box
     osg::Vec3 lengths( 20, 20, 6 );
     osg::Vec3 center( 0., 0., -25. );
     rootNode->addChild(createBox(center, lengths, 1.f));
+
+    moduleRegistry->getCamera()->setViewMatrixAsLookAt(osg::Vec3(0, 0, 0),
+                                                       osg::Vec3(0, 0, -1),
+                                                       osg::Vec3(0, 1, 0));
 
     moduleRegistry->getSceneView()->setSceneData(rootNode);
 

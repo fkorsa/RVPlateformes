@@ -18,7 +18,11 @@ ReturnStatus SDLInputStrategy::handleInput()
                 return RETURN_EXIT;
 
             case SDL_KEYDOWN:
-                return handleKeyPressed(event);
+                if(event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    return RETURN_EXIT;
+                }
+                break;
 
             case SDL_MOUSEMOTION:
                 // If there are several mouse event queued, we handle one and destroy the rest.
@@ -34,34 +38,41 @@ ReturnStatus SDLInputStrategy::handleInput()
         }
     }
 
+    handleKeyContinouslyPressed();
+
     return RETURN_NORMAL;
 }
 
-ReturnStatus SDLInputStrategy::handleKeyPressed(SDL_Event event)
+void SDLInputStrategy::handleKeyContinouslyPressed()
 {
-    switch(event.key.keysym.sym)
+    Uint8 * keystate = SDL_GetKeyState(NULL);
+
+    if(keystate[SDLK_a])
     {
-        case SDLK_ESCAPE:
-            return RETURN_EXIT;
-        case SDLK_w:
-            moduleRegistry->getInputManager()->walk(FRONT, 0.5);
-            break;
-        case SDLK_a:
-            moduleRegistry->getInputManager()->walk(LEFT, 0.5);
-            break;
-        case SDLK_s:
-            moduleRegistry->getInputManager()->walk(BEHIND, 0.5);
-            break;
-        case SDLK_d:
-            moduleRegistry->getInputManager()->walk(RIGHT, 0.5);
-            break;
-        default:
-            break;
+        moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, -SDL_WALKING_DISTANCE);
     }
-    return RETURN_NORMAL;
+    if(keystate[SDLK_s])
+    {
+        moduleRegistry->getInputManager()->walk(WALKING_FRONT, -SDL_WALKING_DISTANCE);
+    }
+    if(keystate[SDLK_d])
+    {
+        moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, SDL_WALKING_DISTANCE);
+    }
+    if(keystate[SDLK_w])
+    {
+        moduleRegistry->getInputManager()->walk(WALKING_FRONT, SDL_WALKING_DISTANCE);
+    }
 }
 
 void SDLInputStrategy::handleMouseMotion(SDL_Event event)
 {
-
+    if(event.motion.xrel != 0.0)
+    {
+        moduleRegistry->getInputManager()->rotateCamera(CAMERA_DIRECTION_X, ((float)event.motion.xrel)/100);
+    }
+    if(event.motion.yrel != 0.0)
+    {
+        moduleRegistry->getInputManager()->rotateCamera(CAMERA_DIRECTION_Y, ((float)event.motion.yrel)/100);
+    }
 }

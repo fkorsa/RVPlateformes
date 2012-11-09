@@ -4,11 +4,15 @@
 #include "Module.h"
 #include "Constants.h"
 
+#include <osg/Math>
+#include <QDebug>
+
 class InputManager : public Module
 {
 public:
     InputManager();
-    void walk(Direction dir, float distance);
+    void walk(WalkingDirection dir, float distance);
+    void rotateCamera(CameraDirection dir, float angle);
 };
 
 #endif // INPUTMANAGER_H

@@ -13,12 +13,18 @@ enum ReturnStatus
     RETURN_EXIT
 };
 
-enum Direction
+enum WalkingDirection
 {
-    LEFT,
-    RIGHT,
-    FRONT,
-    BEHIND
+    WALKING_PARALLEL,
+    WALKING_FRONT
 };
+
+enum CameraDirection
+{
+    CAMERA_DIRECTION_X,
+    CAMERA_DIRECTION_Y
+};
+
+const float SDL_WALKING_DISTANCE = 0.5;
 
 #endif // CONSTANTS_H

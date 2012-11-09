@@ -10,7 +10,7 @@ class SDLInputStrategy : public InputStrategy
 public:
     SDLInputStrategy();
     ReturnStatus handleInput();
-    ReturnStatus handleKeyPressed(SDL_Event event);
+    void handleKeyContinouslyPressed();
     void handleMouseMotion(SDL_Event event);
 };
 
