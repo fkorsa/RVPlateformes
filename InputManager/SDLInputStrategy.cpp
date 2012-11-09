@@ -1,7 +1,7 @@
 #include "SDLInputStrategy.h"
 
 SDLInputStrategy::SDLInputStrategy() :
-    qwerty(true)
+    qwerty(false)
 {
     SDL_WM_GrabInput(SDL_GRAB_ON);
     SDL_ShowCursor(SDL_DISABLE);
