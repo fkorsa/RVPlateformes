@@ -3,6 +3,8 @@
 
 #include <SDL/SDL.h>
 
+#include <QDebug>
+
 #include "InputStrategy.h"
 
 class SDLInputStrategy : public InputStrategy

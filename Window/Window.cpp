@@ -11,8 +11,6 @@ Window::Window(StrategyType strategyType, ModuleRegistry *moduleRegistry)
         windowStrategy = new VRJugglerWindowStrategy();
         break;
     }
-
-
 }
 
 void Window::draw()

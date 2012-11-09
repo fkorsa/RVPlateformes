@@ -24,12 +24,12 @@ InputManager *ModuleRegistry::getInputManager()
     return inputManager;
 }
 
-void ModuleRegistry::registerSceneView(osg::ref_ptr<osgUtil::SceneView> sceneView)
+void ModuleRegistry::registerSceneView(osgUtil::SceneView *sceneView)
 {
     this->sceneView = sceneView;
 }
 
-osg::ref_ptr<osgUtil::SceneView> ModuleRegistry::getSceneView()
+osgUtil::SceneView* ModuleRegistry::getSceneView()
 {
     return sceneView;
 }
@@ -39,7 +39,7 @@ void ModuleRegistry::registerScene(Scene *scene)
     this->scene = scene;
 }
 
-Scene *ModuleRegistry::getScene()
+Scene* ModuleRegistry::getScene()
 {
     return scene;
 }

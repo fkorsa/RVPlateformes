@@ -1,13 +1,14 @@
 #include "Scene.h"
 
-Scene::Scene()
+Scene::Scene() :
+    previousTime(0),
+    currentTime(0)
 {
     rootNode = new osg::Group;
 
     // Bullet Engine initialisation
     // TODO: cleaning bullet before closing app.
     dynamicsWorld = initBulletEngine();
-
 }
 
 // Bullet engine initialisation
@@ -60,7 +61,6 @@ osg::MatrixTransform* Scene::createBox( const osg::Vec3& center, const osg::Vec3
 
 void Scene::createScene()
 {
-
     // How to add a model to the scene
     osg::Node *  model = osgDB::readNodeFile("data/starthing.obj");
     osg::PositionAttitudeTransform * modelPAT = new osg::PositionAttitudeTransform();
@@ -68,10 +68,25 @@ void Scene::createScene()
     modelPAT->addChild(model);
     rootNode->addChild(modelPAT);
 
+    createLights();
+
+    osg::ref_ptr<osgbInteraction::SaveRestoreHandler> srh = new osgbInteraction::SaveRestoreHandler;
+
+    srh->capture();
+
+    // Test box
+    osg::Vec3 lengths( 20, 20, 6 );
+    osg::Vec3 center( 0., 0., -25. );
+    rootNode->addChild(createBox(center, lengths, 1.f));
+
+    moduleRegistry->getSceneView()->setSceneData(rootNode);
+}
+
+void Scene::createLights()
+{
     // Add light
     osg::Light* light = new osg::Light();
     light->setLightNum(0);
-    // we set the light's position via a PositionAttitudeTransform object
     light->setPosition(osg::Vec4f(1000.0, 1000.0, -200, 1.0));
     light->setDiffuse(osg::Vec4f(1, 0.0, 0, 0.5));
     light->setSpecular(osg::Vec4f(1.0, 1.0, 1.0, 1.0));
@@ -82,7 +97,6 @@ void Scene::createScene()
 
     light = new osg::Light();
     light->setLightNum(1);
-    // we set the light's position via a PositionAttitudeTransform object
     light->setPosition(osg::Vec4f(-1000.0, -1000.0, -200, 1.0));
     light->setDiffuse(osg::Vec4f(0, 1.0, 0, 0.5));
     light->setSpecular(osg::Vec4f(1.0, 1.0, 1.0, 1.0));
@@ -91,25 +105,38 @@ void Scene::createScene()
     lightsource->setLight(light);
     rootNode->addChild(lightsource);
 
+    light = new osg::Light();
+    light->setLightNum(2);
+    light->setPosition(osg::Vec4f(-1000.0, -1000.0, 200, 1.0));
+    light->setDiffuse(osg::Vec4f(0, 0, 1, 0.5));
+    light->setSpecular(osg::Vec4f(1.0, 1.0, 1.0, 1.0));
+    light->setAmbient(osg::Vec4f(0.0, 0.0, 0.0, 1.0));
+    lightsource = new osg::LightSource();
+    lightsource->setLight(light);
+    rootNode->addChild(lightsource);
+
+    light = new osg::Light();
+    light->setLightNum(3);
+    light->setPosition(osg::Vec4f(1000.0, 1000.0, 200, 1.0));
+    light->setDiffuse(osg::Vec4f(0, 1, 1, 0.5));
+    light->setSpecular(osg::Vec4f(1.0, 1.0, 1.0, 1.0));
+    light->setAmbient(osg::Vec4f(0.0, 0.0, 0.0, 1.0));
+    lightsource = new osg::LightSource();
+    lightsource->setLight(light);
+    rootNode->addChild(lightsource);
+
     osg::StateSet* stateset = rootNode->getOrCreateStateSet();
     lightsource->setStateSetModes(*stateset, osg::StateAttribute::ON);
-
-    // Test box
-    osg::Vec3 lengths( 20, 20, 6 );
-    osg::Vec3 center( 0., 0., -25. );
-    rootNode->addChild(createBox(center, lengths, 1.f));
-
-    moduleRegistry->getCamera()->setViewMatrixAsLookAt(osg::Vec3(0, 0, 0),
-                                                       osg::Vec3(0, 0, -1),
-                                                       osg::Vec3(0, 1, 0));
-
-    moduleRegistry->getSceneView()->setSceneData(rootNode);
-
-
 }
 
-void Scene::run() {
-    //osg::notify( osg::ALWAYS ) << "coucou" << std::endl;
-    dynamicsWorld->stepSimulation( 1/60, 4, 1/60/4. );
-
+void Scene::run()
+{
+    while(osgTimer.delta_s(previousTime, currentTime) < (1.0/60.0))
+    {
+        currentTime = osgTimer.tick();
+    }
+    dynamicsWorld->stepSimulation(osgTimer.delta_s(previousTime, currentTime));
+    previousTime = currentTime;
 }
+
+\

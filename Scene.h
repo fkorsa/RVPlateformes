@@ -12,6 +12,8 @@
 #include <osgbCollision/CollisionShapes.h>
 #include <osgbDynamics/RigidBody.h>
 #include <osgbCollision/Utils.h>
+#include <osgbInteraction/SaveRestoreHandler.h>
+#include <osgbInteraction/DragHandler.h>
 
 #include <btBulletDynamicsCommon.h>
 
@@ -24,12 +26,14 @@ public:
     void createScene();
     void run();
 private:
-
+    void createLights();
     osg::MatrixTransform* createBox(const osg::Vec3& center, const osg::Vec3& lengths, float mass);
     btDynamicsWorld* initBulletEngine();
     btDynamicsWorld * dynamicsWorld;
-
     osg::Group *rootNode;
+    osg::Timer osgTimer;
+    osg::Timer_t currentTime;
+    osg::Timer_t previousTime;
 };
 
 #endif // SCENE_H

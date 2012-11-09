@@ -18,8 +18,8 @@ public:
     void registerInputManager(InputManager *inputManager);
     InputManager* getInputManager();
 
-    void registerSceneView(osg::ref_ptr<osgUtil::SceneView> sceneView);
-    osg::ref_ptr<osgUtil::SceneView> getSceneView();
+    void registerSceneView(osgUtil::SceneView *sceneView);
+    osgUtil::SceneView* getSceneView();
 
     void registerScene(Scene *scene);
     Scene* getScene();
@@ -30,7 +30,7 @@ public:
 private:
     Window *window;
     InputManager *inputManager;
-    osg::ref_ptr<osgUtil::SceneView> sceneView;
+    osgUtil::SceneView *sceneView;
     Scene *scene;
     osg::ref_ptr<osg::Camera> playerCamera;
 };

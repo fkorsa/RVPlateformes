@@ -3,6 +3,7 @@
 Controller::Controller()
 {    
     ModuleRegistry moduleRegistry;
+    int loopCnt = 0;
 
     window = new Window(SDL_STRATEGY, &moduleRegistry);
     moduleRegistry.registerWindow(window);
@@ -22,7 +23,6 @@ Controller::Controller()
     else {}*/
     inputStrategy = new SDLInputStrategy();
     inputStrategy->setModuleRegistry(&moduleRegistry);
-
     while(true)
     {
         if(inputStrategy->handleInput() == RETURN_EXIT)
@@ -33,5 +33,12 @@ Controller::Controller()
         scene->run();
 
         window->draw();
+        if(loopCnt<3)
+        {
+            loopCnt++;
+            moduleRegistry.getCamera()->setViewMatrixAsLookAt(osg::Vec3(0, 0, 0),
+                                                               osg::Vec3(0, 0, -1),
+                                                               osg::Vec3(0, 1, 0));
+        }
     }
 }

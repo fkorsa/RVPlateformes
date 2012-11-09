@@ -13,7 +13,7 @@ public:
     SDLWindowStrategy(ModuleRegistry *moduleRegistry);
     void draw();
 private:
-    osg::ref_ptr<osgUtil::SceneView> sceneView;
+    osgUtil::SceneView *sceneView;
 };
 
 #endif // SDLWINDOWSTRATEGY_H
