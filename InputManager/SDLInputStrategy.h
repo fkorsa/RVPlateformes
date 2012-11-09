@@ -12,6 +12,8 @@ public:
     ReturnStatus handleInput();
     void handleKeyContinouslyPressed();
     void handleMouseMotion(SDL_Event event);
+private:
+    bool qwerty;
 };
 
 #endif // SDLINPUTMANAGERSTRATEGY_H
