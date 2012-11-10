@@ -1,7 +1,9 @@
 #include "SDLInputStrategy.h"
 
 SDLInputStrategy::SDLInputStrategy() :
-    qwerty(false),godmode(false)
+    qwerty(false),
+    godmode(false),
+    inputManager(NULL)
 {
     SDL_WM_GrabInput(SDL_GRAB_ON);
     SDL_ShowCursor(SDL_DISABLE);
@@ -11,6 +13,10 @@ ReturnStatus SDLInputStrategy::handleInput()
 {
     SDL_Event event;
     bool alreadyPolledMouse = false;
+    if(!inputManager)
+    {
+        inputManager = moduleRegistry->getInputManager();
+    }
     while(SDL_PollEvent(&event))
     {
         switch(event.type)
@@ -35,7 +41,7 @@ ReturnStatus SDLInputStrategy::handleInput()
 
             case SDL_MOUSEMOTION:
                 // If there are several mouse event queued, we handle one and destroy the rest.
-                if(!alreadyPolledMouse)
+                if(!alreadyPolledMouse && godmode)
                 {
                     handleMouseMotion(event);
                     alreadyPolledMouse = true;
@@ -58,85 +64,81 @@ void SDLInputStrategy::handleKeyContinouslyPressed()
 
     if (!godmode)
     {
-
         if(qwerty)
         {
             if(keystate[SDLK_a])
             {
-                moduleRegistry->getInputManager()->moveLeft();
+                inputManager->moveLeft();
             }
             if(keystate[SDLK_d])
             {
-                moduleRegistry->getInputManager()->moveRight();
+                inputManager->moveRight();
             }
         }
         else
         {
             if(keystate[SDLK_q])
             {
-                moduleRegistry->getInputManager()->moveLeft();
+                inputManager->moveLeft();
             }
             if(keystate[SDLK_d])
             {
-                moduleRegistry->getInputManager()->moveRight();
+                inputManager->moveRight();
             }
         }
-
-    } else
+    }
+    else
     {
-
         // GODMODE
-
         if(qwerty)
         {
             if(keystate[SDLK_a])
             {
-                moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, -SDL_WALKING_DISTANCE);
+                inputManager->walk(WALKING_PARALLEL, -SDL_WALKING_DISTANCE);
             }
             if(keystate[SDLK_s])
             {
-                moduleRegistry->getInputManager()->walk(WALKING_FRONT, -SDL_WALKING_DISTANCE);
+                inputManager->walk(WALKING_FRONT, -SDL_WALKING_DISTANCE);
             }
             if(keystate[SDLK_d])
             {
-                moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, SDL_WALKING_DISTANCE);
+                inputManager->walk(WALKING_PARALLEL, SDL_WALKING_DISTANCE);
             }
             if(keystate[SDLK_w])
             {
-                moduleRegistry->getInputManager()->walk(WALKING_FRONT, SDL_WALKING_DISTANCE);
+                inputManager->walk(WALKING_FRONT, SDL_WALKING_DISTANCE);
             }
         }
         else
         {
             if(keystate[SDLK_q])
             {
-                moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, -SDL_WALKING_DISTANCE);
+                inputManager->walk(WALKING_PARALLEL, -SDL_WALKING_DISTANCE);
             }
             if(keystate[SDLK_s])
             {
-                moduleRegistry->getInputManager()->walk(WALKING_FRONT, -SDL_WALKING_DISTANCE);
+                inputManager->walk(WALKING_FRONT, -SDL_WALKING_DISTANCE);
             }
             if(keystate[SDLK_d])
             {
-                moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, SDL_WALKING_DISTANCE);
+                inputManager->walk(WALKING_PARALLEL, SDL_WALKING_DISTANCE);
             }
             if(keystate[SDLK_z])
             {
-                moduleRegistry->getInputManager()->walk(WALKING_FRONT, SDL_WALKING_DISTANCE);
+                inputManager->walk(WALKING_FRONT, SDL_WALKING_DISTANCE);
             }
         }
-}
-
+    }
 }
 
 void SDLInputStrategy::handleMouseMotion(SDL_Event event)
 {
     if(event.motion.xrel != 0.0)
     {
-        moduleRegistry->getInputManager()->rotateCamera(CAMERA_DIRECTION_X, ((float)event.motion.xrel)/100);
+        inputManager->rotateCamera(CAMERA_DIRECTION_X, ((float)event.motion.xrel)/100);
     }
     if(event.motion.yrel != 0.0)
     {
-        moduleRegistry->getInputManager()->rotateCamera(CAMERA_DIRECTION_Y, ((float)event.motion.yrel)/100);
+        inputManager->rotateCamera(CAMERA_DIRECTION_Y, ((float)event.motion.yrel)/100);
     }
 }

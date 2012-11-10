@@ -17,6 +17,7 @@ public:
 private:
     bool qwerty;
     bool godmode;
+    InputManager *inputManager;
 };
 
 #endif // SDLINPUTMANAGERSTRATEGY_H
