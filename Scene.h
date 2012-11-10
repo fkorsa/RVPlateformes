@@ -27,8 +27,11 @@ public:
     void run();
 private:
     void createLights();
-    osg::MatrixTransform* createBox(const osg::Vec3& center, const osg::Vec3& lengths, float mass);
-    btDynamicsWorld* initBulletEngine();
+
+    osg::MatrixTransform* createBall( const osg::Vec3& center, float radius, float mass ); // Ajoute la balle que le joueur doit déplacer
+    osg::MatrixTransform* createBox(const osg::Vec3& center, const osg::Vec3& lengths, float mass); // Ajoute une box
+    btDynamicsWorld* initBulletEngine(); // Initialise le moteur de physique
+
     btDynamicsWorld * dynamicsWorld;
     osg::Group *rootNode;
     osg::Timer osgTimer;
