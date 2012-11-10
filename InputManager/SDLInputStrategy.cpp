@@ -1,7 +1,7 @@
 #include "SDLInputStrategy.h"
 
 SDLInputStrategy::SDLInputStrategy() :
-    qwerty(false)
+    qwerty(false),godmode(false)
 {
     SDL_WM_GrabInput(SDL_GRAB_ON);
     SDL_ShowCursor(SDL_DISABLE);
@@ -26,6 +26,10 @@ ReturnStatus SDLInputStrategy::handleInput()
                 else if(event.key.keysym.sym == SDLK_p)
                 {
                     qwerty = !qwerty;
+                }
+                else if(event.key.keysym.sym == SDLK_m)
+                {
+                    godmode = !godmode;
                 }
                 break;
 
@@ -52,44 +56,76 @@ void SDLInputStrategy::handleKeyContinouslyPressed()
 {
     Uint8 * keystate = SDL_GetKeyState(NULL);
 
-    if(qwerty)
+    if (!godmode)
     {
-        if(keystate[SDLK_a])
+
+        if(qwerty)
         {
-            moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, -SDL_WALKING_DISTANCE);
+            if(keystate[SDLK_a])
+            {
+                moduleRegistry->getInputManager()->moveLeft();
+            }
+            if(keystate[SDLK_d])
+            {
+                moduleRegistry->getInputManager()->moveRight();
+            }
         }
-        if(keystate[SDLK_s])
+        else
         {
-            moduleRegistry->getInputManager()->walk(WALKING_FRONT, -SDL_WALKING_DISTANCE);
+            if(keystate[SDLK_q])
+            {
+                moduleRegistry->getInputManager()->moveLeft();
+            }
+            if(keystate[SDLK_d])
+            {
+                moduleRegistry->getInputManager()->moveRight();
+            }
         }
-        if(keystate[SDLK_d])
-        {
-            moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, SDL_WALKING_DISTANCE);
-        }
-        if(keystate[SDLK_w])
-        {
-            moduleRegistry->getInputManager()->walk(WALKING_FRONT, SDL_WALKING_DISTANCE);
-        }
-    }
-    else
+
+    } else
     {
-        if(keystate[SDLK_q])
+
+        // GODMODE
+
+        if(qwerty)
         {
-            moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, -SDL_WALKING_DISTANCE);
+            if(keystate[SDLK_a])
+            {
+                moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, -SDL_WALKING_DISTANCE);
+            }
+            if(keystate[SDLK_s])
+            {
+                moduleRegistry->getInputManager()->walk(WALKING_FRONT, -SDL_WALKING_DISTANCE);
+            }
+            if(keystate[SDLK_d])
+            {
+                moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, SDL_WALKING_DISTANCE);
+            }
+            if(keystate[SDLK_w])
+            {
+                moduleRegistry->getInputManager()->walk(WALKING_FRONT, SDL_WALKING_DISTANCE);
+            }
         }
-        if(keystate[SDLK_s])
+        else
         {
-            moduleRegistry->getInputManager()->walk(WALKING_FRONT, -SDL_WALKING_DISTANCE);
+            if(keystate[SDLK_q])
+            {
+                moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, -SDL_WALKING_DISTANCE);
+            }
+            if(keystate[SDLK_s])
+            {
+                moduleRegistry->getInputManager()->walk(WALKING_FRONT, -SDL_WALKING_DISTANCE);
+            }
+            if(keystate[SDLK_d])
+            {
+                moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, SDL_WALKING_DISTANCE);
+            }
+            if(keystate[SDLK_z])
+            {
+                moduleRegistry->getInputManager()->walk(WALKING_FRONT, SDL_WALKING_DISTANCE);
+            }
         }
-        if(keystate[SDLK_d])
-        {
-            moduleRegistry->getInputManager()->walk(WALKING_PARALLEL, SDL_WALKING_DISTANCE);
-        }
-        if(keystate[SDLK_z])
-        {
-            moduleRegistry->getInputManager()->walk(WALKING_FRONT, SDL_WALKING_DISTANCE);
-        }
-    }
+}
 
 }
 

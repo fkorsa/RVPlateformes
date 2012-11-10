@@ -16,6 +16,7 @@ public:
     void handleMouseMotion(SDL_Event event);
 private:
     bool qwerty;
+    bool godmode;
 };
 
 #endif // SDLINPUTMANAGERSTRATEGY_H

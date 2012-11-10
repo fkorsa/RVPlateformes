@@ -9,6 +9,7 @@ class InputStrategy : public Module
 {
 public:
     virtual ReturnStatus handleInput() = 0;
+
 };
 
 #endif // INPUTMANAGERSTRATEGY_H

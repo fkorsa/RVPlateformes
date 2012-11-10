@@ -74,10 +74,9 @@ void Scene::createScene()
 
     srh->capture();
 
-    // Test box
-    osg::Vec3 lengths( 20, 20, 6 );
-    osg::Vec3 center( 0., 0., -25. );
-    rootNode->addChild(createBox(center, lengths, 1.f));
+    // NIVEAU 1
+    rootNode->addChild(createBox(osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 6), 0.f));
+    rootNode->addChild(createBox(osg::Vec3( 60., 0., -25. ), osg::Vec3(30, 30, 6), 0.f));
 
     moduleRegistry->getSceneView()->setSceneData(rootNode);
 }

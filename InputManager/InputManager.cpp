@@ -4,6 +4,16 @@ InputManager::InputManager()
 {
 }
 
+void InputManager::moveLeft()
+{
+
+}
+
+void InputManager::moveRight()
+{
+
+}
+
 void InputManager::walk(WalkingDirection dir, float distance)
 {
     osg::ref_ptr<osg::Camera> playerCamera = moduleRegistry->getCamera();

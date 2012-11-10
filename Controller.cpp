@@ -36,9 +36,9 @@ Controller::Controller()
         if(loopCnt<3)
         {
             loopCnt++;
-            moduleRegistry.getCamera()->setViewMatrixAsLookAt(osg::Vec3(0, 0, 0),
-                                                               osg::Vec3(0, 0, -1),
-                                                               osg::Vec3(0, 1, 0));
+            moduleRegistry.getCamera()->setViewMatrixAsLookAt(osg::Vec3(30, -120, 0),
+                                                               osg::Vec3(30, 0, 0),
+                                                               osg::Vec3(0, 0, 1));
         }
     }
 }
