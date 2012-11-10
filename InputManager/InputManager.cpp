@@ -4,14 +4,24 @@ InputManager::InputManager()
 {
 }
 
+void InputManager::setBall(Ball* _ball)
+{
+    ball = _ball;
+}
+
 void InputManager::moveLeft()
 {
-
+    ball->moveLeft();
 }
 
 void InputManager::moveRight()
 {
+    ball->moveRight();
+}
 
+void InputManager::jump()
+{
+    ball->jump();
 }
 
 void InputManager::walk(WalkingDirection dir, float distance)

@@ -5,6 +5,7 @@
 
 class Window;
 class InputManager;
+class Ball;
 class Scene;
 
 class ModuleRegistry
@@ -32,6 +33,7 @@ private:
     InputManager *inputManager;
     osgUtil::SceneView *sceneView;
     Scene *scene;
+    Ball* ball;
     osg::ref_ptr<osg::Camera> playerCamera;
 };
 

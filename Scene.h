@@ -18,6 +18,8 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "Module.h"
+#include "InputManager/InputManager.h"
+#include "Ball.h"
 
 class Scene : public Module
 {
@@ -28,7 +30,6 @@ public:
 private:
     void createLights();
 
-    osg::MatrixTransform* createBall( const osg::Vec3& center, float radius, float mass ); // Ajoute la balle que le joueur doit déplacer
     osg::MatrixTransform* createBox(const osg::Vec3& center, const osg::Vec3& lengths, float mass); // Ajoute une box
     btDynamicsWorld* initBulletEngine(); // Initialise le moteur de physique
 

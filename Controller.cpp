@@ -9,14 +9,14 @@ Controller::Controller()
     moduleRegistry.registerWindow(window);
     window->setModuleRegistry(&moduleRegistry);
 
+    inputManager = new InputManager();
+    moduleRegistry.registerInputManager(inputManager);
+    inputManager->setModuleRegistry(&moduleRegistry);
+
     scene = new Scene();
     moduleRegistry.registerScene(scene);
     scene->setModuleRegistry(&moduleRegistry);
     scene->createScene();
-
-    inputManager = new InputManager();
-    moduleRegistry.registerInputManager(inputManager);
-    inputManager->setModuleRegistry(&moduleRegistry);
 
     // Test pour savoir si on utilise la SDL ou VRJuggler pour les inputs
     /* if(SDL) {}

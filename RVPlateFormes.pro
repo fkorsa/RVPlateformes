@@ -6,14 +6,16 @@ SOURCES += \
     Controller.cpp \
     ModuleRegistry.cpp \
     Module.cpp \
-    Scene.cpp
+    Scene.cpp \
+    Ball.cpp
 
 HEADERS += \
     Controller.h \
     Constants.h \
     ModuleRegistry.h \
     Module.h \
-    Scene.h
+    Scene.h \
+    Ball.h
 
 
 # SDL

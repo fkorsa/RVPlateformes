@@ -27,38 +27,11 @@ btDynamicsWorld* Scene::initBulletEngine()
     // You can now use: dynamicsWorld->addRigidBody( btRigidBody ); to add an object the simulation
     btDynamicsWorld * dynamicsWorld = new btDiscreteDynamicsWorld( dispatcher, inter, solver, collisionConfiguration );
 
-    dynamicsWorld->setGravity( btVector3( 0, 0, -9.8 ) );
+    dynamicsWorld->setGravity( btVector3( 0, 0, -20.8 ) );
 
     return( dynamicsWorld );
 }
 
-// Ajoute la balle
-osg::MatrixTransform* Scene::createBall( const osg::Vec3& center, float radius, float mass )
-{
-
-    osg::Sphere* sphere = new osg::Sphere( center, radius );
-    osg::ShapeDrawable* shape = new osg::ShapeDrawable( sphere );
-    shape->setColor( osg::Vec4( 1., 0., 0., 1. ) );
-    osg::Geode* geode = new osg::Geode();
-    geode->addDrawable( shape );
-
-    // We need a MatrixTransform to move the box around
-    osg::MatrixTransform* root = new osg::MatrixTransform;
-    root->addChild( geode );
-
-    // We add the box to the simulation
-    btCollisionShape* cs = osgbCollision::btBoxCollisionShapeFromOSG( geode );
-        osg::ref_ptr< osgbDynamics::CreationRecord > cr = new osgbDynamics::CreationRecord;
-    cr->_sceneGraph = root;
-    cr->_shapeType = BOX_SHAPE_PROXYTYPE;
-    cr->_mass = mass;
-    cr->_restitution = 1.f;
-    btRigidBody* body = osgbDynamics::createRigidBody( cr.get(), cs );
-    dynamicsWorld->addRigidBody( body );
-
-    return( root );
-
-}
 
 // Create a simple box with and add it to the physics engine
 osg::MatrixTransform* Scene::createBox( const osg::Vec3& center, const osg::Vec3& lengths, float mass )
@@ -81,6 +54,7 @@ osg::MatrixTransform* Scene::createBox( const osg::Vec3& center, const osg::Vec3
     cr->_shapeType = BOX_SHAPE_PROXYTYPE;
     cr->_mass = mass;
     cr->_restitution = 1.f;
+    cr->_friction = 1.f;
     btRigidBody* body = osgbDynamics::createRigidBody( cr.get(), cs );
     dynamicsWorld->addRigidBody( body );
 
@@ -102,11 +76,11 @@ void Scene::createScene()
 
     srh->capture();
 
-    // BALLE
-    rootNode->addChild(createBall(osg::Vec3( 0., 0., 0. ), 7., 1.f));
+    Ball* ball = new Ball(rootNode,dynamicsWorld);
+    moduleRegistry->getInputManager()->setBall(ball);
 
     // NIVEAU 1
-    rootNode->addChild(createBox(osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 6), 0.f));
+    rootNode->addChild(createBox(osg::Vec3( 0., 0., -25. ), osg::Vec3(300, 300, 6), 0.f));
     rootNode->addChild(createBox(osg::Vec3( 60., 0., -25. ), osg::Vec3(30, 30, 6), 0.f));
 
     moduleRegistry->getSceneView()->setSceneData(rootNode);
@@ -161,11 +135,14 @@ void Scene::createLights()
 
 void Scene::run()
 {
-    while(osgTimer.delta_s(previousTime, currentTime) < (1.0/60.0))
+    /*while(osgTimer.delta_s(previousTime, currentTime) < (1.0/60.0))
     {
         currentTime = osgTimer.tick();
-    }
-    dynamicsWorld->stepSimulation(osgTimer.delta_s(previousTime, currentTime));
+    }*/
+    currentTime = osgTimer.tick();
+    double elapsed = osgTimer.delta_s(previousTime, currentTime);
+    //osg::notify( osg::ALWAYS ) << elapsed << ", " << 1./60. << std::endl;
+    dynamicsWorld->stepSimulation(elapsed,4,1./120.);
     previousTime = currentTime;
 }
 
