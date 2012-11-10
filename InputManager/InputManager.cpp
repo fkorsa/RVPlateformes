@@ -14,6 +14,7 @@ void InputManager::moveRight()
 
 }
 
+
 void InputManager::walk(WalkingDirection dir, float distance)
 {
     osg::ref_ptr<osg::Camera> playerCamera = moduleRegistry->getCamera();
@@ -41,7 +42,7 @@ void InputManager::walk(WalkingDirection dir, float distance)
 void InputManager::rotateCamera(CameraDirection dir, float angle)
 {
     osg::ref_ptr<osg::Camera> playerCamera = moduleRegistry->getCamera();
-    osg::Vec3f eye, center, up, cameraDir, cameraUp, baseThirdVector, EC;
+    osg::Vec3f eye, center, up, cameraDir, baseThirdVector, EC;
     osg::Vec3::value_type angleCosinus = cos(angle), angleSinus = sin(angle);
     playerCamera->getViewMatrixAsLookAt(eye, center, up);
     EC = center - eye;
@@ -62,9 +63,10 @@ void InputManager::rotateCamera(CameraDirection dir, float angle)
     cameraDir.normalize();
     center = cameraDir + eye;
     up.normalize();
-    qDebug() << "center : " << center.x() << " " << center.y() << " " << center.z();
-    qDebug() << "eye : " << eye.x() << " " << eye.y() << " " << eye.z();
-    qDebug() << "up : " << up.x() << " " << up.y() << " " << up.z();
-    qDebug() << "angle : " << angle;
-    moduleRegistry->getCamera()->setViewMatrixAsLookAt(eye, center, up);
+    playerCamera->setViewMatrixAsLookAt(eye, center, up);
+}
+
+void InputManager::resetCameraToGameMode()
+{
+
 }

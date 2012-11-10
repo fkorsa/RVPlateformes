@@ -33,58 +33,88 @@ btDynamicsWorld* Scene::initBulletEngine()
 }
 
 // Ajoute la balle
-osg::MatrixTransform* Scene::createBall( const osg::Vec3& center, float radius, float mass )
+osg::MatrixTransform* Scene::createBall(const osg::Vec3& center, float radius, float mass)
 {
-
-    osg::Sphere* sphere = new osg::Sphere( center, radius );
-    osg::ShapeDrawable* shape = new osg::ShapeDrawable( sphere );
-    shape->setColor( osg::Vec4( 1., 0., 0., 1. ) );
+    osg::Sphere* sphere = new osg::Sphere(center, radius);
+    osg::ShapeDrawable* shape = new osg::ShapeDrawable(sphere);
+    shape->setColor(osg::Vec4(1., 0., 0., 1.));
     osg::Geode* geode = new osg::Geode();
-    geode->addDrawable( shape );
+    geode->addDrawable(shape);
 
     // We need a MatrixTransform to move the box around
     osg::MatrixTransform* root = new osg::MatrixTransform;
-    root->addChild( geode );
+    root->addChild(geode);
 
     // We add the box to the simulation
-    btCollisionShape* cs = osgbCollision::btBoxCollisionShapeFromOSG( geode );
-        osg::ref_ptr< osgbDynamics::CreationRecord > cr = new osgbDynamics::CreationRecord;
+    btCollisionShape* cs = osgbCollision::btBoxCollisionShapeFromOSG(geode);
+    osg::ref_ptr<osgbDynamics::CreationRecord> cr = new osgbDynamics::CreationRecord;
     cr->_sceneGraph = root;
-    cr->_shapeType = BOX_SHAPE_PROXYTYPE;
+    cr->_shapeType = SPHERE_SHAPE_PROXYTYPE;
     cr->_mass = mass;
     cr->_restitution = 1.f;
-    btRigidBody* body = osgbDynamics::createRigidBody( cr.get(), cs );
-    dynamicsWorld->addRigidBody( body );
-
-    return( root );
-
+    btRigidBody* body = osgbDynamics::createRigidBody(cr.get(), cs);
+    dynamicsWorld->addRigidBody(body);
+    body->applyCentralForce(btVector3(1000, 0, 1000));
+    return root;
 }
 
 // Create a simple box with and add it to the physics engine
-osg::MatrixTransform* Scene::createBox( const osg::Vec3& center, const osg::Vec3& lengths, float mass )
+osg::MatrixTransform* Scene::createBox(const osg::Vec3& center, const osg::Vec3& lengths, float mass)
 {
-    osg::Vec3 l( lengths );
-    osg::Box* box = new osg::Box( center, l.x(), l.y(), l.z() );
-    osg::ShapeDrawable* shape = new osg::ShapeDrawable( box );
-    shape->setColor( osg::Vec4( 1., 1., 1., 1. ) );
+    osg::Box* box = new osg::Box(center, lengths.x(), lengths.y(), lengths.z());
+    osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
+    shape->setColor(osg::Vec4(1., 1., 1., 1.));
     osg::Geode* geode = new osg::Geode();
-    geode->addDrawable( shape );
+    geode->addDrawable(shape);
 
     // We need a MatrixTransform to move the box around
     osg::MatrixTransform* root = new osg::MatrixTransform;
-    root->addChild( geode );
+    root->addChild(geode);
 
     // We add the box to the simulation
-    btCollisionShape* cs = osgbCollision::btBoxCollisionShapeFromOSG( geode );
-        osg::ref_ptr< osgbDynamics::CreationRecord > cr = new osgbDynamics::CreationRecord;
+    btCollisionShape* cs = osgbCollision::btBoxCollisionShapeFromOSG(geode);
+    osg::ref_ptr<osgbDynamics::CreationRecord> cr = new osgbDynamics::CreationRecord;
     cr->_sceneGraph = root;
     cr->_shapeType = BOX_SHAPE_PROXYTYPE;
     cr->_mass = mass;
     cr->_restitution = 1.f;
-    btRigidBody* body = osgbDynamics::createRigidBody( cr.get(), cs );
-    dynamicsWorld->addRigidBody( body );
+    btRigidBody* body = osgbDynamics::createRigidBody(cr.get(), cs);
+    dynamicsWorld->addRigidBody(body);
 
-    return( root );
+    return root;
+}
+
+osg::PositionAttitudeTransform* Scene::createModel(const char *filename, const osg::Vec3 &center,
+                                                   const float scale, float mass,
+                                                   osg::ref_ptr<osgbInteraction::SaveRestoreHandler> srh)
+{
+    osg::Node* modelNode = osgDB::readNodeFile(filename);
+    if(modelNode == NULL)
+    {
+        qDebug() << "Can't load model.";
+        return(NULL);
+    }
+
+    // We need a MatrixTransform to move the box around
+    osg::MatrixTransform* matrixTransform = new osg::MatrixTransform;
+    matrixTransform->addChild(modelNode);
+
+    osg::PositionAttitudeTransform* root = new osg::PositionAttitudeTransform();
+    root->addChild(matrixTransform);
+    root->setScale(osg::Vec3(scale, scale, scale));
+    root->setPosition(center);
+
+    //btCollisionShape* cs = osgbCollision::btBoxCollisionShapeFromOSG(modelNode);
+    osg::ref_ptr< osgbDynamics::CreationRecord > cr = new osgbDynamics::CreationRecord;
+    cr->_sceneGraph = matrixTransform;
+    cr->_shapeType = BOX_SHAPE_PROXYTYPE;
+    cr->_mass = mass;
+    cr->_restitution = 1.f;
+    btRigidBody* body = osgbDynamics::createRigidBody(cr.get());
+    matrixTransform->setUserData(new osgbCollision::RefRigidBody(body));
+    dynamicsWorld->addRigidBody(body);
+    srh->add("", body);
+    return root;
 }
 
 void Scene::createScene()
@@ -103,7 +133,8 @@ void Scene::createScene()
     srh->capture();
 
     // BALLE
-    rootNode->addChild(createBall(osg::Vec3( 0., 0., 0. ), 7., 1.f));
+    rootNode->addChild(createBall(osg::Vec3( 0., 0., -18. ), 7., 1.f));
+    //rootNode->addChild(createModel("data/Ball.3ds", osg::Vec3(0., 0., 0.), 0.1, 1.f, srh));
 
     // NIVEAU 1
     rootNode->addChild(createBox(osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 6), 0.f));
