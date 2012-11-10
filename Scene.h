@@ -34,9 +34,7 @@ public:
 private:
     void createLights();
 
-<<<<<<< HEAD
-    osg::MatrixTransform* createBox(const osg::Vec3& center, const osg::Vec3& lengths, float mass); // Ajoute une box
-=======
+
     // Ajoute la balle que le joueur doit déplacer
     osg::MatrixTransform* createBall( const osg::Vec3& center, float radius, float mass );
     // Ajoute une plate-forme
@@ -44,7 +42,7 @@ private:
     // Ajoute un modele
     osg::PositionAttitudeTransform *createModel(const char* filename, const osg::Vec3& center, const float scale,
                                                 float mass, osg::ref_ptr<osgbInteraction::SaveRestoreHandler> srh);
->>>>>>> 6c72a4272753d75b8450a56c567c20ab635291c1
+
     btDynamicsWorld* initBulletEngine(); // Initialise le moteur de physique
 
     btDynamicsWorld * dynamicsWorld;

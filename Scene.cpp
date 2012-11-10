@@ -53,8 +53,6 @@ osg::MatrixTransform* Scene::createBox(const osg::Vec3& center, const osg::Vec3&
     cr->_mass = mass;
     cr->_restitution = 1.f;
     cr->_friction = 1.f;
-    btRigidBody* body = osgbDynamics::createRigidBody( cr.get(), cs );
-    dynamicsWorld->addRigidBody( body );
     btRigidBody* body = osgbDynamics::createRigidBody(cr.get(), cs);
     dynamicsWorld->addRigidBody(body);
 
@@ -111,10 +109,6 @@ void Scene::createScene()
 
     Ball* ball = new Ball(rootNode,dynamicsWorld);
     moduleRegistry->getInputManager()->setBall(ball);
-
-    // BALLE
-    rootNode->addChild(createBall(osg::Vec3( 0., 0., -18. ), 7., 1.f));
-    //rootNode->addChild(createModel("data/Ball.3ds", osg::Vec3(0., 0., 0.), 0.1, 1.f, srh));
 
     // NIVEAU 1
     rootNode->addChild(createBox(osg::Vec3( 0., 0., -25. ), osg::Vec3(300, 300, 6), 0.f));
