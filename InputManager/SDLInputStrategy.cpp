@@ -5,8 +5,8 @@ SDLInputStrategy::SDLInputStrategy() :
     godmode(false),
     inputManager(NULL)
 {
-    SDL_WM_GrabInput(SDL_GRAB_ON);
-    SDL_ShowCursor(SDL_DISABLE);
+    //SDL_WM_GrabInput(SDL_GRAB_ON);
+    //SDL_ShowCursor(SDL_DISABLE);
 }
 
 ReturnStatus SDLInputStrategy::handleInput()
@@ -70,21 +70,21 @@ void SDLInputStrategy::handleKeyContinouslyPressed()
             {
                 inputManager->moveLeft();
             }
-            if(keystate[SDLK_d])
-            {
-                inputManager->moveRight();
-            }
         }
         else
         {
             if(keystate[SDLK_q])
             {
                 inputManager->moveLeft();
-            }
-            if(keystate[SDLK_d])
-            {
-                inputManager->moveRight();
-            }
+            }   
+        }
+        if(keystate[SDLK_d])
+        {
+            inputManager->moveRight();
+        }
+        if(keystate[SDLK_SPACE])
+        {
+            inputManager->jump();
         }
     }
     else
@@ -96,14 +96,7 @@ void SDLInputStrategy::handleKeyContinouslyPressed()
             {
                 inputManager->walk(WALKING_PARALLEL, -SDL_WALKING_DISTANCE);
             }
-            if(keystate[SDLK_s])
-            {
-                inputManager->walk(WALKING_FRONT, -SDL_WALKING_DISTANCE);
-            }
-            if(keystate[SDLK_d])
-            {
-                inputManager->walk(WALKING_PARALLEL, SDL_WALKING_DISTANCE);
-            }
+
             if(keystate[SDLK_w])
             {
                 inputManager->walk(WALKING_FRONT, SDL_WALKING_DISTANCE);
@@ -115,18 +108,18 @@ void SDLInputStrategy::handleKeyContinouslyPressed()
             {
                 inputManager->walk(WALKING_PARALLEL, -SDL_WALKING_DISTANCE);
             }
-            if(keystate[SDLK_s])
-            {
-                inputManager->walk(WALKING_FRONT, -SDL_WALKING_DISTANCE);
-            }
-            if(keystate[SDLK_d])
-            {
-                inputManager->walk(WALKING_PARALLEL, SDL_WALKING_DISTANCE);
-            }
             if(keystate[SDLK_z])
             {
                 inputManager->walk(WALKING_FRONT, SDL_WALKING_DISTANCE);
             }
+        }
+        if(keystate[SDLK_s])
+        {
+            inputManager->walk(WALKING_FRONT, -SDL_WALKING_DISTANCE);
+        }
+        if(keystate[SDLK_d])
+        {
+            inputManager->walk(WALKING_PARALLEL, SDL_WALKING_DISTANCE);
         }
     }
 }

@@ -107,8 +107,9 @@ void Scene::createScene()
 
     srh->capture();
 
-    Ball* ball = new Ball(rootNode,dynamicsWorld);
+    Ball *ball = new Ball(rootNode,dynamicsWorld);
     moduleRegistry->getInputManager()->setBall(ball);
+    ballBody = ball->getBody();
 
     // NIVEAU 1
     rootNode->addChild(createBox(osg::Vec3( 0., 0., -25. ), osg::Vec3(300, 300, 6), 0.f));
@@ -173,6 +174,8 @@ void Scene::run()
     currentTime = osgTimer.tick();
     double elapsed = osgTimer.delta_s(previousTime, currentTime);
     //osg::notify( osg::ALWAYS ) << elapsed << ", " << 1./60. << std::endl;
+    btVector3 velocity = ballBody->getVelocityInLocalPoint(btVector3(0, 0, 0));
+    ballBody->setLinearVelocity(btVector3(velocity.x()/BALL_SLOW_SPEED,velocity.y(),velocity.z()));
     dynamicsWorld->stepSimulation(elapsed,4,1./120.);
     previousTime = currentTime;
 }

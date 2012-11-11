@@ -13,7 +13,7 @@
 class Controller
 {
 public:
-    Controller();
+    Controller(StrategyType strategyType);
 private:
     Window *window;
     InputManager *inputManager;

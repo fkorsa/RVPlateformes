@@ -13,6 +13,8 @@
 
 #include <btBulletDynamicsCommon.h>
 
+#include "Constants.h"
+
 class Ball
 {
 public:
@@ -21,6 +23,8 @@ public:
     void moveLeft();
     void moveRight();
     void jump();
+
+    btRigidBody* getBody();
 
 private:
 

@@ -24,6 +24,9 @@ Ball::Ball(osg::Group* _rootNode, btDynamicsWorld * _dynamicsWorld)
 
     body = osgbDynamics::createRigidBody( cr.get(), cs );
 
+    //body->setRollingFriction(1000.f);
+    body->setFriction(100.f);
+
     _rootNode->addChild(root);
     _dynamicsWorld->addRigidBody(body);
 
@@ -31,15 +34,23 @@ Ball::Ball(osg::Group* _rootNode, btDynamicsWorld * _dynamicsWorld)
 
 void Ball::moveLeft()
 {
-    body->setLinearVelocity(btVector3(10,0,0));
+    btVector3 velocity = body->getVelocityInLocalPoint(btVector3(0, 0, 0));
+    body->setLinearVelocity(btVector3(-BALL_SPEED_CONTROL,velocity.y(),velocity.z()));
 }
 
 void Ball::moveRight()
 {
-    body->setLinearVelocity(btVector3(-10,0,0));
+    btVector3 velocity = body->getVelocityInLocalPoint(btVector3(0, 0, 0));
+    body->setLinearVelocity(btVector3(BALL_SPEED_CONTROL,velocity.y(),velocity.z()));
 }
 
 void Ball::jump()
 {
+    //body->setLinearVelocity(btVector3(0,0,BALL_SPEED_JUMP));
+    body->applyCentralImpulse(btVector3(0,0,BALL_SPEED_JUMP));
+}
 
+btRigidBody *Ball::getBody()
+{
+    return body;
 }

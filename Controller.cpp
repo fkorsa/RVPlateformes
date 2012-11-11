@@ -1,6 +1,6 @@
 #include "Controller.h"
 
-Controller::Controller()
+Controller::Controller(StrategyType strategyType)
 {    
     ModuleRegistry moduleRegistry;
     int loopCnt = 0;

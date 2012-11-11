@@ -13,6 +13,7 @@
 #include <osgbCollision/CollisionShapes.h>
 #include <osgbCollision/RefBulletObject.h>
 #include <osgbDynamics/RigidBody.h>
+#include <osgbDynamics/CreationRecord.h>
 #include <osgbCollision/Utils.h>
 #include <osgbInteraction/SaveRestoreHandler.h>
 #include <osgbInteraction/DragHandler.h>
@@ -50,6 +51,7 @@ private:
     osg::Timer osgTimer;
     osg::Timer_t currentTime;
     osg::Timer_t previousTime;
+    btRigidBody *ballBody;
 };
 
 #endif // SCENE_H

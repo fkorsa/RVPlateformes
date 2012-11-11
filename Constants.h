@@ -25,6 +25,12 @@ enum CameraDirection
     CAMERA_DIRECTION_Y
 };
 
-const float SDL_WALKING_DISTANCE = 0.5;
+const float SDL_WALKING_DISTANCE = 2;
+
+const float BALL_SPEED_CONTROL = 25;
+const float BALL_SPEED_JUMP = 5;
+
+// speed(n+1) = speed(n)/BALL_SLOW_SPEED
+const float BALL_SLOW_SPEED = 1.01;
 
 #endif // CONSTANTS_H
