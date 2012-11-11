@@ -1,8 +1,6 @@
 #include "Scene.h"
 
-Scene::Scene() :
-    previousTime(0),
-    currentTime(0)
+Scene::Scene()
 {
 
     // Bullet Engine initialisation
