@@ -20,7 +20,7 @@ class Platform
 public:
     Platform(ModuleRegistry *moduleRegistry, const osg::Vec3& center, const osg::Vec3& lengths, float mass,
                                             osg::Texture2D* texture);
-    void setTranlatingPlatformParameters(const osg::Vec3& originPoint, const osg::Vec3& endPoint, float movingSpeed);
+    void setTranslatingPlatformParameters(const osg::Vec3& originPoint, const osg::Vec3& endPoint, float movingSpeed);
     PlatformType getPlatformType();
     void update();
 private:

@@ -121,8 +121,9 @@ void Scene::createScene()
     osg::Texture2D* texture1 = new osg::Texture2D;
     texture1->setImage(image1);
 
-    platforms[numPlatforms++] = new Platform(moduleRegistry,
+    platforms[numPlatforms] = new Platform(moduleRegistry,
                                              osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 5), 0.f,texture1);
+    platforms[numPlatforms++]->setTranslatingPlatformParameters(osg::Vec3(0., 0., -25), osg::Vec3(0., 0., -30), 1.);
     platforms[numPlatforms++] = new Platform(moduleRegistry,
                                              osg::Vec3( 60., 0., -15. ), osg::Vec3(30, 30, 5), 0.f,texture1);
     platforms[numPlatforms++] = new Platform(moduleRegistry,
@@ -187,6 +188,7 @@ void Scene::createLights()
 void Scene::run(double elapsed)
 {
     ball->update(elapsed);
+
     text2d->update(elapsed);
     btVector3 velocity = ballBody->getVelocityInLocalPoint(btVector3(0, 0, 0));
     ballBody->setLinearVelocity(btVector3(velocity.x()/BALL_SLOW_SPEED,velocity.y(),velocity.z()));

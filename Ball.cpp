@@ -3,7 +3,6 @@
 Ball::Ball(osg::MatrixTransform *_rootNode, btDynamicsWorld * _dynamicsWorld)
     :allowJump(false), jumping(false), timer()
 {
-
     osg::Sphere* sphere = new osg::Sphere( osg::Vec3(0,0,20) , 7. );
     osg::ShapeDrawable* shape = new osg::ShapeDrawable( sphere );
     shape->setColor( osg::Vec4( 1., 0., 0., 1. ) );
@@ -32,9 +31,6 @@ Ball::Ball(osg::MatrixTransform *_rootNode, btDynamicsWorld * _dynamicsWorld)
     _rootNode->addChild(root);
     _dynamicsWorld->addRigidBody(body,COL_BALL,COL_FLOOR);
     _dynamicsWorld->addCollisionObject(ghost,COL_BALL,COL_FLOOR);
-
-
-
 }
 
 void Ball::update(double elapsed)

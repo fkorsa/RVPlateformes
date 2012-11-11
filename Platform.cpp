@@ -15,6 +15,9 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     // We need a MatrixTransform to move the box around
     matrixTransform = new osg::MatrixTransform;
     matrixTransform->addChild(geode);
+    osg::Matrix matrixOffset;
+    matrixOffset.setTrans(center);
+    //matrixTransform->setMatrix(matrixOffset);
 
     // We add the box to the simulation
     btCollisionShape* cs = osgbCollision::btBoxCollisionShapeFromOSG(geode);
@@ -29,7 +32,7 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     moduleRegistry->getRootNode()->addChild(matrixTransform);
 }
 
-void Platform::setTranlatingPlatformParameters(const osg::Vec3 &originPoint, const osg::Vec3 &endPoint, float movingSpeed)
+void Platform::setTranslatingPlatformParameters(const osg::Vec3 &originPoint, const osg::Vec3 &endPoint, float movingSpeed)
 {
     this->originPoint = originPoint;
     this->endPoint = endPoint;
@@ -47,9 +50,12 @@ void Platform::update()
     switch(platformType)
     {
         case PLATFORM_TRANSLATING:
-            // translate platform
-            break;
-        default:
+            osg::Vec3d platformPosition = matrixTransform->getMatrix().getTrans();
+
+            osg::notify( osg::ALWAYS ) << "Position : x " << platformPosition.x() <<
+                                          " y " << platformPosition.y() <<
+                                          " z " << platformPosition.z() << std::endl;
+            body->setLinearVelocity(btVector3(100, 100, 100));
             break;
     }
 }
