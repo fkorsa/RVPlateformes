@@ -31,7 +31,8 @@ btDynamicsWorld* Scene::initBulletEngine()
 }
 
 // Create a simple box with and add it to the physics engine
-osg::MatrixTransform* Scene::createBox(const osg::Vec3& center, const osg::Vec3& lengths, float mass,osg::Texture2D* texture)
+osg::MatrixTransform* Scene::createBox(const osg::Vec3& center, const osg::Vec3& lengths, float mass,
+                                       osg::Texture2D* texture)
 {
     osg::Box* box = new osg::Box(center, lengths.x(), lengths.y(), lengths.z());
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
