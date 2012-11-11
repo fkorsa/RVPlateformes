@@ -27,20 +27,23 @@ btDynamicsWorld* Scene::initBulletEngine()
     // You can now use: dynamicsWorld->addRigidBody( btRigidBody ); to add an object the simulation
     btDynamicsWorld * dynamicsWorld = new btDiscreteDynamicsWorld( dispatcher, inter, solver, collisionConfiguration );
 
-    dynamicsWorld->setGravity( btVector3( 0, 0, -20.8 ) );
+    dynamicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+    dynamicsWorld->setGravity( btVector3( 0, 0, -190 ) );
 
     return( dynamicsWorld );
 }
 
 // Create a simple box with and add it to the physics engine
-osg::MatrixTransform* Scene::createBox(const osg::Vec3& center, const osg::Vec3& lengths, float mass)
+osg::MatrixTransform* Scene::createBox(const osg::Vec3& center, const osg::Vec3& lengths, float mass,osg::Texture2D* texture)
 {
     osg::Box* box = new osg::Box(center, lengths.x(), lengths.y(), lengths.z());
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
-    shape->setColor(osg::Vec4(1., 1., 1., 1.));
+    osg::StateSet* state = new osg::StateSet();
     osg::Geode* geode = new osg::Geode();
+    shape->setColor(osg::Vec4(1., 1., 1., 1.));
+    state->setTextureAttributeAndModes(0,texture,osg::StateAttribute::ON);
     geode->addDrawable(shape);
-
+    geode->setStateSet(state);
     // We need a MatrixTransform to move the box around
     osg::MatrixTransform* root = new osg::MatrixTransform;
     root->addChild(geode);
@@ -54,7 +57,7 @@ osg::MatrixTransform* Scene::createBox(const osg::Vec3& center, const osg::Vec3&
     cr->_restitution = 1.f;
     cr->_friction = 1.f;
     btRigidBody* body = osgbDynamics::createRigidBody(cr.get(), cs);
-    dynamicsWorld->addRigidBody(body);
+    dynamicsWorld->addRigidBody(body,COL_FLOOR,COL_BALL);
 
     return root;
 }
@@ -107,13 +110,24 @@ void Scene::createScene()
 
     srh->capture();
 
-    Ball *ball = new Ball(rootNode,dynamicsWorld);
+    // 2D TEXT FOR DEBUGGING PURPOSE !
+    text2d = new Text2D(rootNode);
+
+    // THE MIGHTY BALL
+    ball = new Ball(rootNode,dynamicsWorld);
     moduleRegistry->getInputManager()->setBall(ball);
     ballBody = ball->getBody();
 
     // NIVEAU 1
-    rootNode->addChild(createBox(osg::Vec3( 0., 0., -25. ), osg::Vec3(300, 300, 6), 0.f));
-    rootNode->addChild(createBox(osg::Vec3( 60., 0., -25. ), osg::Vec3(30, 30, 6), 0.f));
+    osg::Image* image1 = osgDB::readImageFile("data/bric.jpg");
+    osg::Texture2D* texture1 = new osg::Texture2D;
+    texture1->setImage(image1);
+
+    rootNode->addChild(createBox(osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 5), 0.f,texture1));
+    rootNode->addChild(createBox(osg::Vec3( 60., 0., -15. ), osg::Vec3(30, 30, 5), 0.f,texture1));
+    rootNode->addChild(createBox(osg::Vec3( 120., 0., -5. ), osg::Vec3(30, 30, 5), 0.f,texture1));
+    rootNode->addChild(createBox(osg::Vec3( 180., 0., 5. ), osg::Vec3(30, 30, 5), 0.f,texture1));
+    rootNode->addChild(createBox(osg::Vec3( 260., 0., 5. ), osg::Vec3(50, 50, 5), 0.f,texture1));
 
     moduleRegistry->getSceneView()->setSceneData(rootNode);
 }
@@ -123,25 +137,25 @@ void Scene::createLights()
     // Add light
     osg::Light* light = new osg::Light();
     light->setLightNum(0);
-    light->setPosition(osg::Vec4f(1000.0, 1000.0, -200, 1.0));
-    light->setDiffuse(osg::Vec4f(1, 0.0, 0, 0.5));
+    light->setPosition(osg::Vec4f(50.0, 0.0, 100, 1.0));
+    light->setDiffuse(osg::Vec4f(1.0, 1.0, 1.0, 0.5));
     light->setSpecular(osg::Vec4f(1.0, 1.0, 1.0, 1.0));
     light->setAmbient(osg::Vec4f(0.0, 0.0, 0.0, 1.0));
     osg::LightSource* lightsource = new osg::LightSource();
     lightsource->setLight(light);
     rootNode->addChild(lightsource);
 
-    light = new osg::Light();
-    light->setLightNum(1);
-    light->setPosition(osg::Vec4f(-1000.0, -1000.0, -200, 1.0));
-    light->setDiffuse(osg::Vec4f(0, 1.0, 0, 0.5));
+    /*light = new osg::Light();
+    light->setLightNum(0);
+    light->setPosition(osg::Vec4f(50.0, -100.0, 0.0, 1.0));
+    light->setDiffuse(osg::Vec4f(1.0, 1.0, 1.0, 0.5));
     light->setSpecular(osg::Vec4f(1.0, 1.0, 1.0, 1.0));
     light->setAmbient(osg::Vec4f(0.0, 0.0, 0.0, 1.0));
     lightsource = new osg::LightSource();
     lightsource->setLight(light);
-    rootNode->addChild(lightsource);
+    rootNode->addChild(lightsource);*/
 
-    light = new osg::Light();
+    /*light = new osg::Light();
     light->setLightNum(2);
     light->setPosition(osg::Vec4f(-1000.0, -1000.0, 200, 1.0));
     light->setDiffuse(osg::Vec4f(0, 0, 1, 0.5));
@@ -162,21 +176,18 @@ void Scene::createLights()
     rootNode->addChild(lightsource);
 
     osg::StateSet* stateset = rootNode->getOrCreateStateSet();
-    lightsource->setStateSetModes(*stateset, osg::StateAttribute::ON);
+    lightsource->setStateSetModes(*stateset, osg::StateAttribute::ON);*/
 }
 
 void Scene::run()
 {
-    /*while(osgTimer.delta_s(previousTime, currentTime) < (1.0/60.0))
-    {
-        currentTime = osgTimer.tick();
-    }*/
     currentTime = osgTimer.tick();
     double elapsed = osgTimer.delta_s(previousTime, currentTime);
-    //osg::notify( osg::ALWAYS ) << elapsed << ", " << 1./60. << std::endl;
+    ball->update(elapsed);
+    text2d->update(elapsed);
     btVector3 velocity = ballBody->getVelocityInLocalPoint(btVector3(0, 0, 0));
     ballBody->setLinearVelocity(btVector3(velocity.x()/BALL_SLOW_SPEED,velocity.y(),velocity.z()));
-    dynamicsWorld->stepSimulation(elapsed,4,1./120.);
+    dynamicsWorld->stepSimulation(elapsed,10,1./120.);
     previousTime = currentTime;
 }
 

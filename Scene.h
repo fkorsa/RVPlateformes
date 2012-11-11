@@ -25,6 +25,7 @@
 #include "Module.h"
 #include "InputManager/InputManager.h"
 #include "Ball.h"
+#include "Text2d.h"
 
 class Scene : public Module
 {
@@ -39,7 +40,7 @@ private:
     // Ajoute la balle que le joueur doit déplacer
     osg::MatrixTransform* createBall( const osg::Vec3& center, float radius, float mass );
     // Ajoute une plate-forme
-    osg::MatrixTransform* createBox(const osg::Vec3& center, const osg::Vec3& lengths, float mass);
+    osg::MatrixTransform* createBox(const osg::Vec3& center, const osg::Vec3& lengths, float mass, osg::Texture2D * texture);
     // Ajoute un modele
     osg::PositionAttitudeTransform *createModel(const char* filename, const osg::Vec3& center, const float scale,
                                                 float mass, osg::ref_ptr<osgbInteraction::SaveRestoreHandler> srh);
@@ -52,6 +53,8 @@ private:
     osg::Timer_t currentTime;
     osg::Timer_t previousTime;
     btRigidBody *ballBody;
+    Ball* ball;
+    Text2D* text2d;
 };
 
 #endif // SCENE_H

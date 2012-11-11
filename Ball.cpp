@@ -1,6 +1,7 @@
 #include "Ball.h"
 
 Ball::Ball(osg::Group* _rootNode, btDynamicsWorld * _dynamicsWorld)
+    :allowJump(false), jumping(false), timer()
 {
 
     osg::Sphere* sphere = new osg::Sphere( osg::Vec3(0,0,20) , 7. );
@@ -14,38 +15,85 @@ Ball::Ball(osg::Group* _rootNode, btDynamicsWorld * _dynamicsWorld)
     root->addChild( geode );
 
     // We add the box to the simulation
-    btCollisionShape* cs = osgbCollision::btSphereCollisionShapeFromOSG( geode );
+    btCollisionShape* cs = new btSphereShape(6.9f);
     osg::ref_ptr< osgbDynamics::CreationRecord > cr = new osgbDynamics::CreationRecord;
     cr->_sceneGraph = root;
     cr->_shapeType = SPHERE_SHAPE_PROXYTYPE;
     cr->_mass = 3.f;
-    cr->_restitution = 1.f;
+    cr->_restitution = 0.0f;
     cr->_friction = 1.f;
 
     body = osgbDynamics::createRigidBody( cr.get(), cs );
 
-    //body->setRollingFriction(1000.f);
-    body->setFriction(100.f);
+    ghost = new btPairCachingGhostObject();
+    ghost->setCollisionShape (cs);
+    ghost->setCollisionFlags (btCollisionObject::CF_CHARACTER_OBJECT);
 
     _rootNode->addChild(root);
-    _dynamicsWorld->addRigidBody(body);
+    _dynamicsWorld->addRigidBody(body,COL_BALL,COL_FLOOR);
+    _dynamicsWorld->addCollisionObject(ghost,COL_BALL,COL_FLOOR);
+
+
+
+}
+
+void Ball::update(double elapsed) {
+
+    allowJump = false;
+
+    // Superpose the ghost and the ball
+    ghost->setWorldTransform(body->getWorldTransform());
+    btBroadphasePairArray& pairArray = ghost->getOverlappingPairCache()->getOverlappingPairArray();
+    // Il faut déterminer si la sphère touche le sol pour voir si droit de sauter
+    for (int i=0;i<pairArray.size();i++)
+    {
+        const btBroadphasePair& pair = pairArray[i];
+        if (pair.m_pProxy1->m_collisionFilterGroup == COL_FLOOR) {
+            // Ball touche le sol
+            allowJump = true;
+            //osg::notify( osg::ALWAYS ) << "TOUCHE SOL" << std::endl;
+            // Slow the ball down as it touches the ground
+            body->applyCentralForce(body->getLinearVelocity()*-13.f);
+            break;
+        }
+    }
+
+    if (jumping) {
+        osg::notify( osg::ALWAYS ) << "JUMP " << std::endl;
+        timer += elapsed;
+        if (timer>1./10.) jumping = false;
+        body->applyCentralForce(btVector3(0.,0.,3000.));
+    } else {
+        timer = 0;
+    }
 
 }
 
 void Ball::moveLeft()
 {
+<<<<<<< HEAD
     btVector3 velocity = body->getVelocityInLocalPoint(btVector3(0, 0, 0));
     body->setLinearVelocity(btVector3(-BALL_SPEED_CONTROL,velocity.y(),velocity.z()));
+=======
+    if (allowJump)
+        body->applyCentralForce(btVector3(-850.,0.,0.));
+>>>>>>> 86f12814594054596595b1e5f8128c511d52d7fb
 }
 
 void Ball::moveRight()
 {
+<<<<<<< HEAD
     btVector3 velocity = body->getVelocityInLocalPoint(btVector3(0, 0, 0));
     body->setLinearVelocity(btVector3(BALL_SPEED_CONTROL,velocity.y(),velocity.z()));
+=======
+    if (allowJump)
+        body->applyCentralForce(btVector3(850.,0.,0.));
+>>>>>>> 86f12814594054596595b1e5f8128c511d52d7fb
 }
 
 void Ball::jump()
 {
+<<<<<<< HEAD
     //body->setLinearVelocity(btVector3(0,0,BALL_SPEED_JUMP));
     body->applyCentralImpulse(btVector3(0,0,BALL_SPEED_JUMP));
 }
@@ -53,4 +101,9 @@ void Ball::jump()
 btRigidBody *Ball::getBody()
 {
     return body;
+=======
+    if (allowJump) {
+        jumping= true;
+    }
+>>>>>>> 86f12814594054596595b1e5f8128c511d52d7fb
 }
