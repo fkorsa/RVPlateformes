@@ -10,7 +10,8 @@ SOURCES += \
     Text2d.cpp \
     InputManager.cpp \
     SDLInputStrategy.cpp \
-    SDLWindow.cpp
+    SDLWindow.cpp \
+    Platform.cpp
 
 HEADERS += \
     Controller.h \
@@ -22,7 +23,8 @@ HEADERS += \
     Text2d.h \
     InputManager.h \
     SDLInputStrategy.h \
-    SDLWindow.h
+    SDLWindow.h \
+    Platform.h
 
 # SDL
 LIBS += -L/usr/lib -lSDL -lSDL_image -lSDL_ttf

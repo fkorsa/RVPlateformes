@@ -2,6 +2,7 @@
 #define MODULEREGISTRY_H
 
 #include <osgUtil/SceneView>
+#include <btBulletDynamicsCommon.h>
 
 class SDLWindow;
 class InputManager;
@@ -31,6 +32,9 @@ public:
     void registerCamera(osg::ref_ptr<osg::Camera> camera);
     osg::ref_ptr<osg::Camera> getCamera();
 
+    void registerDynamicsWorld(btDynamicsWorld *dynamicsWorld);
+    btDynamicsWorld* getDynamicsWorld();
+
 private:
     SDLWindow *window;
     InputManager *inputManager;
@@ -39,6 +43,7 @@ private:
     osg::ref_ptr<osg::Camera> playerCamera;
     osg::MatrixTransform *rootNode;
     osgUtil::SceneView *sceneView;
+    btDynamicsWorld *dynamicsWorld;
 };
 
 #endif // MODULEREGISTRY_H

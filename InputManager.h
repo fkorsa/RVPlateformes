@@ -6,7 +6,6 @@
 #include "Ball.h"
 
 #include <osg/Math>
-#include <QDebug>
 
 class InputManager : public Module
 {

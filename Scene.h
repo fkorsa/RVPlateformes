@@ -24,6 +24,7 @@
 #include "InputManager.h"
 #include "Ball.h"
 #include "Text2d.h"
+#include "Platform.h"
 
 class Scene : public Module
 {
@@ -50,6 +51,8 @@ private:
     btRigidBody *ballBody;
     Ball* ball;
     Text2D* text2d;
+    Platform *platforms[100];
+    int numPlatforms;
 };
 
 #endif // SCENE_H

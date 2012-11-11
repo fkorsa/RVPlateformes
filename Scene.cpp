@@ -1,6 +1,7 @@
 #include "Scene.h"
 
-Scene::Scene()
+Scene::Scene() :
+    numPlatforms(0)
 {
 
     // Bullet Engine initialisation
@@ -65,11 +66,6 @@ osg::PositionAttitudeTransform* Scene::createModel(const char *filename, const o
                                                    osg::ref_ptr<osgbInteraction::SaveRestoreHandler> srh)
 {
     osg::Node* modelNode = osgDB::readNodeFile(filename);
-    if(modelNode == NULL)
-    {
-        qDebug() << "Can't load model.";
-        return(NULL);
-    }
 
     // We need a MatrixTransform to move the box around
     osg::MatrixTransform* matrixTransform = new osg::MatrixTransform;
@@ -97,6 +93,8 @@ void Scene::createScene()
 {
     rootNode = moduleRegistry->getRootNode();
 
+    moduleRegistry->registerDynamicsWorld(dynamicsWorld);
+
     // How to add a model to the scene
     /*osg::Node *  model = osgDB::readNodeFile("data/starthing.obj");
     osg::PositionAttitudeTransform * modelPAT = new osg::PositionAttitudeTransform();
@@ -123,11 +121,16 @@ void Scene::createScene()
     osg::Texture2D* texture1 = new osg::Texture2D;
     texture1->setImage(image1);
 
-    rootNode->addChild(createBox(osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 5), 0.f,texture1));
-    rootNode->addChild(createBox(osg::Vec3( 60., 0., -15. ), osg::Vec3(30, 30, 5), 0.f,texture1));
-    rootNode->addChild(createBox(osg::Vec3( 120., 0., -5. ), osg::Vec3(30, 30, 5), 0.f,texture1));
-    rootNode->addChild(createBox(osg::Vec3( 180., 0., 5. ), osg::Vec3(30, 30, 5), 0.f,texture1));
-    rootNode->addChild(createBox(osg::Vec3( 260., 0., 5. ), osg::Vec3(50, 50, 5), 0.f,texture1));
+    platforms[numPlatforms++] = new Platform(moduleRegistry,
+                                             osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 5), 0.f,texture1);
+    platforms[numPlatforms++] = new Platform(moduleRegistry,
+                                             osg::Vec3( 60., 0., -15. ), osg::Vec3(30, 30, 5), 0.f,texture1);
+    platforms[numPlatforms++] = new Platform(moduleRegistry,
+                                             osg::Vec3( 120., 0., -5. ), osg::Vec3(30, 30, 5), 0.f,texture1);
+    platforms[numPlatforms++] = new Platform(moduleRegistry,
+                                             osg::Vec3( 180., 0., 5. ), osg::Vec3(30, 30, 5), 0.f,texture1);
+    platforms[numPlatforms++] = new Platform(moduleRegistry,
+                                             osg::Vec3( 260., 0., 5. ), osg::Vec3(50, 50, 5), 0.f,texture1);
 
 #ifndef VRJUGGLER
     moduleRegistry->getSceneView()->setSceneData(rootNode);
@@ -187,6 +190,13 @@ void Scene::run(double elapsed)
     text2d->update(elapsed);
     btVector3 velocity = ballBody->getVelocityInLocalPoint(btVector3(0, 0, 0));
     ballBody->setLinearVelocity(btVector3(velocity.x()/BALL_SLOW_SPEED,velocity.y(),velocity.z()));
+    for(int i = 0;i<numPlatforms;i++)
+    {
+        if(platforms[i]->getPlatformType()!=PLATFORM_STATIC)
+        {
+            platforms[i]->update();
+        }
+    }
     dynamicsWorld->stepSimulation(elapsed,10,1./120.);
 }
 

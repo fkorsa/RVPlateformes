@@ -63,3 +63,13 @@ osg::ref_ptr<osg::Camera> ModuleRegistry::getCamera()
 {
     return playerCamera;
 }
+
+void ModuleRegistry::registerDynamicsWorld(btDynamicsWorld *dynamicsWorld)
+{
+    this->dynamicsWorld = dynamicsWorld;
+}
+
+btDynamicsWorld *ModuleRegistry::getDynamicsWorld()
+{
+    return dynamicsWorld;
+}
