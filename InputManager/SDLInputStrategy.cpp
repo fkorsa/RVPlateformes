@@ -74,6 +74,10 @@ void SDLInputStrategy::handleKeyContinouslyPressed()
             {
                 inputManager->moveRight();
             }
+            if(keystate[SDLK_SPACE])
+            {
+                inputManager->jump();
+            }
         }
         else
         {
@@ -84,6 +88,10 @@ void SDLInputStrategy::handleKeyContinouslyPressed()
             if(keystate[SDLK_d])
             {
                 inputManager->moveRight();
+            }
+            if(keystate[SDLK_SPACE])
+            {
+                inputManager->jump();
             }
         }
     }

@@ -7,7 +7,8 @@ SOURCES += \
     ModuleRegistry.cpp \
     Module.cpp \
     Scene.cpp \
-    Ball.cpp
+    Ball.cpp \
+    Text2d.cpp
 
 HEADERS += \
     Controller.h \
@@ -15,14 +16,16 @@ HEADERS += \
     ModuleRegistry.h \
     Module.h \
     Scene.h \
-    Ball.h
+    Ball.h \
+    Text2d.h
 
 
 # SDL
 LIBS += -L/usr/lib -lSDL -lSDL_image -lSDL_ttf
-LIBS += -L/usr/lib -losg -losgUtil -losgDB -losgGA -losgViewer
 INCLUDEPATH = /usr/include/SDL
 
+#OSG
+LIBS += -L/usr/lib -losg -losgUtil -losgDB -losgGA -losgViewer -losgText
 
 # BULLET
 LIBS += -L/usr/local/lib/ -lBulletDynamics -lBulletCollision -lLinearMath

@@ -1,7 +1,7 @@
 #include "Ball.h"
 
 Ball::Ball(osg::Group* _rootNode, btDynamicsWorld * _dynamicsWorld)
-    :allowJump(false)
+    :allowJump(false), jumping(false), timer()
 {
 
     osg::Sphere* sphere = new osg::Sphere( osg::Vec3(0,0,20) , 7. );
@@ -15,12 +15,12 @@ Ball::Ball(osg::Group* _rootNode, btDynamicsWorld * _dynamicsWorld)
     root->addChild( geode );
 
     // We add the box to the simulation
-    btCollisionShape* cs = osgbCollision::btSphereCollisionShapeFromOSG( geode );
+    btCollisionShape* cs = new btSphereShape(6.9f);
     osg::ref_ptr< osgbDynamics::CreationRecord > cr = new osgbDynamics::CreationRecord;
     cr->_sceneGraph = root;
     cr->_shapeType = SPHERE_SHAPE_PROXYTYPE;
     cr->_mass = 3.f;
-    cr->_restitution = 1.f;
+    cr->_restitution = 0.0f;
     cr->_friction = 1.f;
 
     body = osgbDynamics::createRigidBody( cr.get(), cs );
@@ -37,7 +37,7 @@ Ball::Ball(osg::Group* _rootNode, btDynamicsWorld * _dynamicsWorld)
 
 }
 
-void Ball::update() {
+void Ball::update(double elapsed) {
 
     allowJump = false;
 
@@ -51,24 +51,39 @@ void Ball::update() {
         if (pair.m_pProxy1->m_collisionFilterGroup == COL_FLOOR) {
             // Ball touche le sol
             allowJump = true;
-            osg::notify( osg::ALWAYS ) << "TOUCHE SOL" << std::endl;
+            //osg::notify( osg::ALWAYS ) << "TOUCHE SOL" << std::endl;
+            // Slow the ball down as it touches the ground
+            body->applyCentralForce(body->getLinearVelocity()*-13.f);
             break;
         }
+    }
+
+    if (jumping) {
+        osg::notify( osg::ALWAYS ) << "JUMP " << std::endl;
+        timer += elapsed;
+        if (timer>1./10.) jumping = false;
+        body->applyCentralForce(btVector3(0.,0.,3000.));
+    } else {
+        timer = 0;
     }
 
 }
 
 void Ball::moveLeft()
 {
-    body->setLinearVelocity(btVector3(10,0,0));
+    if (allowJump)
+        body->applyCentralForce(btVector3(-850.,0.,0.));
 }
 
 void Ball::moveRight()
 {
-    body->setLinearVelocity(btVector3(-10,0,0));
+    if (allowJump)
+        body->applyCentralForce(btVector3(850.,0.,0.));
 }
 
 void Ball::jump()
 {
-
+    if (allowJump) {
+        jumping= true;
+    }
 }

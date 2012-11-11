@@ -22,11 +22,12 @@ public:
     void moveRight();
     void jump();
 
-    void update();
+    void update(double elapsed);
 
 private:
 
-    bool allowJump;
+    double timer;
+    bool allowJump, jumping;
     osg::Group* rootNode;
     btDynamicsWorld * dynamicsWorld;
     osg::ref_ptr<osg::MatrixTransform> root;
