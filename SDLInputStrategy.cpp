@@ -1,3 +1,7 @@
+#define SDL
+
+#ifdef SDL
+
 #include "SDLInputStrategy.h"
 
 SDLInputStrategy::SDLInputStrategy() :
@@ -135,3 +139,5 @@ void SDLInputStrategy::handleMouseMotion(SDL_Event event)
         inputManager->rotateCamera(CAMERA_DIRECTION_Y, ((float)event.motion.yrel)/100);
     }
 }
+
+#endif //SDL

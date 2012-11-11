@@ -1,6 +1,10 @@
-#include "SDLWindowStrategy.h"
+#define SDL
 
-SDLWindowStrategy::SDLWindowStrategy(ModuleRegistry *moduleRegistry)
+#ifdef SDL
+
+#include "SDLWindow.h"
+
+SDLWindow::SDLWindow(ModuleRegistry *moduleRegistry)
 {
     //SDL init
     SDL_Init(SDL_INIT_VIDEO);
@@ -22,10 +26,12 @@ SDLWindowStrategy::SDLWindowStrategy(ModuleRegistry *moduleRegistry)
     moduleRegistry->registerCamera(playerCamera);
 }
 
-void SDLWindowStrategy::draw()
+void SDLWindow::draw()
 {
     sceneView->update();
     sceneView->cull();
     sceneView->draw();
     SDL_GL_SwapBuffers();
 }
+
+#endif // SDL

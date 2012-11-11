@@ -4,7 +4,6 @@ Scene::Scene() :
     previousTime(0),
     currentTime(0)
 {
-    rootNode = new osg::Group;
 
     // Bullet Engine initialisation
     // TODO: cleaning bullet before closing app.
@@ -97,12 +96,14 @@ osg::PositionAttitudeTransform* Scene::createModel(const char *filename, const o
 
 void Scene::createScene()
 {
+    rootNode = moduleRegistry->getRootNode();
+
     // How to add a model to the scene
-    osg::Node *  model = osgDB::readNodeFile("data/starthing.obj");
+    /*osg::Node *  model = osgDB::readNodeFile("data/starthing.obj");
     osg::PositionAttitudeTransform * modelPAT = new osg::PositionAttitudeTransform();
     modelPAT->setPosition(osg::Vec3d(0, 0, -200));
     modelPAT->addChild(model);
-    rootNode->addChild(modelPAT);
+    rootNode->addChild(modelPAT);*/
 
     createLights();
 
@@ -129,7 +130,9 @@ void Scene::createScene()
     rootNode->addChild(createBox(osg::Vec3( 180., 0., 5. ), osg::Vec3(30, 30, 5), 0.f,texture1));
     rootNode->addChild(createBox(osg::Vec3( 260., 0., 5. ), osg::Vec3(50, 50, 5), 0.f,texture1));
 
+#ifndef VRJUGGLER
     moduleRegistry->getSceneView()->setSceneData(rootNode);
+#endif
 }
 
 void Scene::createLights()
@@ -179,16 +182,13 @@ void Scene::createLights()
     lightsource->setStateSetModes(*stateset, osg::StateAttribute::ON);*/
 }
 
-void Scene::run()
+void Scene::run(double elapsed)
 {
-    currentTime = osgTimer.tick();
-    double elapsed = osgTimer.delta_s(previousTime, currentTime);
     ball->update(elapsed);
     text2d->update(elapsed);
     btVector3 velocity = ballBody->getVelocityInLocalPoint(btVector3(0, 0, 0));
     ballBody->setLinearVelocity(btVector3(velocity.x()/BALL_SLOW_SPEED,velocity.y(),velocity.z()));
     dynamicsWorld->stepSimulation(elapsed,10,1./120.);
-    previousTime = currentTime;
 }
 
 \

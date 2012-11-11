@@ -1,6 +1,6 @@
 #include "Ball.h"
 
-Ball::Ball(osg::Group* _rootNode, btDynamicsWorld * _dynamicsWorld)
+Ball::Ball(osg::MatrixTransform *_rootNode, btDynamicsWorld * _dynamicsWorld)
     :allowJump(false), jumping(false), timer()
 {
 
@@ -88,11 +88,9 @@ void Ball::moveRight()
 
 void Ball::jump()
 {
-    //body->setLinearVelocity(btVector3(0,0,BALL_SPEED_JUMP));
     if(allowJump)
     {
         jumping= true;
-        body->applyCentralImpulse(btVector3(0,0,BALL_SPEED_JUMP));
     }
 }
 

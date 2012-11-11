@@ -18,7 +18,7 @@
 class Ball
 {
 public:
-    Ball(osg::Group* _rootNode,btDynamicsWorld * _dynamicsWorld);
+    Ball(osg::MatrixTransform* _rootNode,btDynamicsWorld * _dynamicsWorld);
 
     void moveLeft();
     void moveRight();
@@ -32,7 +32,7 @@ private:
 
     double timer;
     bool allowJump, jumping;
-    osg::Group* rootNode;
+    osg::MatrixTransform* rootNode;
     btDynamicsWorld * dynamicsWorld;
     osg::ref_ptr<osg::MatrixTransform> root;
     btRigidBody* body;

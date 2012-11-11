@@ -1,5 +1,4 @@
-include(InputManager/InputManager.pri)
-include(Window/Window.pri)
+include(VRJuggler/VRJuggler.pri)
 
 SOURCES += \
     main.cpp \
@@ -8,7 +7,10 @@ SOURCES += \
     Module.cpp \
     Scene.cpp \
     Ball.cpp \
-    Text2d.cpp
+    Text2d.cpp \
+    InputManager.cpp \
+    SDLInputStrategy.cpp \
+    SDLWindow.cpp
 
 HEADERS += \
     Controller.h \
@@ -17,8 +19,10 @@ HEADERS += \
     Module.h \
     Scene.h \
     Ball.h \
-    Text2d.h
-
+    Text2d.h \
+    InputManager.h \
+    SDLInputStrategy.h \
+    SDLWindow.h
 
 # SDL
 LIBS += -L/usr/lib -lSDL -lSDL_image -lSDL_ttf

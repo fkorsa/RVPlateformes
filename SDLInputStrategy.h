@@ -1,13 +1,17 @@
 #ifndef SDLINPUTMANAGERSTRATEGY_H
 #define SDLINPUTMANAGERSTRATEGY_H
 
+#define SDL
+
+#ifdef SDL
+
 #include <SDL/SDL.h>
 
 #include <QDebug>
 
-#include "InputStrategy.h"
+#include "InputManager.h"
 
-class SDLInputStrategy : public InputStrategy
+class SDLInputStrategy : public Module
 {
 public:
     SDLInputStrategy();
@@ -20,4 +24,5 @@ private:
     InputManager *inputManager;
 };
 
+#endif // SDL
 #endif // SDLINPUTMANAGERSTRATEGY_H

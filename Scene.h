@@ -20,10 +20,8 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include <QDebug>
-
 #include "Module.h"
-#include "InputManager/InputManager.h"
+#include "InputManager.h"
 #include "Ball.h"
 #include "Text2d.h"
 
@@ -32,7 +30,7 @@ class Scene : public Module
 public:
     Scene();
     void createScene();
-    void run();
+    void run(double elapsed);
 private:
     void createLights();
 
@@ -48,10 +46,7 @@ private:
     btDynamicsWorld* initBulletEngine(); // Initialise le moteur de physique
 
     btDynamicsWorld * dynamicsWorld;
-    osg::Group *rootNode;
-    osg::Timer osgTimer;
-    osg::Timer_t currentTime;
-    osg::Timer_t previousTime;
+    osg::MatrixTransform *rootNode;
     btRigidBody *ballBody;
     Ball* ball;
     Text2D* text2d;

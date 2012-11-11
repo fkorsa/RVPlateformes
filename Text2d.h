@@ -14,7 +14,7 @@
 class Text2D
 {
 public:
-    Text2D(osg::Group* rootNode);
+    Text2D(osg::MatrixTransform* rootNode);
 
     void update(double elapsed);
     std::ostringstream* print();
@@ -22,7 +22,7 @@ public:
 private:
     std::ostringstream output;
     osgText::Text* text;
-    osg::Group* rootNode;
+    osg::Node* rootNode;
     double timer;
     int frameCount;
     std::string fps;

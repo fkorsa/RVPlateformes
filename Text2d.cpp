@@ -1,6 +1,6 @@
 #include "Text2d.h"
 
-Text2D::Text2D(osg::Group* rootNode)
+Text2D::Text2D(osg::MatrixTransform *rootNode)
     :rootNode(rootNode), timer(0), frameCount(0)
 {
 
@@ -30,7 +30,8 @@ void Text2D::update(double elapsed)
 {
     timer += elapsed;
     frameCount++;
-    if (timer>1.) {
+    if (timer>1.)
+    {
         std::ostringstream ss; ss <<frameCount;
         fps = "FPS: " + ss.str();
         frameCount = 0;

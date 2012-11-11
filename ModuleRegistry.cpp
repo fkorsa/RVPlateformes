@@ -4,12 +4,12 @@ ModuleRegistry::ModuleRegistry()
 {
 }
 
-void ModuleRegistry::registerWindow(Window *window)
+void ModuleRegistry::registerWindow(SDLWindow *window)
 {
     this->window = window;
 }
 
-Window *ModuleRegistry::getWindow()
+SDLWindow *ModuleRegistry::getWindow()
 {
     return window;
 }
@@ -24,14 +24,14 @@ InputManager *ModuleRegistry::getInputManager()
     return inputManager;
 }
 
-void ModuleRegistry::registerSceneView(osgUtil::SceneView *sceneView)
+void ModuleRegistry::registerRootNode(osg::MatrixTransform *rootNode)
 {
-    this->sceneView = sceneView;
+    this->rootNode = rootNode;
 }
 
-osgUtil::SceneView* ModuleRegistry::getSceneView()
+osg::MatrixTransform *ModuleRegistry::getRootNode()
 {
-    return sceneView;
+    return rootNode;
 }
 
 void ModuleRegistry::registerScene(Scene *scene)
@@ -42,6 +42,16 @@ void ModuleRegistry::registerScene(Scene *scene)
 Scene* ModuleRegistry::getScene()
 {
     return scene;
+}
+
+void ModuleRegistry::registerSceneView(osgUtil::SceneView *sceneView)
+{
+    this->sceneView = sceneView;
+}
+
+osgUtil::SceneView *ModuleRegistry::getSceneView()
+{
+    return sceneView;
 }
 
 void ModuleRegistry::registerCamera(osg::ref_ptr<osg::Camera> camera)
