@@ -71,39 +71,27 @@ void Ball::update(double elapsed) {
 
 void Ball::moveLeft()
 {
-<<<<<<< HEAD
-    btVector3 velocity = body->getVelocityInLocalPoint(btVector3(0, 0, 0));
-    body->setLinearVelocity(btVector3(-BALL_SPEED_CONTROL,velocity.y(),velocity.z()));
-=======
-    if (allowJump)
+    if(allowJump)
         body->applyCentralForce(btVector3(-850.,0.,0.));
->>>>>>> 86f12814594054596595b1e5f8128c511d52d7fb
 }
 
 void Ball::moveRight()
 {
-<<<<<<< HEAD
-    btVector3 velocity = body->getVelocityInLocalPoint(btVector3(0, 0, 0));
-    body->setLinearVelocity(btVector3(BALL_SPEED_CONTROL,velocity.y(),velocity.z()));
-=======
-    if (allowJump)
+    if(allowJump)
         body->applyCentralForce(btVector3(850.,0.,0.));
->>>>>>> 86f12814594054596595b1e5f8128c511d52d7fb
 }
 
 void Ball::jump()
 {
-<<<<<<< HEAD
     //body->setLinearVelocity(btVector3(0,0,BALL_SPEED_JUMP));
     body->applyCentralImpulse(btVector3(0,0,BALL_SPEED_JUMP));
+    if(allowJump)
+    {
+        jumping= true;
+    }
 }
 
 btRigidBody *Ball::getBody()
 {
     return body;
-=======
-    if (allowJump) {
-        jumping= true;
-    }
->>>>>>> 86f12814594054596595b1e5f8128c511d52d7fb
 }
