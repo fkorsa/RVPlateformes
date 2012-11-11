@@ -27,7 +27,8 @@ btDynamicsWorld* Scene::initBulletEngine()
     // You can now use: dynamicsWorld->addRigidBody( btRigidBody ); to add an object the simulation
     btDynamicsWorld * dynamicsWorld = new btDiscreteDynamicsWorld( dispatcher, inter, solver, collisionConfiguration );
 
-    dynamicsWorld->setGravity( btVector3( 0, 0, -20.8 ) );
+    dynamicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+    dynamicsWorld->setGravity( btVector3( 0, 0, -40.8 ) );
 
     return( dynamicsWorld );
 }
@@ -54,7 +55,7 @@ osg::MatrixTransform* Scene::createBox(const osg::Vec3& center, const osg::Vec3&
     cr->_restitution = 1.f;
     cr->_friction = 1.f;
     btRigidBody* body = osgbDynamics::createRigidBody(cr.get(), cs);
-    dynamicsWorld->addRigidBody(body);
+    dynamicsWorld->addRigidBody(body,COL_FLOOR,COL_BALL);
 
     return root;
 }
@@ -107,7 +108,7 @@ void Scene::createScene()
 
     srh->capture();
 
-    Ball* ball = new Ball(rootNode,dynamicsWorld);
+    ball = new Ball(rootNode,dynamicsWorld);
     moduleRegistry->getInputManager()->setBall(ball);
 
     // NIVEAU 1
@@ -170,6 +171,7 @@ void Scene::run()
     {
         currentTime = osgTimer.tick();
     }*/
+    ball->update();
     currentTime = osgTimer.tick();
     double elapsed = osgTimer.delta_s(previousTime, currentTime);
     //osg::notify( osg::ALWAYS ) << elapsed << ", " << 1./60. << std::endl;

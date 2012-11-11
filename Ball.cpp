@@ -1,6 +1,7 @@
 #include "Ball.h"
 
 Ball::Ball(osg::Group* _rootNode, btDynamicsWorld * _dynamicsWorld)
+    :allowJump(false)
 {
 
     osg::Sphere* sphere = new osg::Sphere( osg::Vec3(0,0,20) , 7. );
@@ -24,8 +25,36 @@ Ball::Ball(osg::Group* _rootNode, btDynamicsWorld * _dynamicsWorld)
 
     body = osgbDynamics::createRigidBody( cr.get(), cs );
 
+    ghost = new btPairCachingGhostObject();
+    ghost->setCollisionShape (cs);
+    ghost->setCollisionFlags (btCollisionObject::CF_CHARACTER_OBJECT);
+
     _rootNode->addChild(root);
-    _dynamicsWorld->addRigidBody(body);
+    _dynamicsWorld->addRigidBody(body,COL_BALL,COL_FLOOR);
+    _dynamicsWorld->addCollisionObject(ghost,COL_BALL,COL_FLOOR);
+
+
+
+}
+
+void Ball::update() {
+
+    allowJump = false;
+
+    // Superpose the ghost and the ball
+    ghost->setWorldTransform(body->getWorldTransform());
+    btBroadphasePairArray& pairArray = ghost->getOverlappingPairCache()->getOverlappingPairArray();
+    // Il faut déterminer si la sphère touche le sol pour voir si droit de sauter
+    for (int i=0;i<pairArray.size();i++)
+    {
+        const btBroadphasePair& pair = pairArray[i];
+        if (pair.m_pProxy1->m_collisionFilterGroup == COL_FLOOR) {
+            // Ball touche le sol
+            allowJump = true;
+            osg::notify( osg::ALWAYS ) << "TOUCHE SOL" << std::endl;
+            break;
+        }
+    }
 
 }
 

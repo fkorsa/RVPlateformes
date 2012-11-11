@@ -50,6 +50,7 @@ private:
     osg::Timer osgTimer;
     osg::Timer_t currentTime;
     osg::Timer_t previousTime;
+    Ball* ball;
 };
 
 #endif // SCENE_H
