@@ -37,7 +37,8 @@ Ball::Ball(osg::Group* _rootNode, btDynamicsWorld * _dynamicsWorld)
 
 }
 
-void Ball::update(double elapsed) {
+void Ball::update(double elapsed)
+{
 
     allowJump = false;
 
@@ -48,7 +49,8 @@ void Ball::update(double elapsed) {
     for (int i=0;i<pairArray.size();i++)
     {
         const btBroadphasePair& pair = pairArray[i];
-        if (pair.m_pProxy1->m_collisionFilterGroup == COL_FLOOR) {
+        if (pair.m_pProxy1->m_collisionFilterGroup == COL_FLOOR)
+        {
             // Ball touche le sol
             allowJump = true;
             //osg::notify( osg::ALWAYS ) << "TOUCHE SOL" << std::endl;
@@ -58,12 +60,15 @@ void Ball::update(double elapsed) {
         }
     }
 
-    if (jumping) {
+    if (jumping)
+    {
         osg::notify( osg::ALWAYS ) << "JUMP " << std::endl;
         timer += elapsed;
         if (timer>1./10.) jumping = false;
         body->applyCentralForce(btVector3(0.,0.,3000.));
-    } else {
+    }
+    else
+    {
         timer = 0;
     }
 
@@ -84,10 +89,10 @@ void Ball::moveRight()
 void Ball::jump()
 {
     //body->setLinearVelocity(btVector3(0,0,BALL_SPEED_JUMP));
-    body->applyCentralImpulse(btVector3(0,0,BALL_SPEED_JUMP));
     if(allowJump)
     {
         jumping= true;
+        body->applyCentralImpulse(btVector3(0,0,BALL_SPEED_JUMP));
     }
 }
 

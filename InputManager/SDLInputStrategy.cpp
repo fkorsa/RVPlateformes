@@ -5,8 +5,8 @@ SDLInputStrategy::SDLInputStrategy() :
     godmode(false),
     inputManager(NULL)
 {
-    //SDL_WM_GrabInput(SDL_GRAB_ON);
-    //SDL_ShowCursor(SDL_DISABLE);
+    SDL_WM_GrabInput(SDL_GRAB_ON);
+    SDL_ShowCursor(SDL_DISABLE);
 }
 
 ReturnStatus SDLInputStrategy::handleInput()
