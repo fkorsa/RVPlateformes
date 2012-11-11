@@ -33,14 +33,14 @@ public:
         return vpr::ReturnStatus::Succeed;
     }
 
-    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+    virtual void writeObject(vpr::ObjectWriter* writer)
     {
         const float* pos_data = mCurPos.getData();
         for ( int n=0;n<16;n++ )
         {
             writer->writeFloat(pos_data[n]);
         }
-        return vpr::ReturnStatus::Succeed;
+        return;
     }
 public:
     gmtl::Matrix44f mCurPos;      /**< Current position */

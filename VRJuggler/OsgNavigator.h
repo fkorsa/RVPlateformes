@@ -80,7 +80,7 @@ public:
         }
         if (!mNavData.isLocal())
         {
-            std::cout << "Data is NOT local, returning.\n";
+            //std::cout << "Data is NOT local, returning.\n";
             return;
         }
         // Clamp delta
