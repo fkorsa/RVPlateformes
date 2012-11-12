@@ -43,28 +43,40 @@ Platform* Platform::setMass(float mass)
     body->setMassProps(mass,btVector3(0.,0.,0.));
 }
 
+// Make the platform move between its creating point (startPoint) and the parameter endPoint, at
+// speed movingSpeed (which is in an arbitrary unit)
 Platform* Platform::setTranslatingPlatformParameters(const osg::Vec3 &endPoint, float movingSpeed)
 {
     this->endPoint = endPoint;
     this->movingSpeed = movingSpeed;
+    // Initialize the movement direction to be toward the endPoint
     movesTowardEnd = true;
+    // Set the platform type to be a moving platform
     isPlatformMoving = true;
+    // Initialize the position of the platform
     currentPos = startPoint;
     return this;
 }
 
 void Platform::update(double elapsed)
 {
-    if(isPlatformMoving)
+    // If the time elapsed is too great, do nothing
+    if(elapsed < 1)
     {
-        osg::Vec3 movingVector;
-        double localSpeed = movingSpeed * elapsed;
-        if(elapsed < 1)
+        // If the platform shall move between two points, as set by calling setTranslatingPlatformParameters(...)
+        if(isPlatformMoving)
         {
+            osg::Vec3 movingVector;
+            // We scale the speed by the time elapsed since the last passage in the loop
+            double localSpeed = movingSpeed * elapsed;
+            // Test the direction the platform should move
             if(movesTowardEnd)
             {
+                // If the platform is not yet too close to the endPoint, move
                 if((currentPos-endPoint).length() > localSpeed)
                 {
+                    // The platform moves by a vector defined by the start point and the end point,
+                    // normalized and scaled by the speed & time elapsed
                     movingVector = endPoint - startPoint;
                     movingVector.normalize();
                     movingVector *= localSpeed;
