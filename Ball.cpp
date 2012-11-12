@@ -24,6 +24,8 @@ Ball::Ball(osg::MatrixTransform *_rootNode, btDynamicsWorld * _dynamicsWorld)
 
     body = osgbDynamics::createRigidBody( cr.get(), cs );
 
+    body->setActivationState( DISABLE_DEACTIVATION );
+
     ghost = new btPairCachingGhostObject();
     ghost->setCollisionShape (cs);
     ghost->setCollisionFlags (btCollisionObject::CF_CHARACTER_OBJECT);

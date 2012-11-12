@@ -13,10 +13,13 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     geode->addDrawable(shape);
     geode->setStateSet(state);
     // We need a MatrixTransform to move the box around
-    matrixTransform = new osg::MatrixTransform;
+    osg::MatrixTransform* matrixTransform = new osg::MatrixTransform;
     matrixTransform->addChild(geode);
     osg::Matrix matrixOffset;
     matrixOffset.setTrans(center);
+
+    shakeMotion = new osgbDynamics::MotionState();
+    shakeMotion->setTransform(matrixTransform);
     //matrixTransform->setMatrix(matrixOffset);
 
     // We add the box to the simulation
@@ -27,9 +30,22 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     cr->_mass = mass;
     cr->_restitution = 1.f;
     cr->_friction = 1.f;
-    body = osgbDynamics::createRigidBody(cr.get(), cs);
+    btVector3 inertia(0, 0, 0);
+    btRigidBody::btRigidBodyConstructionInfo rb( mass, shakeMotion, cs, inertia);
+    //body = osgbDynamics::createRigidBody(cr.get(), cs);
+    body = new btRigidBody(rb);
+    //body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
     moduleRegistry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL);
     moduleRegistry->getRootNode()->addChild(matrixTransform);
+
+    btVector3 move(center.x(), center.y(), center.z());
+    btTransform moveTrans;
+    moveTrans.setIdentity();
+    moveTrans.setOrigin(move);
+    btTransform world;
+    shakeMotion->getWorldTransform(world);
+    btTransform netTrans = moveTrans * world;
+    //shakeMotion->setWorldTransform(netTrans);
 }
 
 void Platform::setTranslatingPlatformParameters(const osg::Vec3 &originPoint, const osg::Vec3 &endPoint, float movingSpeed)
@@ -38,6 +54,7 @@ void Platform::setTranslatingPlatformParameters(const osg::Vec3 &originPoint, co
     this->endPoint = endPoint;
     this->movingSpeed = movingSpeed;
     platformType = PLATFORM_TRANSLATING;
+    body->setActivationState( DISABLE_DEACTIVATION );
 }
 
 PlatformType Platform::getPlatformType()
@@ -50,12 +67,13 @@ void Platform::update()
     switch(platformType)
     {
         case PLATFORM_TRANSLATING:
-            osg::Vec3d platformPosition = matrixTransform->getMatrix().getTrans();
+            //osg::Vec3d platformPosition = matrixTransform->getMatrix().getTrans();
 
-            osg::notify( osg::ALWAYS ) << "Position : x " << platformPosition.x() <<
+            /*osg::notify( osg::ALWAYS ) << "Position : x " << platformPosition.x() <<
                                           " y " << platformPosition.y() <<
-                                          " z " << platformPosition.z() << std::endl;
-            body->setLinearVelocity(btVector3(100, 100, 100));
+                                          " z " << platformPosition.z() << std::endl;*/
+            /*body->forceActivationState(1);
+            body->setLinearVelocity(btVector3(100, 100, 100));*/
             break;
     }
 }

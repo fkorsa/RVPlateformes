@@ -11,6 +11,7 @@
 #include <osgbCollision/RefBulletObject.h>
 #include <osgbDynamics/RigidBody.h>
 #include <osgbDynamics/CreationRecord.h>
+#include <osgbDynamics/MotionState.h>
 
 #include "ModuleRegistry.h"
 #include "Constants.h"
@@ -24,8 +25,8 @@ public:
     PlatformType getPlatformType();
     void update();
 private:
-    osg::MatrixTransform *matrixTransform;
     btRigidBody *body;
+    osgbDynamics::MotionState* shakeMotion;
     PlatformType platformType;
     osg::Vec3 originPoint;
     osg::Vec3 endPoint;
