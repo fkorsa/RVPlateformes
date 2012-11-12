@@ -1,7 +1,7 @@
 #include "Platform.h"
 
 Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
-                   const osg::Vec3 &lengths, float mass, osg::Texture2D *texture) :
+                   const osg::Vec3 &lengths, osg::Texture2D *texture) :
     isMovingPlatform(false)
 {
     osg::Box* box = new osg::Box(center, lengths.x(), lengths.y(), lengths.z());
@@ -26,7 +26,7 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     trans.setIdentity();
     trans.setOrigin(osgbCollision::asBtVector3(center));
     cs->addChildShape(trans, boxShape);
-    btRigidBody::btRigidBodyConstructionInfo rb(mass, shakeMotion, cs, inertia);
+    btRigidBody::btRigidBodyConstructionInfo rb(0.0f, shakeMotion, cs, inertia);
 
     body = new btRigidBody(rb);
     moduleRegistry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL);
@@ -36,6 +36,10 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     body->setActivationState( DISABLE_DEACTIVATION );
 
     startPoint = center;
+}
+
+Platform* Platform::setMass(float mass) {
+    body->setMassProps(mass,btVector3(0.,0.,0.));
 }
 
 Platform* Platform::setTranslatingPlatformParameters(const osg::Vec3 &endPoint, float movingSpeed)
