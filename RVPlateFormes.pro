@@ -11,7 +11,8 @@ SOURCES += \
     InputManager.cpp \
     SDLInputStrategy.cpp \
     SDLWindow.cpp \
-    Platform.cpp
+    Platform.cpp \
+    Skybox.cpp
 
 HEADERS += \
     Controller.h \
@@ -24,7 +25,8 @@ HEADERS += \
     InputManager.h \
     SDLInputStrategy.h \
     SDLWindow.h \
-    Platform.h
+    Platform.h \
+    Skybox.h
 
 # SDL
 LIBS += -L/usr/lib -lSDL -lSDL_image -lSDL_ttf
