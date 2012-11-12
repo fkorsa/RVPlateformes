@@ -38,12 +38,13 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     startPoint = center;
 }
 
-void Platform::setTranslatingPlatformParameters(const osg::Vec3 &endPoint, float movingSpeed)
+Platform* Platform::setTranslatingPlatformParameters(const osg::Vec3 &endPoint, float movingSpeed)
 {
     this->endPoint = endPoint;
     this->movingSpeed = movingSpeed;
     movesTowardEnd = true;
     isMovingPlatform = true;
+    return this;
 }
 
 void Platform::update(double elapsed)

@@ -23,7 +23,6 @@ Ball::Ball(osg::MatrixTransform *_rootNode, btDynamicsWorld * _dynamicsWorld)
     cr->_friction = 1.f;
 
     body = osgbDynamics::createRigidBody( cr.get(), cs );
-
     body->setActivationState(DISABLE_DEACTIVATION);
 
     ghost = new btPairCachingGhostObject();
