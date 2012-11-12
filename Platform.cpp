@@ -2,7 +2,7 @@
 
 Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
                    const osg::Vec3 &lengths, osg::Texture2D *texture) :
-    isMovingPlatform(false)
+    isMovingPlatform(false),positionElasticity(0)
 {
     osg::Box* box = new osg::Box(center, lengths.x(), lengths.y(), lengths.z());
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
@@ -40,6 +40,14 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
 
 Platform* Platform::setMass(float mass) {
     body->setMassProps(mass,btVector3(0.,0.,0.));
+    body->activate();
+    return this;
+}
+
+// La plaque oscille quand on saute dessus
+Platform* Platform::setPositionElasticity(float elasticity) {
+    this->positionElasticity = elasticity;
+    return this;
 }
 
 Platform* Platform::setTranslatingPlatformParameters(const osg::Vec3 &endPoint, float movingSpeed)
@@ -93,6 +101,11 @@ void Platform::update(double elapsed)
         }
 
     }
+
+    if (positionElasticity > 0) {
+        //body->
+    }
+
 }
 
 // Translates the platform by adding movingVector to its present coordinates

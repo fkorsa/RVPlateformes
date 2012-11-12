@@ -127,7 +127,8 @@ void Scene::createScene()
     platforms[numPlatforms++] = new Platform(moduleRegistry,osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 5), texture1);
     platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 60., 0., -15. ), osg::Vec3(30, 30, 5), texture1))
             ->setTranslatingPlatformParameters(osg::Vec3(60., 0., 20), 10);
-    platforms[numPlatforms++] = new Platform(moduleRegistry,osg::Vec3( 120., 0., -5. ), osg::Vec3(30, 30, 5), texture1);
+    platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 120., 0., -5. ), osg::Vec3(30, 30, 5), texture1))
+            ->setMass(5.0f);
     platforms[numPlatforms++] = new Platform(moduleRegistry,osg::Vec3( 180., 0., 5. ), osg::Vec3(30, 30, 5), texture1);
     platforms[numPlatforms++] = new Platform(moduleRegistry,osg::Vec3( 260., 0., 5. ), osg::Vec3(50, 50, 5), texture1);
 

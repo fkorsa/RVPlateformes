@@ -24,6 +24,7 @@ public:
     Platform(ModuleRegistry *moduleRegistry, const osg::Vec3& center, const osg::Vec3& lengths, osg::Texture2D *texture);
     Platform* setTranslatingPlatformParameters(const osg::Vec3& endPoint, float movingSpeed);
     Platform* setMass(float mass);
+    Platform* setPositionElasticity(float elasticity);
     void update(double elapsed);
     void movePlatform(osg::Vec3 movingVector);
 private:
@@ -34,6 +35,7 @@ private:
     bool movesTowardEnd;
     bool isMovingPlatform;
     float movingSpeed;
+    float positionElasticity;
 };
 
 #endif // PLATFORM_H
