@@ -108,6 +108,9 @@ void Scene::createScene()
 
     srh->capture();
 
+    // SKYBOX !
+    Skybox* skybox = new Skybox(rootNode);
+
     // 2D TEXT FOR DEBUGGING PURPOSE !
     text2d = new Text2D(rootNode);
 

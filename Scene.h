@@ -25,6 +25,8 @@
 #include "Ball.h"
 #include "Text2d.h"
 #include "Platform.h"
+#include "Skybox.h"
+
 
 class Scene : public Module
 {
