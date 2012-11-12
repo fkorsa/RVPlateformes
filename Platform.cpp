@@ -1,7 +1,8 @@
 #include "Platform.h"
 
 Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
-                   const osg::Vec3 &lengths, float mass, osg::Texture2D *texture)
+                   const osg::Vec3 &lengths, float mass, osg::Texture2D *texture) :
+    isMovingPlatform(false)
 {
     osg::Box* box = new osg::Box(center, lengths.x(), lengths.y(), lengths.z());
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
@@ -52,18 +53,13 @@ void Platform::update(double elapsed)
         osg::Vec3 movingVector;
         btTransform world;
         osg::Vec3 platformPos, restVector;
-        double localSpeed = 0.1;
-        //double localSpeed = 0.1;
-        osg::notify( osg::ALWAYS ) << "localSpeed : " << localSpeed
-                                   << " movingSpeed : " << movingSpeed
-                                   << " product : " << movingSpeed * elapsed
-                                   << " elapsed : " << elapsed << std::endl;
+        double localSpeed = movingSpeed * elapsed;
         shakeMotion->getWorldTransform(world);
         platformPos = osgbCollision::asOsgVec3(world.getOrigin());
         if(movesTowardEnd)
         {
             restVector = platformPos - (endPoint - startPoint);
-            if(restVector.length() > movingSpeed)
+            if(restVector.length() > localSpeed)
             {
                 movingVector = endPoint - startPoint;
                 movingVector.normalize();
@@ -78,7 +74,7 @@ void Platform::update(double elapsed)
         else
         {
             restVector = platformPos;
-            if(restVector.length() > movingSpeed)
+            if(restVector.length() > localSpeed)
             {
                 movingVector = startPoint - endPoint;
                 movingVector.normalize();
