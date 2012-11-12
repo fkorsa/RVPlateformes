@@ -26,7 +26,7 @@ btDynamicsWorld* Scene::initBulletEngine()
     btDynamicsWorld * dynamicsWorld = new btDiscreteDynamicsWorld( dispatcher, inter, solver, collisionConfiguration );
 
     dynamicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
-    dynamicsWorld->setGravity( btVector3( 0, 0, -190 ) );
+    dynamicsWorld->setGravity( btVector3( 0, 0, -250 ) );
 
     return( dynamicsWorld );
 }
