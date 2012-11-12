@@ -53,7 +53,7 @@ void Ball::update(double elapsed)
             allowJump = true;
             //osg::notify( osg::ALWAYS ) << "TOUCHE SOL" << std::endl;
             // Slow the ball down as it touches the ground
-            body->applyCentralForce(body->getLinearVelocity()*-13.f);
+            body->applyCentralForce(body->getLinearVelocity()*-18.f);
             break;
         }
     }
@@ -63,7 +63,7 @@ void Ball::update(double elapsed)
         osg::notify( osg::ALWAYS ) << "JUMP " << std::endl;
         timer += elapsed;
         if (timer>1./10.) jumping = false;
-        body->applyCentralForce(btVector3(0.,0.,3000.));
+        body->applyCentralForce(btVector3(0.,0.,3900.));
     }
     else
     {
@@ -74,13 +74,13 @@ void Ball::update(double elapsed)
 void Ball::moveLeft()
 {
     if(allowJump)
-        body->applyCentralForce(btVector3(-850.,0.,0.));
+        body->applyCentralForce(btVector3(-1200.,0.,0.));
 }
 
 void Ball::moveRight()
 {
     if(allowJump)
-        body->applyCentralForce(btVector3(850.,0.,0.));
+        body->applyCentralForce(btVector3(1200.,0.,0.));
 }
 
 void Ball::jump()
