@@ -198,8 +198,6 @@ void Scene::run(double elapsed)
     ball->update(elapsed);
 
     text2d->update(elapsed);
-    btVector3 velocity = ballBody->getVelocityInLocalPoint(btVector3(0, 0, 0));
-    ballBody->setLinearVelocity(btVector3(velocity.x()/BALL_SLOW_SPEED,velocity.y(),velocity.z()));
     for(int i = 0;i<numPlatforms;i++)
     {
         platforms[i]->update(elapsed);
