@@ -24,7 +24,7 @@ public:
     Platform(ModuleRegistry *moduleRegistry, const osg::Vec3& center, const osg::Vec3& lengths, float mass,
                                             osg::Texture2D* texture);
     void setTranslatingPlatformParameters(const osg::Vec3& endPoint, float movingSpeed);
-    void update();
+    void update(double elapsed);
     void movePlatform(osg::Vec3 movingVector);
 private:
     btRigidBody *body;

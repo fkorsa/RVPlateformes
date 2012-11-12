@@ -10,7 +10,7 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     shape->setColor(osg::Vec4(1., 1., 1., 1.));
     state->setTextureAttributeAndModes(0,texture,osg::StateAttribute::ON);
     geode->addDrawable(shape);
-    //geode->setStateSet(state);
+    geode->setStateSet(state);
     // We need a MatrixTransform to move the box around
     osg::MatrixTransform* matrixTransform = new osg::MatrixTransform;
     matrixTransform->addChild(geode);
@@ -45,21 +45,30 @@ void Platform::setTranslatingPlatformParameters(const osg::Vec3 &endPoint, float
     isMovingPlatform = true;
 }
 
-void Platform::update()
+void Platform::update(double elapsed)
 {
     if(isMovingPlatform)
     {
         osg::Vec3 movingVector;
         btTransform world;
         osg::Vec3 platformPos, restVector;
+        double localSpeed = 0.1;
+        //double localSpeed = 0.1;
+        osg::notify( osg::ALWAYS ) << "localSpeed : " << localSpeed
+                                   << " movingSpeed : " << movingSpeed
+                                   << " product : " << movingSpeed * elapsed
+                                   << " elapsed : " << elapsed << std::endl;
         shakeMotion->getWorldTransform(world);
         platformPos = osgbCollision::asOsgVec3(world.getOrigin());
         if(movesTowardEnd)
         {
             restVector = platformPos - (endPoint - startPoint);
-            if(restVector.length() > PLATFORM_DISTANCE_THRESHOLD)
+            if(restVector.length() > movingSpeed)
             {
                 movingVector = endPoint - startPoint;
+                movingVector.normalize();
+                movingVector *= localSpeed;
+                movePlatform(movingVector);
             }
             else
             {
@@ -69,21 +78,23 @@ void Platform::update()
         else
         {
             restVector = platformPos;
-            if(restVector.length() > PLATFORM_DISTANCE_THRESHOLD)
+            if(restVector.length() > movingSpeed)
             {
                 movingVector = startPoint - endPoint;
+                movingVector.normalize();
+                movingVector *= localSpeed;
+                movePlatform(movingVector);
             }
             else
             {
-                movesTowardEnd = false;
+                movesTowardEnd = true;
             }
         }
-        movingVector.normalize();
-        movingVector *= movingSpeed;
-        movePlatform(movingVector);
+
     }
 }
 
+// Translates the platform by adding movingVector to its present coordinates
 void Platform::movePlatform(osg::Vec3 movingVector)
 {
     btVector3 move = osgbCollision::asBtVector3(movingVector);

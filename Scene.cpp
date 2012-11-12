@@ -126,15 +126,20 @@ void Scene::createScene()
 
     platforms[numPlatforms] = new Platform(moduleRegistry,
                                              osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 5), 0.f,texture1);
-    platforms[numPlatforms++]->setTranslatingPlatformParameters(osg::Vec3(0., 0., -30), 1.);
-    platforms[numPlatforms++] = new Platform(moduleRegistry,
+    numPlatforms++;
+    platforms[numPlatforms] = new Platform(moduleRegistry,
                                              osg::Vec3( 60., 0., -15. ), osg::Vec3(30, 30, 5), 0.f,texture1);
-    platforms[numPlatforms++] = new Platform(moduleRegistry,
+    platforms[numPlatforms]->setTranslatingPlatformParameters(osg::Vec3(60., 0., 20), 100);
+    numPlatforms++;
+    platforms[numPlatforms] = new Platform(moduleRegistry,
                                              osg::Vec3( 120., 0., -5. ), osg::Vec3(30, 30, 5), 0.f,texture1);
-    platforms[numPlatforms++] = new Platform(moduleRegistry,
+    numPlatforms++;
+    platforms[numPlatforms] = new Platform(moduleRegistry,
                                              osg::Vec3( 180., 0., 5. ), osg::Vec3(30, 30, 5), 0.f,texture1);
-    platforms[numPlatforms++] = new Platform(moduleRegistry,
+    numPlatforms++;
+    platforms[numPlatforms] = new Platform(moduleRegistry,
                                              osg::Vec3( 260., 0., 5. ), osg::Vec3(50, 50, 5), 0.f,texture1);
+    numPlatforms++;
 
 #ifndef VRJUGGLER
     moduleRegistry->getSceneView()->setSceneData(rootNode);
@@ -197,7 +202,7 @@ void Scene::run(double elapsed)
     ballBody->setLinearVelocity(btVector3(velocity.x()/BALL_SLOW_SPEED,velocity.y(),velocity.z()));
     for(int i = 0;i<numPlatforms;i++)
     {
-        platforms[i]->update();
+        platforms[i]->update(elapsed);
     }
     dynamicsWorld->stepSimulation(elapsed,10,1./120.);
 }
