@@ -33,7 +33,6 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     moduleRegistry->getRootNode()->addChild(matrixTransform);
 
     body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-    body->setActivationState( DISABLE_DEACTIVATION );
 
     startPoint = center;
 }
@@ -55,6 +54,7 @@ Platform* Platform::setTranslatingPlatformParameters(const osg::Vec3 &endPoint, 
     isPlatformMoving = true;
     // Initialize the position of the platform
     currentPos = startPoint;
+    body->setActivationState(DISABLE_DEACTIVATION);
     return this;
 }
 
