@@ -123,7 +123,7 @@ void Scene::createScene()
 
     platforms[numPlatforms] = new Platform(moduleRegistry,
                                              osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 5), 0.f,texture1);
-    platforms[numPlatforms++]->setTranslatingPlatformParameters(osg::Vec3(0., 0., -25), osg::Vec3(0., 0., -30), 1.);
+    platforms[numPlatforms++]->setTranslatingPlatformParameters(osg::Vec3(0., 0., -30), 1.);
     platforms[numPlatforms++] = new Platform(moduleRegistry,
                                              osg::Vec3( 60., 0., -15. ), osg::Vec3(30, 30, 5), 0.f,texture1);
     platforms[numPlatforms++] = new Platform(moduleRegistry,
@@ -194,10 +194,7 @@ void Scene::run(double elapsed)
     ballBody->setLinearVelocity(btVector3(velocity.x()/BALL_SLOW_SPEED,velocity.y(),velocity.z()));
     for(int i = 0;i<numPlatforms;i++)
     {
-        if(platforms[i]->getPlatformType()!=PLATFORM_STATIC)
-        {
-            platforms[i]->update();
-        }
+        platforms[i]->update();
     }
     dynamicsWorld->stepSimulation(elapsed,10,1./120.);
 }

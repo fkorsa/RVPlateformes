@@ -24,11 +24,11 @@ Ball::Ball(osg::MatrixTransform *_rootNode, btDynamicsWorld * _dynamicsWorld)
 
     body = osgbDynamics::createRigidBody( cr.get(), cs );
 
-    body->setActivationState( DISABLE_DEACTIVATION );
+    body->setActivationState(DISABLE_DEACTIVATION);
 
     ghost = new btPairCachingGhostObject();
     ghost->setCollisionShape (cs);
-    ghost->setCollisionFlags (btCollisionObject::CF_CHARACTER_OBJECT);
+    ghost->setCollisionFlags (btCollisionObject::CF_CHARACTER_OBJECT | btCollisionObject::CF_KINEMATIC_OBJECT);
 
     _rootNode->addChild(root);
     _dynamicsWorld->addRigidBody(body,COL_BALL,COL_FLOOR);
@@ -69,7 +69,6 @@ void Ball::update(double elapsed)
     {
         timer = 0;
     }
-
 }
 
 void Ball::moveLeft()
