@@ -2,7 +2,7 @@
 
 Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
                    const osg::Vec3 &lengths, osg::Texture2D *texture) :
-    isMovingPlatform(false)
+    isPlatformMoving(false)
 {
     osg::Box* box = new osg::Box(center, lengths.x(), lengths.y(), lengths.z());
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
@@ -38,7 +38,8 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     startPoint = center;
 }
 
-Platform* Platform::setMass(float mass) {
+Platform* Platform::setMass(float mass)
+{
     body->setMassProps(mass,btVector3(0.,0.,0.));
 }
 
@@ -47,51 +48,52 @@ Platform* Platform::setTranslatingPlatformParameters(const osg::Vec3 &endPoint, 
     this->endPoint = endPoint;
     this->movingSpeed = movingSpeed;
     movesTowardEnd = true;
-    isMovingPlatform = true;
+    isPlatformMoving = true;
+    currentPos = startPoint;
     return this;
 }
 
 void Platform::update(double elapsed)
 {
-    if(isMovingPlatform)
+    if(isPlatformMoving)
     {
         osg::Vec3 movingVector;
-        btTransform world;
-        osg::Vec3 platformPos, restVector;
         double localSpeed = movingSpeed * elapsed;
-        shakeMotion->getWorldTransform(world);
-        platformPos = osgbCollision::asOsgVec3(world.getOrigin());
-        if(movesTowardEnd)
+        if(elapsed < 1)
         {
-            restVector = platformPos - (endPoint - startPoint);
-            if(restVector.length() > localSpeed)
+            if(movesTowardEnd)
             {
-                movingVector = endPoint - startPoint;
-                movingVector.normalize();
-                movingVector *= localSpeed;
-                movePlatform(movingVector);
+                if((currentPos-endPoint).length() > localSpeed)
+                {
+                    movingVector = endPoint - startPoint;
+                    movingVector.normalize();
+                    movingVector *= localSpeed;
+                    movePlatform(movingVector);
+                    currentPos += movingVector;
+                }
+                else
+                {
+                    movesTowardEnd = false;
+                    currentPos = endPoint;
+                }
             }
             else
             {
-                movesTowardEnd = false;
+                if((currentPos-startPoint).length() > localSpeed)
+                {
+                    movingVector = startPoint - endPoint;
+                    movingVector.normalize();
+                    movingVector *= localSpeed;
+                    movePlatform(movingVector);
+                    currentPos += movingVector;
+                }
+                else
+                {
+                    movesTowardEnd = true;
+                    currentPos = startPoint;
+                }
             }
         }
-        else
-        {
-            restVector = platformPos;
-            if(restVector.length() > localSpeed)
-            {
-                movingVector = startPoint - endPoint;
-                movingVector.normalize();
-                movingVector *= localSpeed;
-                movePlatform(movingVector);
-            }
-            else
-            {
-                movesTowardEnd = true;
-            }
-        }
-
     }
 }
 
