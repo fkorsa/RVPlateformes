@@ -1,4 +1,5 @@
 include(VRJuggler/VRJuggler.pri)
+include(3DEntities/3DEntities.pri)
 
 SOURCES += \
     main.cpp \
@@ -6,14 +7,11 @@ SOURCES += \
     ModuleRegistry.cpp \
     Module.cpp \
     Scene.cpp \
-    Ball.cpp \
     Text2d.cpp \
     InputManager.cpp \
     SDLInputStrategy.cpp \
     SDLWindow.cpp \
-    Platform.cpp \
     Skybox.cpp \
-    Pyramid.cpp \
     Text3d.cpp
 
 HEADERS += \
@@ -22,15 +20,13 @@ HEADERS += \
     ModuleRegistry.h \
     Module.h \
     Scene.h \
-    Ball.h \
     Text2d.h \
     InputManager.h \
     SDLInputStrategy.h \
     SDLWindow.h \
-    Platform.h \
     Skybox.h \
-    Pyramid.h \
-    Text3d.h
+    Text3d.h \
+    Utils.h
 
 # SDL
 LIBS += -L/usr/lib -lSDL -lSDL_image -lSDL_ttf

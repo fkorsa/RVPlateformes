@@ -1,7 +1,7 @@
 #include "Platform.h"
 
-Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
-                   const osg::Vec3 &lengths, osg::Texture2D *texture) :
+Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center,
+                   const osg::Vec3f &lengths, osg::Texture2D *texture) :
     isPlatformMoving(false),positionElasticity(0),isUnstable(false)
 {
     osg::Box* box = new osg::Box(osg::Vec3(), lengths.x(), lengths.y(), lengths.z());
@@ -24,10 +24,10 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
 
     btVector3 inertia(0, 0, 0);
     btCompoundShape* cs = new btCompoundShape;
-    btBoxShape* boxShape = new btBoxShape(osgbCollision::asBtVector3(lengths*0.5));
+    btBoxShape* boxShape = new btBoxShape(Utils::asBtVector3(lengths*0.5));
     btTransform trans;
     trans.setIdentity();
-    trans.setOrigin(osgbCollision::asBtVector3(center));
+    trans.setOrigin(Utils::asBtVector3(center));
     cs->addChildShape(trans, boxShape);
     btRigidBody::btRigidBodyConstructionInfo rb(0.0f, shakeMotion, cs, inertia);
 
@@ -36,7 +36,7 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     registry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL|COL_OTHERS);
     registry->getRootNode()->addChild(matrixTransform);
     body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-    startPoint = center;
+    startPoint = Utils::asBtVector3(center);
     desiredCurrentPos = startPoint;
 }
 
@@ -66,7 +66,7 @@ Platform* Platform::setPositionElasticity(float elasticity, float resistance)
 
 // Make the platform move between its creating point (startPoint) and the parameter endPoint, at
 // speed movingSpeed (which is in an arbitrary unit)
-Platform* Platform::setTranslatingPlatformParameters(const osg::Vec3 &endPoint, float movingSpeed)
+Platform* Platform::setTranslatingPlatformParameters(const btVector3 &endPoint, float movingSpeed)
 {
     this->endPoint = endPoint;
     this->movingSpeed = movingSpeed;
@@ -96,13 +96,10 @@ void Platform::update(double elapsed)
     // If the time elapsed is too great, do nothing
     if(elapsed < 1)
     {
-//        btTransform world;
-//        shakeMotion->getWorldTransform(world);
-//        currentPos = osgbCollision::asOsgVec3(world.getOrigin()) + startPoint;
         // If the platform shall move between two points, as set by calling setTranslatingPlatformParameters(...)
         if(isPlatformMoving)
         {
-            osg::Vec3 movingVector;
+            btVector3 movingVector;
             // We scale the speed by the time elapsed since the last passage in the loop
             double localSpeed = movingSpeed * elapsed;
             // Test the direction the platform should move
@@ -174,20 +171,19 @@ void Platform::update(double elapsed)
     {
         btTransform world;
         shakeMotion->getWorldTransform(world);
-        osg::Vec3 position = osgbCollision::asOsgVec3(world.getOrigin()) + startPoint;
-        body->applyCentralForce(osgbCollision::asBtVector3(desiredCurrentPos-position)*positionElasticity);
+        btVector3 position = world.getOrigin() + startPoint;
+        body->applyCentralForce((desiredCurrentPos-position)*positionElasticity);
         body->applyCentralForce(-body->getLinearVelocity()*positionResistance);
     }
 
 }
 
 // Translates the platform by adding movingVector to its present coordinates
-void Platform::movePlatform(osg::Vec3 movingVector)
+void Platform::movePlatform(btVector3 movingVector)
 {
-    btVector3 move = osgbCollision::asBtVector3(movingVector);
     btTransform moveTrans;
     moveTrans.setIdentity();
-    moveTrans.setOrigin(move);
+    moveTrans.setOrigin(movingVector);
     btTransform world;
     shakeMotion->getWorldTransform(world);
     world = moveTrans * world;

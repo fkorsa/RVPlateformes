@@ -130,7 +130,7 @@ void Scene::createScene()
     texture1->setImage(image1);
 
     platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 5), texture1))
-            ->setTranslatingPlatformParameters(osg::Vec3(0., 15, -5), 10)
+            ->setTranslatingPlatformParameters(btVector3(0., 15, -5), 10)
             ->setUnstable(0.01);
     platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 60., 0., -15. ), osg::Vec3(30, 30, 5), texture1))
             ->setPositionElasticity()
@@ -207,7 +207,7 @@ void Scene::run(double elapsed)
     ball->update(elapsed);
 
     text2d->update(elapsed);
-    text3d->update(elapsed);
+    //text3d->update(elapsed);
     for(int i = 0;i<numPlatforms;i++)
     {
         platforms[i]->update(elapsed);
