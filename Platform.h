@@ -1,6 +1,7 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
+#include <osg/PositionAttitudeTransform>
 #include <osg/MatrixTransform>
 #include <osg/ShapeDrawable>
 #include <osg/Geode>
@@ -27,16 +28,19 @@ public:
     Platform* setMass(float mass);
     void update(double elapsed);
     void movePlatform(osg::Vec3 movingVector);
-    void rotatePlatform();
+    void rotatePlatform(float angle);
 private:
     btRigidBody *body;
     osgbDynamics::MotionState* shakeMotion;
+    osg::PositionAttitudeTransform* platformPAT;
     osg::Vec3 endPoint;
     osg::Vec3 startPoint;
     osg::Vec3 desiredCurrentPos, currentPos;
     bool movesTowardEnd;
     bool isPlatformMoving, isUnstable;
+    bool firstRotateDirection;
     float movingSpeed;
+    float rotatingAngle;
 };
 
 #endif // PLATFORM_H

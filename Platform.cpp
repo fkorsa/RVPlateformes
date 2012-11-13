@@ -5,7 +5,7 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     isPlatformMoving(false),
     isUnstable(false)
 {
-    osg::Box* box = new osg::Box(center, lengths.x(), lengths.y(), lengths.z());
+    osg::Box* box = new osg::Box(osg::Vec3(), lengths.x(), lengths.y(), lengths.z());
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
     osg::StateSet* state = new osg::StateSet();
     osg::Geode* geode = new osg::Geode();
@@ -15,7 +15,10 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     geode->setStateSet(state);
     // We need a MatrixTransform to move the box around
     osg::MatrixTransform* matrixTransform = new osg::MatrixTransform;
-    matrixTransform->addChild(geode);
+    platformPAT = new osg::PositionAttitudeTransform;
+    platformPAT->addChild(geode);
+    platformPAT->setPosition(center);
+    matrixTransform->addChild(platformPAT);
 
     shakeMotion = new osgbDynamics::MotionState();
     shakeMotion->setTransform(matrixTransform);
@@ -62,6 +65,8 @@ Platform* Platform::setTranslatingPlatformParameters(const osg::Vec3 &endPoint, 
 Platform* Platform::setUnstable()
 {
     isUnstable = true;
+    firstRotateDirection = true;
+    rotatingAngle = 0;
     return this;
 }
 
@@ -70,9 +75,9 @@ void Platform::update(double elapsed)
     // If the time elapsed is too great, do nothing
     if(elapsed < 1)
     {
-        /*btTransform world;
-        shakeMotion->getWorldTransform(world);
-        currentPos = osgbCollision::asOsgVec3(world.getOrigin()) + startPoint;*/
+//        btTransform world;
+//        shakeMotion->getWorldTransform(world);
+//        currentPos = osgbCollision::asOsgVec3(world.getOrigin()) + startPoint;
         // If the platform shall move between two points, as set by calling setTranslatingPlatformParameters(...)
         if(isPlatformMoving)
         {
@@ -118,7 +123,24 @@ void Platform::update(double elapsed)
         }
         if(isUnstable)
         {
-
+            if(firstRotateDirection)
+            {
+                rotatePlatform(rotatingAngle);
+                rotatingAngle += 0.01;
+                if(rotatingAngle > 0.05)
+                {
+                    firstRotateDirection = false;
+                }
+            }
+            else
+            {
+                rotatePlatform(rotatingAngle);
+                rotatingAngle -= 0.01;
+                if(rotatingAngle < -0.05)
+                {
+                    firstRotateDirection = true;
+                }
+            }
         }
     }
 }
@@ -132,12 +154,12 @@ void Platform::movePlatform(osg::Vec3 movingVector)
     moveTrans.setOrigin(move);
     btTransform world;
     shakeMotion->getWorldTransform(world);
-    btTransform netTrans = moveTrans * world;
-    shakeMotion->setWorldTransform(netTrans);
+    world = moveTrans * world;
+    shakeMotion->setWorldTransform(world);
 }
 
-void Platform::rotatePlatform()
+void Platform::rotatePlatform(float angle)
 {
-    btTransform rotateTrans;
-    //rotateTrans.setRotation();
+    platformPAT->setAttitude(osg::Quat(1, 0, 0, angle));
+    //platformPAT->setPosition(currentPos*2);
 }

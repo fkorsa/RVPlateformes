@@ -125,7 +125,8 @@ void Scene::createScene()
     texture1->setImage(image1);
 
     platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 5), texture1))
-            ->setTranslatingPlatformParameters(osg::Vec3(0., 0., -15), 100);
+            //->setTranslatingPlatformParameters(osg::Vec3(0., 0., -15), 100)
+            ->setUnstable();
     platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 60., 0., -15. ), osg::Vec3(30, 30, 5), texture1))
             ->setTranslatingPlatformParameters(osg::Vec3(60., 0., 20), 50);
     platforms[numPlatforms++] = new Platform(moduleRegistry,osg::Vec3( 120., 0., -5. ), osg::Vec3(30, 30, 5), texture1);
