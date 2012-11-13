@@ -32,8 +32,9 @@ private:
     osgbDynamics::MotionState* shakeMotion;
     osg::Vec3 endPoint;
     osg::Vec3 startPoint;
+    osg::Vec3 currentPos;
     bool movesTowardEnd;
-    bool isMovingPlatform;
+    bool isPlatformMoving;
     float movingSpeed;
     float positionElasticity;
 };

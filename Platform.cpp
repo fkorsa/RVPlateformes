@@ -2,7 +2,7 @@
 
 Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
                    const osg::Vec3 &lengths, osg::Texture2D *texture) :
-    isMovingPlatform(false),positionElasticity(0)
+    isPlatformMoving(false),positionElasticity(0)
 {
     osg::Box* box = new osg::Box(center, lengths.x(), lengths.y(), lengths.z());
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
@@ -26,7 +26,7 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     trans.setIdentity();
     trans.setOrigin(osgbCollision::asBtVector3(center));
     cs->addChildShape(trans, boxShape);
-    btRigidBody::btRigidBodyConstructionInfo rb(0.0f, shakeMotion, cs, inertia);
+    btRigidBody::btRigidBodyConstructionInfo rb(10.0f, shakeMotion, cs, inertia);
 
     body = new btRigidBody(rb);
     moduleRegistry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL);
@@ -38,15 +38,17 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     startPoint = center;
 }
 
-Platform* Platform::setMass(float mass) {
-    body->setMassProps(mass,btVector3(0.,0.,0.));
-    body->activate();
+Platform* Platform::setMass(float mass)
+{
+    body->setCollisionFlags(body->getCollisionFlags() & ~btCollisionObject::CF_KINEMATIC_OBJECT & ~btCollisionObject::CF_STATIC_OBJECT);
+    body->forceActivationState(ACTIVE_TAG);
     return this;
 }
 
 // La plaque oscille quand on saute dessus
 Platform* Platform::setPositionElasticity(float elasticity) {
-    this->positionElasticity = elasticity;
+    setMass(5.0f);
+    positionElasticity = elasticity;
     return this;
 }
 
@@ -55,55 +57,56 @@ Platform* Platform::setTranslatingPlatformParameters(const osg::Vec3 &endPoint, 
     this->endPoint = endPoint;
     this->movingSpeed = movingSpeed;
     movesTowardEnd = true;
-    isMovingPlatform = true;
+    isPlatformMoving = true;
+    currentPos = startPoint;
     return this;
 }
 
 void Platform::update(double elapsed)
 {
-    if(isMovingPlatform)
+    if(isPlatformMoving)
     {
         osg::Vec3 movingVector;
-        btTransform world;
-        osg::Vec3 platformPos, restVector;
         double localSpeed = movingSpeed * elapsed;
-        shakeMotion->getWorldTransform(world);
-        platformPos = osgbCollision::asOsgVec3(world.getOrigin());
-        if(movesTowardEnd)
+        if(elapsed < 1)
         {
-            restVector = platformPos - (endPoint - startPoint);
-            if(restVector.length() > localSpeed)
+            if(movesTowardEnd)
             {
-                movingVector = endPoint - startPoint;
-                movingVector.normalize();
-                movingVector *= localSpeed;
-                movePlatform(movingVector);
+                if((currentPos-endPoint).length() > localSpeed)
+                {
+                    movingVector = endPoint - startPoint;
+                    movingVector.normalize();
+                    movingVector *= localSpeed;
+                    movePlatform(movingVector);
+                    currentPos += movingVector;
+                }
+                else
+                {
+                    movesTowardEnd = false;
+                    currentPos = endPoint;
+                }
             }
             else
             {
-                movesTowardEnd = false;
+                if((currentPos-startPoint).length() > localSpeed)
+                {
+                    movingVector = startPoint - endPoint;
+                    movingVector.normalize();
+                    movingVector *= localSpeed;
+                    movePlatform(movingVector);
+                    currentPos += movingVector;
+                }
+                else
+                {
+                    movesTowardEnd = true;
+                    currentPos = startPoint;
+                }
             }
         }
-        else
-        {
-            restVector = platformPos;
-            if(restVector.length() > localSpeed)
-            {
-                movingVector = startPoint - endPoint;
-                movingVector.normalize();
-                movingVector *= localSpeed;
-                movePlatform(movingVector);
-            }
-            else
-            {
-                movesTowardEnd = true;
-            }
-        }
-
     }
 
     if (positionElasticity > 0) {
-        //body->
+        body->applyCentralForce((startPoint-currentPos)*positionElasticity);
     }
 
 }
