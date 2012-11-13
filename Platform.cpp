@@ -2,8 +2,7 @@
 
 Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
                    const osg::Vec3 &lengths, osg::Texture2D *texture) :
-    isPlatformMoving(false),
-    isUnstable(false)
+    isPlatformMoving(false),positionElasticity(0),isUnstable(false)
 {
     osg::Box* box = new osg::Box(osg::Vec3(), lengths.x(), lengths.y(), lengths.z());
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
@@ -33,17 +32,36 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
     btRigidBody::btRigidBodyConstructionInfo rb(0.0f, shakeMotion, cs, inertia);
 
     body = new btRigidBody(rb);
-    moduleRegistry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL);
-    moduleRegistry->getRootNode()->addChild(matrixTransform);
-
+    registry = moduleRegistry;
+    registry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL|COL_OTHERS);
+    registry->getRootNode()->addChild(matrixTransform);
     body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-
     startPoint = center;
+    desiredCurrentPos = startPoint;
 }
 
 Platform* Platform::setMass(float mass)
 {
-    body->setMassProps(mass,btVector3(0.,0.,0.));
+    int flags = body->getCollisionFlags();
+    registry->getDynamicsWorld()->removeCollisionObject(body);
+    body->setCollisionFlags(flags & ~btCollisionObject::CF_KINEMATIC_OBJECT);
+    body->forceActivationState(ACTIVE_TAG);
+    body->setMassProps(mass,btVector3(0,0,0));
+    registry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL|COL_OTHERS);
+    return this;
+}
+
+// La plaque oscille quand on saute dessus
+// Plus elasticity est grand plus les oscillations sont lentes
+// Plus resistance est grand plus le retour à l'équilibre est rapide
+Platform* Platform::setPositionElasticity(float elasticity, float resistance)
+{
+    setMass(10.0f);
+    body->setGravity(btVector3(0,0,0));
+    body->setDamping(0.2f,0.2f);
+    positionElasticity = elasticity;
+    positionResistance = resistance;
+    return this;
 }
 
 // Make the platform move between its creating point (startPoint) and the parameter endPoint, at
@@ -62,11 +80,14 @@ Platform* Platform::setTranslatingPlatformParameters(const osg::Vec3 &endPoint, 
     return this;
 }
 
-Platform* Platform::setUnstable()
+Platform* Platform::setUnstable(float platformUnstability)
 {
     isUnstable = true;
     firstRotateDirection = true;
-    rotatingAngle = 0;
+    directionDelta = 0;
+    rotatingDirection = 0;
+    directionFactor = PLATFORM_UNSTABLE_SMOOTHING_THRESHOLD;
+    this->platformUnstability = platformUnstability;
     return this;
 }
 
@@ -123,26 +144,41 @@ void Platform::update(double elapsed)
         }
         if(isUnstable)
         {
-            if(firstRotateDirection)
+            if(registry->getBall()->isOnTheFloor() == body)
             {
-                rotatePlatform(rotatingAngle);
-                rotatingAngle += 0.01;
-                if(rotatingAngle > 0.05)
+                directionDelta += platformUnstability;
+                rotatingDirection += directionDelta;
+                if(directionFactor>1)
                 {
-                    firstRotateDirection = false;
+                    directionFactor /= PLATFORM_UNSTABLE_SMOOTHING;
                 }
             }
             else
             {
-                rotatePlatform(rotatingAngle);
-                rotatingAngle -= 0.01;
-                if(rotatingAngle < -0.05)
+                if(directionFactor<PLATFORM_UNSTABLE_SMOOTHING_THRESHOLD)
                 {
-                    firstRotateDirection = true;
+                    directionFactor *= PLATFORM_UNSTABLE_SMOOTHING;
                 }
             }
+            if(rotatingDirection>PLATFORM_UNSTABLE_FALLING_THRESHOLD)
+            {
+                setMass(1.f);
+                body->setGravity(btVector3(0, 0, -1000));
+                positionElasticity = 0;
+            }
+            rotatePlatform(rotatingDirection, directionFactor);
         }
     }
+
+    if (positionElasticity > 0)
+    {
+        btTransform world;
+        shakeMotion->getWorldTransform(world);
+        osg::Vec3 position = osgbCollision::asOsgVec3(world.getOrigin()) + startPoint;
+        body->applyCentralForce(osgbCollision::asBtVector3(desiredCurrentPos-position)*positionElasticity);
+        body->applyCentralForce(-body->getLinearVelocity()*positionResistance);
+    }
+
 }
 
 // Translates the platform by adding movingVector to its present coordinates
@@ -158,8 +194,8 @@ void Platform::movePlatform(osg::Vec3 movingVector)
     shakeMotion->setWorldTransform(world);
 }
 
-void Platform::rotatePlatform(float angle)
+void Platform::rotatePlatform(float direction, float directionFactor)
 {
-    platformPAT->setAttitude(osg::Quat(1, 0, 0, angle));
-    //platformPAT->setPosition(currentPos*2);
+    platformPAT->setAttitude(osg::Quat(cos(direction)/directionFactor, sin(direction)/directionFactor,
+                                       PLATFORM_UNSTABLE_ANGLE, 0));
 }

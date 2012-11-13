@@ -12,7 +12,9 @@ SOURCES += \
     SDLInputStrategy.cpp \
     SDLWindow.cpp \
     Platform.cpp \
-    Skybox.cpp
+    Skybox.cpp \
+    Pyramid.cpp \
+    Text3d.cpp
 
 HEADERS += \
     Controller.h \
@@ -26,7 +28,9 @@ HEADERS += \
     SDLInputStrategy.h \
     SDLWindow.h \
     Platform.h \
-    Skybox.h
+    Skybox.h \
+    Pyramid.h \
+    Text3d.h
 
 # SDL
 LIBS += -L/usr/lib -lSDL -lSDL_image -lSDL_ttf

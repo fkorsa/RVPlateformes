@@ -73,3 +73,13 @@ btDynamicsWorld *ModuleRegistry::getDynamicsWorld()
 {
     return dynamicsWorld;
 }
+
+void ModuleRegistry::registerBall(Ball *ball)
+{
+    this->ball = ball;
+}
+
+Ball *ModuleRegistry::getBall()
+{
+    return ball;
+}

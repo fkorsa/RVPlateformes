@@ -14,8 +14,9 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "Constants.h"
+#include "Module.h"
 
-class Ball
+class Ball : public Module
 {
 public:
     Ball(osg::MatrixTransform* _rootNode,btDynamicsWorld * _dynamicsWorld);
@@ -23,6 +24,8 @@ public:
     void moveLeft();
     void moveRight();
     void jump();
+
+    void* isOnTheFloor();
 
     btRigidBody* getBody();
 
@@ -37,6 +40,8 @@ private:
     osg::ref_ptr<osg::MatrixTransform> root;
     btRigidBody* body;
     btPairCachingGhostObject* ghost; // Object use to detect collisions
+
+    void* collisionObject;
 
 };
 

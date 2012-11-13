@@ -27,11 +27,12 @@ Ball::Ball(osg::MatrixTransform *_rootNode, btDynamicsWorld * _dynamicsWorld)
 
     ghost = new btPairCachingGhostObject();
     ghost->setCollisionShape (cs);
-    ghost->setCollisionFlags (btCollisionObject::CF_CHARACTER_OBJECT | btCollisionObject::CF_KINEMATIC_OBJECT);
+    ghost->setCollisionFlags (body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 
     _rootNode->addChild(root);
     _dynamicsWorld->addRigidBody(body,COL_BALL,COL_FLOOR);
-    _dynamicsWorld->addCollisionObject(ghost,COL_BALL,COL_FLOOR);
+    _dynamicsWorld->addCollisionObject(ghost,COL_BALL,COL_FLOOR|COL_OTHERS);
+
 }
 
 void Ball::update(double elapsed)
@@ -43,6 +44,7 @@ void Ball::update(double elapsed)
     ghost->setWorldTransform(body->getWorldTransform());
     btBroadphasePairArray& pairArray = ghost->getOverlappingPairCache()->getOverlappingPairArray();
     // Il faut déterminer si la sphère touche le sol pour voir si droit de sauter
+    collisionObject = NULL;
     for (int i=0;i<pairArray.size();i++)
     {
         const btBroadphasePair& pair = pairArray[i];
@@ -50,6 +52,7 @@ void Ball::update(double elapsed)
         {
             // Ball touche le sol
             allowJump = true;
+            collisionObject = pair.m_pProxy1->m_clientObject;
             //osg::notify( osg::ALWAYS ) << "TOUCHE SOL" << std::endl;
             // Slow the ball down as it touches the ground
             body->applyCentralForce(body->getLinearVelocity()*-18.f);
@@ -59,7 +62,7 @@ void Ball::update(double elapsed)
 
     if (jumping)
     {
-        osg::notify( osg::ALWAYS ) << "JUMP " << std::endl;
+        //osg::notify( osg::ALWAYS ) << "JUMP " << std::endl;
         timer += elapsed;
         if (timer>1./10.) jumping = false;
         body->applyCentralForce(btVector3(0.,0.,3900.));
@@ -88,6 +91,11 @@ void Ball::jump()
     {
         jumping= true;
     }
+}
+
+void *Ball::isOnTheFloor()
+{
+    return collisionObject;
 }
 
 btRigidBody *Ball::getBody()

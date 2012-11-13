@@ -8,6 +8,7 @@
 #include <osg/StateSet>
 #include <osg/Texture2D>
 #include <osgDB/ReadFile>
+#include <osg/Math>
 
 #include <osgbCollision/CollisionShapes.h>
 #include <osgbCollision/RefBulletObject.h>
@@ -18,18 +19,21 @@
 
 #include "ModuleRegistry.h"
 #include "Constants.h"
+#include "Ball.h"
 
 class Platform
 {
 public:
     Platform(ModuleRegistry *moduleRegistry, const osg::Vec3& center, const osg::Vec3& lengths, osg::Texture2D *texture);
     Platform* setTranslatingPlatformParameters(const osg::Vec3& endPoint, float movingSpeed);
-    Platform* setUnstable();
+    Platform* setUnstable(float platformUnstability);
     Platform* setMass(float mass);
+    Platform* setPositionElasticity(float elasticity = 300.0f, float resistance = 10.0f);
     void update(double elapsed);
     void movePlatform(osg::Vec3 movingVector);
-    void rotatePlatform(float angle);
+    void rotatePlatform(float direction, float directionFactor);
 private:
+    ModuleRegistry* registry;
     btRigidBody *body;
     osgbDynamics::MotionState* shakeMotion;
     osg::PositionAttitudeTransform* platformPAT;
@@ -38,9 +42,14 @@ private:
     osg::Vec3 desiredCurrentPos, currentPos;
     bool movesTowardEnd;
     bool isPlatformMoving, isUnstable;
-    bool firstRotateDirection;
     float movingSpeed;
-    float rotatingAngle;
+
+    // Variables used for unstable platforms
+    float directionDelta, rotatingDirection, directionFactor, platformUnstability;
+    bool firstRotateDirection;
+
+    // Variables used for oscillating platforms
+    float positionElasticity,positionResistance;
 };
 
 #endif // PLATFORM_H

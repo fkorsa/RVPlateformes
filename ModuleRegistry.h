@@ -35,6 +35,9 @@ public:
     void registerDynamicsWorld(btDynamicsWorld *dynamicsWorld);
     btDynamicsWorld* getDynamicsWorld();
 
+    void registerBall(Ball *ball);
+    Ball* getBall();
+
 private:
     SDLWindow *window;
     InputManager *inputManager;

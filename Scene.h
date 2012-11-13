@@ -24,9 +24,10 @@
 #include "InputManager.h"
 #include "Ball.h"
 #include "Text2d.h"
+#include "Text3d.h"
 #include "Platform.h"
 #include "Skybox.h"
-
+#include "Pyramid.h"
 
 class Scene : public Module
 {
@@ -53,6 +54,7 @@ private:
     btRigidBody *ballBody;
     Ball* ball;
     Text2D* text2d;
+    Text3D* text3d;
     Platform *platforms[100];
     int numPlatforms;
 };
