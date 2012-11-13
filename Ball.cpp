@@ -27,11 +27,12 @@ Ball::Ball(osg::MatrixTransform *_rootNode, btDynamicsWorld * _dynamicsWorld)
 
     ghost = new btPairCachingGhostObject();
     ghost->setCollisionShape (cs);
-    ghost->setCollisionFlags (btCollisionObject::CF_CHARACTER_OBJECT | btCollisionObject::CF_KINEMATIC_OBJECT);
+    ghost->setCollisionFlags (body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 
     _rootNode->addChild(root);
     _dynamicsWorld->addRigidBody(body,COL_BALL,COL_FLOOR);
     _dynamicsWorld->addCollisionObject(ghost,COL_BALL,COL_FLOOR);
+
 }
 
 void Ball::update(double elapsed)
@@ -59,7 +60,7 @@ void Ball::update(double elapsed)
 
     if (jumping)
     {
-        osg::notify( osg::ALWAYS ) << "JUMP " << std::endl;
+        //osg::notify( osg::ALWAYS ) << "JUMP " << std::endl;
         timer += elapsed;
         if (timer>1./10.) jumping = false;
         body->applyCentralForce(btVector3(0.,0.,3900.));
