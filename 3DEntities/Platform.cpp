@@ -139,8 +139,11 @@ void Platform::update(double elapsed)
                 }
             }
         }
+        // If the platform shall fall after a certain time during which the ball is on the platform,
+        // as set in setUnstable(...)
         if(isUnstable)
         {
+            // Test whether the ball is in contact with this platform
             if(registry->getBall()->isOnTheFloor() == body)
             {
                 directionDelta += platformUnstability;
@@ -150,6 +153,7 @@ void Platform::update(double elapsed)
                     directionFactor /= PLATFORM_UNSTABLE_SMOOTHING;
                 }
             }
+            // else slowly stop the agitation
             else
             {
                 if(directionFactor<PLATFORM_UNSTABLE_SMOOTHING_THRESHOLD)
@@ -157,6 +161,7 @@ void Platform::update(double elapsed)
                     directionFactor *= PLATFORM_UNSTABLE_SMOOTHING;
                 }
             }
+            // If the platform has been agitated for too long, it will fall
             if(rotatingDirection>PLATFORM_UNSTABLE_FALLING_THRESHOLD)
             {
                 setMass(1.f);
@@ -190,6 +195,7 @@ void Platform::movePlatform(btVector3 movingVector)
     shakeMotion->setWorldTransform(world);
 }
 
+// Rotate the platform to make the impression of agitation (like it will fall soon...)
 void Platform::rotatePlatform(float direction, float directionFactor)
 {
     platformPAT->setAttitude(osg::Quat(cos(direction)/directionFactor, sin(direction)/directionFactor,
