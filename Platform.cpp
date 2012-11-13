@@ -2,7 +2,8 @@
 
 Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
                    const osg::Vec3 &lengths, osg::Texture2D *texture) :
-    isPlatformMoving(false)
+    isPlatformMoving(false),
+    isUnstable(false)
 {
     osg::Box* box = new osg::Box(center, lengths.x(), lengths.y(), lengths.z());
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
@@ -53,8 +54,14 @@ Platform* Platform::setTranslatingPlatformParameters(const osg::Vec3 &endPoint, 
     // Set the platform type to be a moving platform
     isPlatformMoving = true;
     // Initialize the position of the platform
-    currentPos = startPoint;
+    desiredCurrentPos = startPoint;
     body->setActivationState(DISABLE_DEACTIVATION);
+    return this;
+}
+
+Platform* Platform::setUnstable()
+{
+    isUnstable = true;
     return this;
 }
 
@@ -63,6 +70,9 @@ void Platform::update(double elapsed)
     // If the time elapsed is too great, do nothing
     if(elapsed < 1)
     {
+        /*btTransform world;
+        shakeMotion->getWorldTransform(world);
+        currentPos = osgbCollision::asOsgVec3(world.getOrigin()) + startPoint;*/
         // If the platform shall move between two points, as set by calling setTranslatingPlatformParameters(...)
         if(isPlatformMoving)
         {
@@ -73,7 +83,7 @@ void Platform::update(double elapsed)
             if(movesTowardEnd)
             {
                 // If the platform is not yet too close to the endPoint, move
-                if((currentPos-endPoint).length() > localSpeed)
+                if((desiredCurrentPos-endPoint).length() > localSpeed)
                 {
                     // The platform moves by a vector defined by the start point and the end point,
                     // normalized and scaled by the speed & time elapsed
@@ -81,30 +91,34 @@ void Platform::update(double elapsed)
                     movingVector.normalize();
                     movingVector *= localSpeed;
                     movePlatform(movingVector);
-                    currentPos += movingVector;
+                    desiredCurrentPos += movingVector;
                 }
                 else
                 {
                     movesTowardEnd = false;
-                    currentPos = endPoint;
+                    desiredCurrentPos = endPoint;
                 }
             }
             else
             {
-                if((currentPos-startPoint).length() > localSpeed)
+                if((desiredCurrentPos-startPoint).length() > localSpeed)
                 {
                     movingVector = startPoint - endPoint;
                     movingVector.normalize();
                     movingVector *= localSpeed;
                     movePlatform(movingVector);
-                    currentPos += movingVector;
+                    desiredCurrentPos += movingVector;
                 }
                 else
                 {
                     movesTowardEnd = true;
-                    currentPos = startPoint;
+                    desiredCurrentPos = startPoint;
                 }
             }
+        }
+        if(isUnstable)
+        {
+
         }
     }
 }
@@ -120,4 +134,10 @@ void Platform::movePlatform(osg::Vec3 movingVector)
     shakeMotion->getWorldTransform(world);
     btTransform netTrans = moveTrans * world;
     shakeMotion->setWorldTransform(netTrans);
+}
+
+void Platform::rotatePlatform()
+{
+    btTransform rotateTrans;
+    //rotateTrans.setRotation();
 }
