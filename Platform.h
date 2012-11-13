@@ -25,7 +25,7 @@ public:
     Platform* setTranslatingPlatformParameters(const osg::Vec3& endPoint, float movingSpeed);
     Platform* setUnstable();
     Platform* setMass(float mass);
-    Platform* setPositionElasticity(float elasticity);
+    Platform* setPositionElasticity(float elasticity = 300.0f, float resistance = 10.0f);
     void update(double elapsed);
     void movePlatform(osg::Vec3 movingVector);
     void rotatePlatform();
@@ -39,7 +39,7 @@ private:
     bool movesTowardEnd;
     bool isPlatformMoving, isUnstable;
     float movingSpeed;
-    float positionElasticity;
+    float positionElasticity,positionResistance;
 };
 
 #endif // PLATFORM_H

@@ -30,7 +30,7 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3 &center,
 
     body = new btRigidBody(rb);
     registry = moduleRegistry;
-    registry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL);
+    registry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL|COL_OTHERS);
     registry->getRootNode()->addChild(matrixTransform);
     body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
     startPoint = center;
@@ -44,16 +44,19 @@ Platform* Platform::setMass(float mass)
     body->setCollisionFlags(flags & ~btCollisionObject::CF_KINEMATIC_OBJECT);
     body->forceActivationState(ACTIVE_TAG);
     body->setMassProps(mass,btVector3(0,0,0));
-    registry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL);
+    registry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL|COL_OTHERS);
     return this;
 }
 
 // La plaque oscille quand on saute dessus
-Platform* Platform::setPositionElasticity(float elasticity) {
-    setMass(15.0f);
+// Plus elasticity est grand plus les oscillations sont lentes
+// Plus resistance est grand plus le retour à l'équilibre est rapide
+Platform* Platform::setPositionElasticity(float elasticity, float resistance) {
+    setMass(10.0f);
     body->setGravity(btVector3(0,0,0));
-    body->setDamping(0.8f,0.8f);
+    body->setDamping(0.2f,0.2f);
     positionElasticity = elasticity;
+    positionResistance = resistance;
     return this;
 }
 
@@ -138,6 +141,7 @@ void Platform::update(double elapsed)
         shakeMotion->getWorldTransform(world);
         osg::Vec3 position = osgbCollision::asOsgVec3(world.getOrigin()) + startPoint;
         body->applyCentralForce(osgbCollision::asBtVector3(desiredCurrentPos-position)*positionElasticity);
+        body->applyCentralForce(-body->getLinearVelocity()*positionResistance);
     }
 
 }

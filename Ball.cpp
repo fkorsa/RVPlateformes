@@ -31,7 +31,7 @@ Ball::Ball(osg::MatrixTransform *_rootNode, btDynamicsWorld * _dynamicsWorld)
 
     _rootNode->addChild(root);
     _dynamicsWorld->addRigidBody(body,COL_BALL,COL_FLOOR);
-    _dynamicsWorld->addCollisionObject(ghost,COL_BALL,COL_FLOOR);
+    _dynamicsWorld->addCollisionObject(ghost,COL_BALL,COL_FLOOR|COL_OTHERS);
 
 }
 

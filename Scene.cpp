@@ -119,23 +119,33 @@ void Scene::createScene()
     moduleRegistry->getInputManager()->setBall(ball);
     ballBody = ball->getBody();
 
-    // NIVEAU 1
+    // LEVEL 1
     osg::Image* image1 = osgDB::readImageFile("data/bric.jpg");
     osg::Texture2D* texture1 = new osg::Texture2D;
     texture1->setImage(image1);
 
     platforms[numPlatforms++] = new Platform(moduleRegistry,osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 5), texture1);
     platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 60., 0., -15. ), osg::Vec3(30, 30, 5), texture1))
-            ->setPositionElasticity(300.f);
-    platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 120., 0., -5. ), osg::Vec3(30, 30, 5), texture1))
-            ->setPositionElasticity(2.f);
-    platforms[numPlatforms++] = new Platform(moduleRegistry,osg::Vec3( 180., 0., 5. ), osg::Vec3(30, 30, 5), texture1);
-    platforms[numPlatforms++] = new Platform(moduleRegistry,osg::Vec3( 260., 0., 5. ), osg::Vec3(50, 50, 5), texture1);
+            ->setPositionElasticity();
+    platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 100., 0., 30. ), osg::Vec3(30, 30, 5), texture1))
+            ->setPositionElasticity(2000.f,300.0f);
+    platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 260., 0., 5. ), osg::Vec3(50, 50, 5), texture1))
+            ->setPositionElasticity(2000.f,300.0f);
+
+    // SOME BOXES
+    osg::Image* image2 = osgDB::readImageFile("data/box.png");
+    osg::Texture2D* texture2 = new osg::Texture2D;
+    texture2->setImage(image2);
+    new Pyramid(moduleRegistry,1,1,7,400.0f,osg::Vec3(100,0,37),texture2);
+    new Pyramid(moduleRegistry,4,4,7,1.0f,osg::Vec3(260,0,15),texture2);
+
 
 #ifndef VRJUGGLER
     moduleRegistry->getSceneView()->setSceneData(rootNode);
 #endif
 }
+
+
 
 void Scene::createLights()
 {
