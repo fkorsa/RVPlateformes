@@ -21,7 +21,7 @@ Ball::Ball(osg::Vec3f center, float radius, ModuleRegistry *moduleRegistry)
     btTransform trans;
     trans.setIdentity();
     cs->addChildShape(trans, sphereShape);
-    btRigidBody::btRigidBodyConstructionInfo rb(3.0f, ballMotionState, cs, inertia);
+    btRigidBody::btRigidBodyConstructionInfo rb(10.0f, ballMotionState, cs, inertia);
 
     body = new btRigidBody(rb);
     body->setActivationState(DISABLE_DEACTIVATION);
@@ -29,8 +29,8 @@ Ball::Ball(osg::Vec3f center, float radius, ModuleRegistry *moduleRegistry)
     ghost->setCollisionShape (cs);
     ghost->setCollisionFlags (body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 
-    moduleRegistry->getDynamicsWorld()->addRigidBody(body);
-    moduleRegistry->getDynamicsWorld()->addCollisionObject(ghost,COL_BALL,COL_FLOOR|COL_OTHERS);
+    moduleRegistry->getDynamicsWorld()->addRigidBody(body, COL_BALL, COL_FLOOR|COL_OTHERS);
+    moduleRegistry->getDynamicsWorld()->addCollisionObject(ghost, COL_BALL, COL_FLOOR|COL_OTHERS);
     moduleRegistry->getRootNode()->addChild(ballPAT);
 }
 
@@ -64,7 +64,7 @@ void Ball::update(double elapsed)
         //osg::notify( osg::ALWAYS ) << "JUMP " << std::endl;
         timer += elapsed;
         if (timer>1./10.) jumping = false;
-        body->applyCentralForce(btVector3(0.,0.,3900.));
+        body->applyCentralForce(btVector3(0.,0.,BALL_JUMP_FORCE));
     }
     else
     {
@@ -75,13 +75,13 @@ void Ball::update(double elapsed)
 void Ball::moveLeft()
 {
     if(allowJump)
-        body->applyCentralForce(btVector3(-1200.,0.,0.));
+        body->applyCentralForce(btVector3(-BALL_HORIZONTAL_FORCE,0.,0.));
 }
 
 void Ball::moveRight()
 {
     if(allowJump)
-        body->applyCentralForce(btVector3(1200.,0.,0.));
+        body->applyCentralForce(btVector3(BALL_HORIZONTAL_FORCE,0.,0.));
 }
 
 void Ball::jump()

@@ -128,7 +128,7 @@ void Scene::createScene()
     osg::Texture2D* texture1 = new osg::Texture2D;
     texture1->setImage(image1);
 
-    /*platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 0., 0., -25. ), osg::Vec3f(30, 30, 5), texture1))
+    platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 0., 0., -25. ), osg::Vec3f(30, 30, 5), texture1))
             //->setPositionElasticity(2000.f,300.0f);
             ->setTranslatingPlatformParameters(btVector3(0., 0, -5), 10)
             //->setUnstable(10)
@@ -138,16 +138,16 @@ void Scene::createScene()
             ->setUnstable(1)
             ;
     platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 100., 0., 30. ), osg::Vec3(30, 30, 5), texture1))
-            ->setPositionElasticity(2000.f,800.0f);*/
+            ->setPositionElasticity(4000.f,80.0f);
     platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 260., 0., 5. ), osg::Vec3(50, 50, 5), texture1))
-            ->setPositionElasticity(2000.f,800.0f);
+            ->setPositionElasticity(20000.f,800.0f);
 
     // SOME BOXES
     osg::Image* image2 = osgDB::readImageFile("data/box.png");
     osg::Texture2D* texture2 = new osg::Texture2D;
     texture2->setImage(image2);
     new Pyramid(moduleRegistry,1,1,7,400.0f,osg::Vec3(100,0,37),texture2);
-    new Pyramid(moduleRegistry,4,4,7,1.0f,osg::Vec3(260,0,15),texture2);
+    new Pyramid(moduleRegistry,4,4,7,10.0f,osg::Vec3(260,0,15),texture2);
 
 
 #ifndef VRJUGGLER

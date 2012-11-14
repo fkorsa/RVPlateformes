@@ -175,15 +175,6 @@ void Platform::update(double elapsed)
         btVector3 position = world.getOrigin();
         body->applyCentralForce((desiredCurrentPos-position)*positionElasticity);
         body->applyCentralForce(-body->getLinearVelocity()*positionResistance);
-        osg::notify( osg::ALWAYS ) << "desiredpos : "
-                                   << "x : " << desiredCurrentPos.x()
-                                   << " y : " << desiredCurrentPos.y()
-                                   << " z : " << desiredCurrentPos.z()
-                                   << std::endl
-                                   << " x : " << position.x()
-                                   << " y : " << position.y()
-                                   << " z : " << position.z()
-                                   << std::endl;
     }
 
 }
