@@ -12,30 +12,26 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center,
     state->setTextureAttributeAndModes(0,texture,osg::StateAttribute::ON);
     geode->addDrawable(shape);
     geode->setStateSet(state);
-    // We need a MatrixTransform to move the box around
-    osg::MatrixTransform* matrixTransform = new osg::MatrixTransform;
     platformPAT = new osg::PositionAttitudeTransform;
     platformPAT->addChild(geode);
     platformPAT->setPosition(center);
-    matrixTransform->addChild(platformPAT);
 
-    shakeMotion = new osgbDynamics::MotionState();
-    shakeMotion->setTransform(matrixTransform);
+    platformMotionState = new MyMotionState(platformPAT);
 
     btVector3 inertia(0, 0, 0);
     btCompoundShape* cs = new btCompoundShape;
     btBoxShape* boxShape = new btBoxShape(Utils::asBtVector3(lengths*0.5));
     btTransform trans;
     trans.setIdentity();
-    trans.setOrigin(Utils::asBtVector3(center));
     cs->addChildShape(trans, boxShape);
-    btRigidBody::btRigidBodyConstructionInfo rb(0.0f, shakeMotion, cs, inertia);
+    btRigidBody::btRigidBodyConstructionInfo rb(0.0f, platformMotionState, cs, inertia);
 
     body = new btRigidBody(rb);
+    body->setFriction(1);
+    body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
     registry = moduleRegistry;
     registry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL|COL_OTHERS);
-    registry->getRootNode()->addChild(matrixTransform);
-    body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+    registry->getRootNode()->addChild(platformPAT);
     startPoint = Utils::asBtVector3(center);
     desiredCurrentPos = startPoint;
 }
@@ -146,11 +142,11 @@ void Platform::update(double elapsed)
             // Test whether the ball is in contact with this platform
             if(registry->getBall()->isOnTheFloor() == body)
             {
-                directionDelta += platformUnstability;
+                directionDelta += platformUnstability * elapsed;
                 rotatingDirection += directionDelta;
                 if(directionFactor>1)
                 {
-                    directionFactor /= PLATFORM_UNSTABLE_SMOOTHING;
+                    directionFactor /= PLATFORM_UNSTABLE_SMOOTHING * elapsed;
                 }
             }
             // else slowly stop the agitation
@@ -158,7 +154,7 @@ void Platform::update(double elapsed)
             {
                 if(directionFactor<PLATFORM_UNSTABLE_SMOOTHING_THRESHOLD)
                 {
-                    directionFactor *= PLATFORM_UNSTABLE_SMOOTHING;
+                    directionFactor *= PLATFORM_UNSTABLE_SMOOTHING * elapsed;
                 }
             }
             // If the platform has been agitated for too long, it will fall
@@ -175,10 +171,19 @@ void Platform::update(double elapsed)
     if (positionElasticity > 0)
     {
         btTransform world;
-        shakeMotion->getWorldTransform(world);
-        btVector3 position = world.getOrigin() + startPoint;
+        platformMotionState->getWorldTransform(world);
+        btVector3 position = world.getOrigin();
         body->applyCentralForce((desiredCurrentPos-position)*positionElasticity);
         body->applyCentralForce(-body->getLinearVelocity()*positionResistance);
+        osg::notify( osg::ALWAYS ) << "desiredpos : "
+                                   << "x : " << desiredCurrentPos.x()
+                                   << " y : " << desiredCurrentPos.y()
+                                   << " z : " << desiredCurrentPos.z()
+                                   << std::endl
+                                   << " x : " << position.x()
+                                   << " y : " << position.y()
+                                   << " z : " << position.z()
+                                   << std::endl;
     }
 
 }
@@ -190,9 +195,9 @@ void Platform::movePlatform(btVector3 movingVector)
     moveTrans.setIdentity();
     moveTrans.setOrigin(movingVector);
     btTransform world;
-    shakeMotion->getWorldTransform(world);
+    platformMotionState->getWorldTransform(world);
     world = moveTrans * world;
-    shakeMotion->setWorldTransform(world);
+    platformMotionState->setWorldTransform(world);
 }
 
 // Rotate the platform to make the impression of agitation (like it will fall soon...)

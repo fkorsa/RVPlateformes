@@ -1,38 +1,37 @@
 #include "Ball.h"
 
-Ball::Ball(osg::MatrixTransform *_rootNode, btDynamicsWorld * _dynamicsWorld)
+Ball::Ball(osg::Vec3f center, float radius, ModuleRegistry *moduleRegistry)
     :allowJump(false), jumping(false), timer()
 {
-    osg::Sphere* sphere = new osg::Sphere( osg::Vec3(0,0,20) , 7. );
+    osg::Sphere* sphere = new osg::Sphere(osg::Vec3f(), radius);
     osg::ShapeDrawable* shape = new osg::ShapeDrawable( sphere );
     shape->setColor( osg::Vec4( 1., 0., 0., 1. ) );
     osg::Geode* geode = new osg::Geode();
     geode->addDrawable( shape );
 
-    // We need a MatrixTransform to move the box around
-    osg::MatrixTransform* root = new osg::MatrixTransform;
-    root->addChild( geode );
+    osg::PositionAttitudeTransform* ballPAT = new osg::PositionAttitudeTransform;
+    ballPAT->addChild(geode);
+    ballPAT->setPosition(center);
 
-    // We add the box to the simulation
-    btCollisionShape* cs = new btSphereShape(6.9f);
-    osg::ref_ptr< osgbDynamics::CreationRecord > cr = new osgbDynamics::CreationRecord;
-    cr->_sceneGraph = root;
-    cr->_shapeType = SPHERE_SHAPE_PROXYTYPE;
-    cr->_mass = 3.f;
-    cr->_restitution = 0.0f;
-    cr->_friction = 1.f;
+    MyMotionState* ballMotionState = new MyMotionState(ballPAT);
 
-    body = osgbDynamics::createRigidBody( cr.get(), cs );
+    btVector3 inertia(0, 0, 0);
+    btCompoundShape* cs = new btCompoundShape;
+    btSphereShape* sphereShape = new btSphereShape(7.);
+    btTransform trans;
+    trans.setIdentity();
+    cs->addChildShape(trans, sphereShape);
+    btRigidBody::btRigidBodyConstructionInfo rb(3.0f, ballMotionState, cs, inertia);
+
+    body = new btRigidBody(rb);
     body->setActivationState(DISABLE_DEACTIVATION);
-
     ghost = new btPairCachingGhostObject();
     ghost->setCollisionShape (cs);
     ghost->setCollisionFlags (body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 
-    _rootNode->addChild(root);
-    _dynamicsWorld->addRigidBody(body,COL_BALL,COL_FLOOR);
-    _dynamicsWorld->addCollisionObject(ghost,COL_BALL,COL_FLOOR|COL_OTHERS);
-
+    moduleRegistry->getDynamicsWorld()->addRigidBody(body);
+    moduleRegistry->getDynamicsWorld()->addCollisionObject(ghost,COL_BALL,COL_FLOOR|COL_OTHERS);
+    moduleRegistry->getRootNode()->addChild(ballPAT);
 }
 
 void Ball::update(double elapsed)

@@ -118,10 +118,9 @@ void Scene::createScene()
     //text3d = new Text3D(rootNode);
 
     // THE MIGHTY BALL
-    ball = new Ball(rootNode,dynamicsWorld);
+    ball = new Ball(osg::Vec3f(0, 0, 20), 7., moduleRegistry);
     moduleRegistry->getInputManager()->setBall(ball);
     moduleRegistry->registerBall(ball);
-    ball->setModuleRegistry(moduleRegistry);
     ballBody = ball->getBody();
 
     // LEVEL 1
@@ -129,16 +128,19 @@ void Scene::createScene()
     osg::Texture2D* texture1 = new osg::Texture2D;
     texture1->setImage(image1);
 
-    platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 0., 0., -25. ), osg::Vec3(30, 30, 5), texture1))
-            ->setTranslatingPlatformParameters(btVector3(0., 15, -5), 10)
-            ->setUnstable(0.01);
+    /*platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 0., 0., -25. ), osg::Vec3f(30, 30, 5), texture1))
+            //->setPositionElasticity(2000.f,300.0f);
+            ->setTranslatingPlatformParameters(btVector3(0., 0, -5), 10)
+            //->setUnstable(10)
+            ;
     platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 60., 0., -15. ), osg::Vec3(30, 30, 5), texture1))
-            ->setPositionElasticity()
-            ->setUnstable(0.01);
+            //->setPositionElasticity()
+            ->setUnstable(1)
+            ;
     platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 100., 0., 30. ), osg::Vec3(30, 30, 5), texture1))
-            ->setPositionElasticity(2000.f,300.0f);
+            ->setPositionElasticity(2000.f,800.0f);*/
     platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 260., 0., 5. ), osg::Vec3(50, 50, 5), texture1))
-            ->setPositionElasticity(2000.f,300.0f);
+            ->setPositionElasticity(2000.f,800.0f);
 
     // SOME BOXES
     osg::Image* image2 = osgDB::readImageFile("data/box.png");

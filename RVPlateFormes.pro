@@ -1,29 +1,18 @@
 include(VRJuggler/VRJuggler.pri)
 include(3DEntities/3DEntities.pri)
+include(Abstract/Abstract.pri)
 
 SOURCES += \
     main.cpp \
-    Controller.cpp \
-    ModuleRegistry.cpp \
-    Module.cpp \
     Scene.cpp \
     Text2d.cpp \
-    InputManager.cpp \
-    SDLInputStrategy.cpp \
-    SDLWindow.cpp \
     Skybox.cpp \
     Text3d.cpp
 
 HEADERS += \
-    Controller.h \
     Constants.h \
-    ModuleRegistry.h \
-    Module.h \
     Scene.h \
     Text2d.h \
-    InputManager.h \
-    SDLInputStrategy.h \
-    SDLWindow.h \
     Skybox.h \
     Text3d.h \
     Utils.h

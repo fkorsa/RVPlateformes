@@ -15,10 +15,9 @@ Pyramid::Pyramid(ModuleRegistry *registry, int width, int depth, int size, float
     registry->getRootNode()->addChild(rootNode);
 }
 
-osg::MatrixTransform* Pyramid::createBox(const osg::Vec3& center)
+void Pyramid::createBox(const osg::Vec3& center)
 {
-
-    osg::Box* box = new osg::Box(center, size, size, size);
+    osg::Box* box = new osg::Box(osg::Vec3f(), size, size, size);
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
     osg::StateSet* state = new osg::StateSet();
     osg::Geode* geode = new osg::Geode();
@@ -27,24 +26,26 @@ osg::MatrixTransform* Pyramid::createBox(const osg::Vec3& center)
     geode->addDrawable(shape);
     geode->setStateSet(state);
 
-    // We need a MatrixTransform to move the box around
-    osg::MatrixTransform* root = new osg::MatrixTransform;
-    root->addChild(geode);
+    osg::PositionAttitudeTransform* boxPAT = new osg::PositionAttitudeTransform;
+    boxPAT->addChild(geode);
+    boxPAT->setPosition(center);
 
-    // We add the box to the simulation
-    btCollisionShape* cs = osgbCollision::btBoxCollisionShapeFromOSG(geode);
-    osg::ref_ptr<osgbDynamics::CreationRecord> cr = new osgbDynamics::CreationRecord;
-    cr->_sceneGraph = root;
-    cr->_shapeType = BOX_SHAPE_PROXYTYPE;
-    cr->_mass = mass;
-    cr->_restitution = 1.f;
-    cr->_friction = 1.f;
-    btRigidBody* body = osgbDynamics::createRigidBody(cr.get(), cs);
+    MyMotionState* boxMotionState = new MyMotionState(boxPAT);
+
+    btVector3 inertia(0, 0, 0);
+    btCompoundShape* cs = new btCompoundShape;
+    btBoxShape* boxShape = new btBoxShape(btVector3(size, size, size)*0.5);
+    btTransform trans;
+    trans.setIdentity();
+    cs->addChildShape(trans, boxShape);
+    btRigidBody::btRigidBodyConstructionInfo rb(mass, boxMotionState, cs, inertia);
+
+    btRigidBody* body = new btRigidBody(rb);
+    body->setRestitution(1.f);
+    body->setFriction(0.001);
 
     registry->getDynamicsWorld()->addRigidBody(body,COL_OTHERS,COL_FLOOR|COL_BALL|COL_OTHERS);
-    rootNode->addChild(root);
-
-    return root;
+    rootNode->addChild(boxPAT);
 }
 
 void Pyramid::addLayer(int width,int depth, int height)

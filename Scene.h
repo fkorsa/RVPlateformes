@@ -20,8 +20,8 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include "Module.h"
-#include "InputManager.h"
+#include "Abstract/Module.h"
+#include "Abstract/InputManager.h"
 #include "3DEntities/Ball.h"
 #include "Text2d.h"
 #include "Text3d.h"

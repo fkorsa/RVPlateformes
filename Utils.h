@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <osg/Vec3f>
+#include <osg/Quat>
 
 #include <bullet/btBulletDynamicsCommon.h>
 
@@ -16,6 +17,16 @@ public:
     static osg::Vec3f asOsgVec3(btVector3 vector)
     {
         return osg::Vec3f(vector.x(), vector.y(), vector.z());
+    }
+
+    static btQuaternion asBtQuaternion(osg::Quat quat)
+    {
+        return btQuaternion(quat.x(), quat.y(), quat.z(), quat.w());
+    }
+
+    static osg::Quat asOsgQuaternion(btQuaternion quat)
+    {
+        return osg::Quat(quat.x(), quat.y(), quat.z(), quat.w());
     }
 
 };

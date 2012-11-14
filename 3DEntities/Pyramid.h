@@ -10,7 +10,8 @@
 #include <osgbCollision/RefBulletObject.h>
 #include <osgbDynamics/RigidBody.h>
 #include <osg/MatrixTransform>
-#include "Module.h"
+#include "Abstract/Module.h"
+#include "Abstract/MyMotionState.h"
 #include "Constants.h"
 
 /**
@@ -23,7 +24,7 @@ public:
 
 private:
     void addLayer(int width,int depth, int height);
-    osg::MatrixTransform* createBox(const osg::Vec3& center);
+    void createBox(const osg::Vec3& center);
 
     float mass;
     int size;

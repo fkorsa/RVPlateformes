@@ -10,16 +10,10 @@
 #include <osgDB/ReadFile>
 #include <osg/Math>
 
-#include <osgbCollision/CollisionShapes.h>
-#include <osgbCollision/RefBulletObject.h>
-#include <osgbCollision/Utils.h>
-#include <osgbDynamics/RigidBody.h>
-#include <osgbDynamics/CreationRecord.h>
-#include <osgbDynamics/MotionState.h>
-
-#include "ModuleRegistry.h"
+#include "Abstract/ModuleRegistry.h"
 #include "Constants.h"
 #include "Ball.h"
+#include "Abstract/MyMotionState.h"
 
 #include "Utils.h"
 
@@ -37,7 +31,7 @@ public:
 private:
     ModuleRegistry* registry;
     btRigidBody *body;
-    osgbDynamics::MotionState* shakeMotion;
+    MyMotionState* platformMotionState;
     osg::PositionAttitudeTransform* platformPAT;
     btVector3 endPoint;
     btVector3 startPoint;
