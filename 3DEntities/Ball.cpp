@@ -40,7 +40,7 @@ Ball::Ball(osg::Vec3f center, float radius, ModuleRegistry *moduleRegistry)
 
     moduleRegistry->getDynamicsWorld()->addRigidBody(body, COL_BALL, COL_FLOOR|COL_OTHERS);
     moduleRegistry->getDynamicsWorld()->addCollisionObject(ghost, COL_BALL, COL_FLOOR|COL_OTHERS);
-    moduleRegistry->getRootNode()->addChild(ballMT);
+    moduleRegistry->getRootNode()->addChild(ballMT.get());
 }
 
 void Ball::update(double elapsed)

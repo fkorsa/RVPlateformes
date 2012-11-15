@@ -34,7 +34,7 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center,
     body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
     registry = moduleRegistry;
     registry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL|COL_OTHERS);
-    registry->getRootNode()->addChild(platformMT);
+    registry->getRootNode()->addChild(platformMT.get());
     startPoint = Utils::asBtVector3(center);
     desiredCurrentPos = startPoint;
 }

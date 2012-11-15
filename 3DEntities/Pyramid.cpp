@@ -47,7 +47,7 @@ void Pyramid::createBox(const osg::Vec3& center)
     body->setFriction(.1);
 
     registry->getDynamicsWorld()->addRigidBody(body,COL_OTHERS,COL_FLOOR|COL_BALL|COL_OTHERS);
-    rootNode->addChild(boxMT);
+    rootNode->addChild(boxMT.get());
 }
 
 void Pyramid::addLayer(int width,int depth, int height)
