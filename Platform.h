@@ -37,9 +37,9 @@ private:
     btRigidBody *body;
     osgbDynamics::MotionState* shakeMotion;
     osg::PositionAttitudeTransform* platformPAT;
-    osg::Vec3 endPoint;
-    osg::Vec3 startPoint;
-    osg::Vec3 desiredCurrentPos, currentPos;
+    osg::Vec3f endPoint;
+    osg::Vec3f startPoint;
+    osg::Vec3f desiredCurrentPos, currentPos;
     bool movesTowardEnd;
     bool isPlatformMoving, isUnstable;
     float movingSpeed;

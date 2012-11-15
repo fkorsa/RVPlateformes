@@ -145,7 +145,7 @@ void Scene::createScene()
     osg::Texture2D* texture2 = new osg::Texture2D;
     texture2->setImage(image2);
     new Pyramid(moduleRegistry,1,1,7,400.0f,osg::Vec3(100,0,37),texture2);
-    new Pyramid(moduleRegistry,4,4,7,1.0f,osg::Vec3(260,0,15),texture2);
+    new Pyramid(moduleRegistry,10,4,7,1.0f,osg::Vec3(260,0,15),texture2);
 
 
 #ifndef VRJUGGLER
@@ -205,9 +205,8 @@ void Scene::createLights()
 void Scene::run(double elapsed)
 {
     ball->update(elapsed);
-
     text2d->update(elapsed);
-    text3d->update(elapsed);
+    //text3d->update(elapsed);
     for(int i = 0;i<numPlatforms;i++)
     {
         platforms[i]->update(elapsed);
