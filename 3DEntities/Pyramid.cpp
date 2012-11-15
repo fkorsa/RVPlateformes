@@ -26,11 +26,13 @@ void Pyramid::createBox(const osg::Vec3& center)
     geode->addDrawable(shape);
     geode->setStateSet(state);
 
-    osg::PositionAttitudeTransform* boxPAT = new osg::PositionAttitudeTransform;
-    boxPAT->addChild(geode);
-    boxPAT->setPosition(center);
+    osg::ref_ptr<osg::MatrixTransform> boxMT = new osg::MatrixTransform;
+    boxMT->addChild(geode);
+    osg::Matrix m;
+    m.makeTranslate(center);
+    boxMT->setMatrix( m );
 
-    MyMotionState* boxMotionState = new MyMotionState(boxPAT);
+    MyMotionState* boxMotionState = new MyMotionState(boxMT);
 
     btVector3 inertia(0, 0, 0);
     btCompoundShape* cs = new btCompoundShape;
@@ -45,7 +47,7 @@ void Pyramid::createBox(const osg::Vec3& center)
     body->setFriction(.1);
 
     registry->getDynamicsWorld()->addRigidBody(body,COL_OTHERS,COL_FLOOR|COL_BALL|COL_OTHERS);
-    rootNode->addChild(boxPAT);
+    rootNode->addChild(boxMT);
 }
 
 void Pyramid::addLayer(int width,int depth, int height)

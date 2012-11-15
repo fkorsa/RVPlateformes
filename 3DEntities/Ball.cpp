@@ -15,11 +15,13 @@ Ball::Ball(osg::Vec3f center, float radius, ModuleRegistry *moduleRegistry)
     geode->addDrawable( shape );
     geode->setStateSet(state);
 
-    osg::PositionAttitudeTransform* ballPAT = new osg::PositionAttitudeTransform;
-    ballPAT->addChild(geode);
-    ballPAT->setPosition(center);
+    osg::ref_ptr<osg::MatrixTransform> ballMT = new osg::MatrixTransform;
+    ballMT->addChild(geode);
+    osg::Matrix m;
+    m.makeTranslate(center);
+    ballMT->setMatrix( m );
 
-    MyMotionState* ballMotionState = new MyMotionState(ballPAT);
+    MyMotionState* ballMotionState = new MyMotionState(ballMT);
 
     btVector3 inertia(0, 0, 0);
     btCompoundShape* cs = new btCompoundShape;
@@ -38,7 +40,7 @@ Ball::Ball(osg::Vec3f center, float radius, ModuleRegistry *moduleRegistry)
 
     moduleRegistry->getDynamicsWorld()->addRigidBody(body, COL_BALL, COL_FLOOR|COL_OTHERS);
     moduleRegistry->getDynamicsWorld()->addCollisionObject(ghost, COL_BALL, COL_FLOOR|COL_OTHERS);
-    moduleRegistry->getRootNode()->addChild(ballPAT);
+    moduleRegistry->getRootNode()->addChild(ballMT);
 }
 
 void Ball::update(double elapsed)

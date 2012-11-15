@@ -12,11 +12,13 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center,
     state->setTextureAttributeAndModes(0,texture,osg::StateAttribute::ON);
     geode->addDrawable(shape);
     geode->setStateSet(state);
-    platformPAT = new osg::PositionAttitudeTransform;
-    platformPAT->addChild(geode);
-    platformPAT->setPosition(center);
+    platformMT = new osg::MatrixTransform;
+    platformMT->addChild(geode);
+    osg::Matrix m;
+    m.makeTranslate(center);
+    platformMT->setMatrix( m );
 
-    platformMotionState = new MyMotionState(platformPAT);
+    platformMotionState = new MyMotionState(platformMT);
 
     btVector3 inertia(0, 0, 0);
     btCompoundShape* cs = new btCompoundShape;
@@ -32,7 +34,7 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center,
     body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
     registry = moduleRegistry;
     registry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL|COL_OTHERS);
-    registry->getRootNode()->addChild(platformPAT);
+    registry->getRootNode()->addChild(platformMT);
     startPoint = Utils::asBtVector3(center);
     desiredCurrentPos = startPoint;
 }
@@ -198,6 +200,9 @@ void Platform::movePlatform(btVector3 movingVector)
 // Rotate the platform to make the impression of agitation (like it will fall soon...)
 void Platform::rotatePlatform(float direction, float directionFactor)
 {
-    platformPAT->setAttitude(osg::Quat(cos(direction)/directionFactor, sin(direction)/directionFactor,
-                                       PLATFORM_UNSTABLE_ANGLE, 0));
+    osg::Matrix m = platformMT->getMatrix();
+    m.setRotate(osg::Quat(cos(direction)/directionFactor, sin(direction)/directionFactor,
+                          PLATFORM_UNSTABLE_ANGLE, 0));
+
+    platformMT->setMatrix( m );
 }

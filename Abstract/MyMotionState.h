@@ -10,13 +10,10 @@
 class MyMotionState : public btMotionState
 {
 public:
-    MyMotionState(osg::PositionAttitudeTransform *pat)
+    MyMotionState(osg::ref_ptr<osg::MatrixTransform> mt)
     {
-        this->pat = pat;
-        transform.setIdentity();
-        transform.setOrigin(Utils::asBtVector3(pat->getPosition()));
-        transform.setRotation(Utils::asBtQuaternion(pat->getAttitude()));
-        mt = pat->asMatrixTransform();
+        this->mt = mt;
+        transform = Utils::asBtTransform(mt->getMatrix());
         _com = osg::Vec3(0,0,0);
         _scale = osg::Vec3( 1., 1., 1. );
     }
@@ -52,9 +49,8 @@ public:
 
 private:
     osg::Vec3 _com, _scale;
-    osg::ref_ptr< osg::MatrixTransform > mt;
+    osg::ref_ptr<osg::MatrixTransform> mt;
     btTransform transform;
-    osg::PositionAttitudeTransform *pat;
 };
 
 #endif // MYMOTIONSTATE_H

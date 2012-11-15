@@ -2,7 +2,7 @@
 APP = RVPlateformes
 
 # La liste des fichiers à compiler
-SRC = Text2d.cpp 3DEntities/Platform.cpp 3DEntities/Ball.cpp 3DEntities/Pyramid.cpp Abstract/ModuleRegistry.cpp Abstract/Controller.cpp Abstract/SDLWindow.cpp Abstract/Module.cpp Abstract/SDLInputStrategy.cpp Abstract/InputManager.cpp Text3d.cpp Scene.cpp main.cpp VRJuggler/OsgNav.cpp Skybox.cpp
+SRC = main.cpp Text2d.cpp 3DEntities/Platform.cpp 3DEntities/Ball.cpp 3DEntities/Pyramid.cpp Abstract/ModuleRegistry.cpp Abstract/Controller.cpp Abstract/SDLWindow.cpp Abstract/Module.cpp Abstract/SDLInputStrategy.cpp Abstract/InputManager.cpp Text3d.cpp Scene.cpp VRJuggler/OsgNav.cpp Skybox.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
