@@ -15,7 +15,8 @@ HEADERS += \
     Text2d.h \
     Skybox.h \
     Text3d.h \
-    Utils.h
+    Utils.h \
+    MyMatrixf.h
 
 # SDL
 LIBS += -L/usr/lib -lSDL -lSDL_image -lSDL_ttf

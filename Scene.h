@@ -50,7 +50,7 @@ private:
     btDynamicsWorld* initBulletEngine(); // Initialise le moteur de physique
 
     btDynamicsWorld * dynamicsWorld;
-    osg::MatrixTransform *rootNode;
+    osg::Group *rootNode;
     btRigidBody *ballBody;
     Ball* ball;
     Text2D* text2d;

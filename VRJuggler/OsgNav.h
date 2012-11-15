@@ -1,7 +1,11 @@
 #ifndef OSGNAV_H
 #define OSGNAV_H
 
-#include "Module.h"
+//#define VRJUGGLER
+
+#include "../Abstract/Module.h"
+#include "../Scene.h"
+#include "../Abstract/InputManager.h"
 
 #ifdef VRJUGGLER
 
@@ -26,6 +30,7 @@
 
 #include <vrj/Draw/OSG/OsgApp.h>
 
+#include <vrj/vrjConfig.h>
 #include <osg/Math>
 #include <osg/Geode>
 #include <osg/Material>
@@ -37,6 +42,8 @@
 #include <gmtl/Coord.h>
 #include <gmtl/Xforms.h>
 #include <gmtl/Math.h>
+
+#include "nav.h"
 
 class OsgNav : public vrj::OsgApp, public Module
 {
@@ -62,9 +69,6 @@ public:
         vrj::OsgApp::configSceneView(newSceneViewer);
 
         sceneView = newSceneViewer;
-        /*newSceneViewer->getLight()->setAmbient(osg::Vec4(0.3f,0.3f,0.3f,1.0f));
-        newSceneViewer->getLight()->setDiffuse(osg::Vec4(0.9f,0.9f,0.9f,1.0f));
-        newSceneViewer->getLight()->setSpecular(osg::Vec4(1.0f,1.0f,1.0f,1.0f));*/
     }
 
     osgUtil::SceneView* getSceneView()
@@ -72,9 +76,9 @@ public:
         return sceneView;
     }
 
-    osg::ref_ptr<osg::Node> getRootNode()
+    osg::MatrixTransform* getRootNode()
     {
-        return mNavTrans;
+        return mNavTrans.get();
     }
 
     void bufferPreDraw();
@@ -89,18 +93,13 @@ public:
     virtual void postFrame()
     {}
 
+
 private:
     osg::ref_ptr<osg::Group>           mRootNode;
     osg::ref_ptr<osg::Group>           mNoNav;
     osg::ref_ptr<osg::MatrixTransform> mNavTrans;
-    osg::ref_ptr<osg::MatrixTransform> mLanderTrans;
-    osg::ref_ptr<osg::Node>            mModelLander;
-    osg::ref_ptr<osg::MatrixTransform> mRotationLander[5];
-    osg::Matrix 					   rotationMatrix[5];
-    osg::Matrix 					   transMatrix[5];
-    osg::ref_ptr<osg::MatrixTransform> mLandersTransArray[5];
     osg::MatrixTransform              *mSelectedMatrix;
-    osg::SceneView                    *sceneView;
+    osgUtil::SceneView                    *sceneView;
     OsgNavigator mNavigator;
     float time_passed;
 
@@ -117,5 +116,5 @@ public:
     gadget::DigitalInterface   mButton5;
 };
 
-#endif // VRJUGGLER
-#endif // OSGNAV_H
+#endif
+#endif

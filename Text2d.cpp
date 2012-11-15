@@ -1,6 +1,6 @@
 #include "Text2d.h"
 
-Text2D::Text2D(osg::MatrixTransform *rootNode)
+Text2D::Text2D(osg::Group *rootNode)
     :rootNode(rootNode), timer(0), frameCount(0)
 {
 

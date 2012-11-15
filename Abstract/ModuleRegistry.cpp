@@ -24,12 +24,12 @@ InputManager *ModuleRegistry::getInputManager()
     return inputManager;
 }
 
-void ModuleRegistry::registerRootNode(osg::MatrixTransform *rootNode)
+void ModuleRegistry::registerRootNode(osg::Group *rootNode)
 {
     this->rootNode = rootNode;
 }
 
-osg::MatrixTransform *ModuleRegistry::getRootNode()
+osg::Group *ModuleRegistry::getRootNode()
 {
     return rootNode;
 }

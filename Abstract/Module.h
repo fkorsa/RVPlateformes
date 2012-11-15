@@ -6,6 +6,7 @@
 class Module
 {
 public:
+    Module();
     void setModuleRegistry(ModuleRegistry *moduleRegistry);
 protected:
     ModuleRegistry *moduleRegistry;

@@ -20,8 +20,8 @@ public:
     void registerInputManager(InputManager *inputManager);
     InputManager* getInputManager();
 
-    void registerRootNode(osg::MatrixTransform *rootNode);
-    osg::MatrixTransform* getRootNode();
+    void registerRootNode(osg::Group *rootNode);
+    osg::Group* getRootNode();
 
     void registerScene(Scene *scene);
     Scene* getScene();
@@ -44,7 +44,7 @@ private:
     Scene *scene;
     Ball* ball;
     osg::ref_ptr<osg::Camera> playerCamera;
-    osg::MatrixTransform *rootNode;
+    osg::Group *rootNode;
     osgUtil::SceneView *sceneView;
     btDynamicsWorld *dynamicsWorld;
 };

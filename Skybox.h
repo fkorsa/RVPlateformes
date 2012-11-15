@@ -23,6 +23,7 @@
 #include <osg/Vec4>
 #include <osg/Quat>
 #include <osg/Matrix>
+#include <osg/Matrixf>
 #include <osg/ShapeDrawable>
 #include <osg/Geometry>
 #include <osg/Geode>
@@ -40,6 +41,9 @@
 #include <osgDB/ReadFile>
 #include <osgUtil/SmoothingVisitor>
 #include <osgUtil/CullVisitor>
+
+#include "Utils.h"
+#include "MyMatrixf.h"
 
 class Skybox
 {
@@ -60,7 +64,9 @@ private:
             if (cv)
             {
                 osg::Vec3 eyePointLocal = cv->getEyeLocal();
-                matrix.preMultTranslate(eyePointLocal);
+                MyMatrixf mat(matrix);
+                mat.preMultTranslate(eyePointLocal);
+                matrix = mat;
             }
             return true;
         }
@@ -72,10 +78,16 @@ private:
             if (cv)
             {
                 osg::Vec3 eyePointLocal = cv->getEyeLocal();
-                matrix.postMultTranslate(-eyePointLocal);
+                MyMatrixf mat(matrix);
+                mat.postMultTranslate(-eyePointLocal);
+                matrix = mat;
             }
             return true;
         }
+        
+	
+
+
     };
 
     // Update texture matrix for cubemaps

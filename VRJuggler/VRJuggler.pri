@@ -3,6 +3,5 @@ SOURCES += \
     
 HEADERS += \
     VRJuggler/OsgNav.h \
-    VRJuggler/NavData.h \
-    VRJuggler/OsgNavigator.h
+    VRJuggler/nav.h
     

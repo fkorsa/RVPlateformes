@@ -35,8 +35,8 @@ enum CollisionGroups
 
 const float SDL_WALKING_DISTANCE = 2;
 
-const float BALL_HORIZONTAL_FORCE = 15000;
-const float BALL_JUMP_FORCE = 39000;
+const float BALL_HORIZONTAL_FORCE = 3000;
+const float BALL_JUMP_FORCE = 10000;
 
 const float PLATFORM_UNSTABLE_SMOOTHING = 110;
 const float PLATFORM_UNSTABLE_SMOOTHING_THRESHOLD = 10;
