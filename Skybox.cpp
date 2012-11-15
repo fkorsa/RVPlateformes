@@ -1,32 +1,33 @@
 #include "Skybox.h"
 
-Skybox::Skybox(osg::Group* rootNode)
+Skybox::Skybox(osg::Group* rootNode,const std::string directory)
 {
+    this->directory = directory;
     rootNode->addChild(createSkyBox());
 }
 
 osg::TextureCubeMap* Skybox::readCubeMap()
 {
-    osg::TextureCubeMap* cubemap = new osg::TextureCubeMap;
-    //#define CUBEMAP_FILENAME(face) "data/Cubemap_axis/" #face ".png"
-    //#define CUBEMAP_FILENAME(face) "data/Cubemap_snow/" #face ".jpg"
-    #define CUBEMAP_FILENAME(face) "data/TerragenExample/" #face ".jpg"
 
-    osg::Image* imagePosX = osgDB::readImageFile(CUBEMAP_FILENAME(posx));
-    osg::Image* imageNegX = osgDB::readImageFile(CUBEMAP_FILENAME(negx));
-    osg::Image* imagePosY = osgDB::readImageFile(CUBEMAP_FILENAME(posy));
-    osg::Image* imageNegY = osgDB::readImageFile(CUBEMAP_FILENAME(negy));
-    osg::Image* imagePosZ = osgDB::readImageFile(CUBEMAP_FILENAME(posz));
-    osg::Image* imageNegZ = osgDB::readImageFile(CUBEMAP_FILENAME(negz));
+    std::string base = "data/textures/" + directory + "/";
+
+    osg::TextureCubeMap* cubemap = new osg::TextureCubeMap;
+
+    osg::Image* imagePosX = osgDB::readImageFile(base+"left.jpg");
+    osg::Image* imageNegX = osgDB::readImageFile(base+"right.jpg");
+    osg::Image* imagePosY = osgDB::readImageFile(base+"back.jpg");
+    osg::Image* imageNegY = osgDB::readImageFile(base+"front.jpg");
+    osg::Image* imagePosZ = osgDB::readImageFile(base+"top.jpg");
+    osg::Image* imageNegZ = osgDB::readImageFile(base+"bottom.jpg");
 
     if (imagePosX && imageNegX && imagePosY && imageNegY && imagePosZ && imageNegZ)
     {
-        cubemap->setImage(osg::TextureCubeMap::POSITIVE_X, imagePosX);
-        cubemap->setImage(osg::TextureCubeMap::NEGATIVE_X, imageNegX);
-        cubemap->setImage(osg::TextureCubeMap::POSITIVE_Y, imagePosY);
-        cubemap->setImage(osg::TextureCubeMap::NEGATIVE_Y, imageNegY);
-        cubemap->setImage(osg::TextureCubeMap::POSITIVE_Z, imagePosZ);
-        cubemap->setImage(osg::TextureCubeMap::NEGATIVE_Z, imageNegZ);
+        cubemap->setImage(osg::TextureCubeMap::POSITIVE_X, imageNegY);
+        cubemap->setImage(osg::TextureCubeMap::NEGATIVE_X, imagePosY);
+        cubemap->setImage(osg::TextureCubeMap::POSITIVE_Y, imageNegZ);
+        cubemap->setImage(osg::TextureCubeMap::NEGATIVE_Y, imagePosZ);
+        cubemap->setImage(osg::TextureCubeMap::POSITIVE_Z, imageNegX);
+        cubemap->setImage(osg::TextureCubeMap::NEGATIVE_Z, imagePosX);
 
         cubemap->setWrap(osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE);
         cubemap->setWrap(osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE);

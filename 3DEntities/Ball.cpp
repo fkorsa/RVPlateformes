@@ -3,11 +3,17 @@
 Ball::Ball(osg::Vec3f center, float radius, ModuleRegistry *moduleRegistry)
     :allowJump(false), jumping(false), timer()
 {
+
+    osg::Image* image = osgDB::readImageFile("data/textures/earth.jpg");
+    osg::Texture2D* texture = new osg::Texture2D;
     osg::Sphere* sphere = new osg::Sphere(osg::Vec3f(), radius);
     osg::ShapeDrawable* shape = new osg::ShapeDrawable( sphere );
-    shape->setColor( osg::Vec4( 1., 0., 0., 1. ) );
     osg::Geode* geode = new osg::Geode();
+    osg::StateSet* state = new osg::StateSet();
+    texture->setImage(image);
+    state->setTextureAttributeAndModes(0,texture,osg::StateAttribute::ON);
     geode->addDrawable( shape );
+    geode->setStateSet(state);
 
     osg::PositionAttitudeTransform* ballPAT = new osg::PositionAttitudeTransform;
     ballPAT->addChild(geode);
@@ -21,10 +27,11 @@ Ball::Ball(osg::Vec3f center, float radius, ModuleRegistry *moduleRegistry)
     btTransform trans;
     trans.setIdentity();
     cs->addChildShape(trans, sphereShape);
-    btRigidBody::btRigidBodyConstructionInfo rb(10.0f, ballMotionState, cs, inertia);
+    btRigidBody::btRigidBodyConstructionInfo rb(4.0f, ballMotionState, cs, inertia);
 
     body = new btRigidBody(rb);
     body->setActivationState(DISABLE_DEACTIVATION);
+
     ghost = new btPairCachingGhostObject();
     ghost->setCollisionShape (cs);
     ghost->setCollisionFlags (body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);

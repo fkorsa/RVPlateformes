@@ -24,7 +24,7 @@ public:
     Platform* setTranslatingPlatformParameters(const btVector3& endPoint, float movingSpeed);
     Platform* setUnstable(float platformUnstability);
     Platform* setMass(float mass);
-    Platform* setPositionElasticity(float elasticity = 300.0f, float resistance = 10.0f);
+    Platform* setPositionElasticity(float elasticity = 300.0f, float resistance = 1.0f);
     void update(double elapsed);
     void movePlatform(btVector3 movingVector);
     void rotatePlatform(float direction, float directionFactor);

@@ -22,12 +22,12 @@
 
 #include "Abstract/Module.h"
 #include "Abstract/InputManager.h"
-#include "3DEntities/Ball.h"
 #include "Text2d.h"
 #include "Text3d.h"
 #include "3DEntities/Platform.h"
 #include "Skybox.h"
 #include "3DEntities/Pyramid.h"
+#include "3DEntities/Ball.h"
 
 class Scene : public Module
 {
