@@ -27,7 +27,8 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center,
     btRigidBody::btRigidBodyConstructionInfo rb(0.0f, platformMotionState, cs, inertia);
 
     body = new btRigidBody(rb);
-    body->setFriction(1);
+    body->setFriction(0.7f);
+    body->setRestitution(0.5f);
     body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
     registry = moduleRegistry;
     registry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL|COL_OTHERS);
@@ -54,7 +55,7 @@ Platform* Platform::setPositionElasticity(float elasticity, float resistance)
 {
     setMass(10.0f);
     body->setGravity(btVector3(0,0,0));
-    body->setDamping(0.2f,0.2f);
+    //body->setDamping(0.9f,0.9f);
     positionElasticity = elasticity;
     positionResistance = resistance;
     return this;
@@ -174,7 +175,10 @@ void Platform::update(double elapsed)
         platformMotionState->getWorldTransform(world);
         btVector3 position = world.getOrigin();
         body->applyCentralForce((desiredCurrentPos-position)*positionElasticity);
-        body->applyCentralForce(-body->getLinearVelocity()*positionResistance);
+        if (body->getLinearVelocity().length()>10.0f) {
+            body->applyCentralForce(-body->getLinearVelocity()*positionResistance);
+            osg::notify( osg::ALWAYS ) << "Force: " << body->getLinearVelocity().length() << std::endl;
+        }
     }
 
 }

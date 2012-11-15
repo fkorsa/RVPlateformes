@@ -41,8 +41,8 @@ void Pyramid::createBox(const osg::Vec3& center)
     btRigidBody::btRigidBodyConstructionInfo rb(mass, boxMotionState, cs, inertia);
 
     btRigidBody* body = new btRigidBody(rb);
-    body->setRestitution(0.f);
-    body->setFriction(.00001);
+    body->setRestitution(0.3f);
+    body->setFriction(.1);
 
     registry->getDynamicsWorld()->addRigidBody(body,COL_OTHERS,COL_FLOOR|COL_BALL|COL_OTHERS);
     rootNode->addChild(boxPAT);

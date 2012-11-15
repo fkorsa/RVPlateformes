@@ -109,7 +109,7 @@ void Scene::createScene()
     srh->capture();
 
     // SKYBOX !
-    Skybox* skybox = new Skybox(rootNode);
+    Skybox* skybox = new Skybox(rootNode,"skybox1");
 
     // 2D TEXT FOR DEBUGGING PURPOSE !
     text2d = new Text2D(rootNode);
@@ -124,7 +124,7 @@ void Scene::createScene()
     ballBody = ball->getBody();
 
     // LEVEL 1
-    osg::Image* image1 = osgDB::readImageFile("data/bric.jpg");
+    osg::Image* image1 = osgDB::readImageFile("data/textures/box3.jpg");
     osg::Texture2D* texture1 = new osg::Texture2D;
     texture1->setImage(image1);
 
@@ -137,22 +137,17 @@ void Scene::createScene()
             //->setPositionElasticity()
             ->setUnstable(1)
             ;
-    platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 100., 0., 30. ), osg::Vec3(30, 30, 5), texture1))
-            ->setPositionElasticity(4000.f,80.0f);
-    platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 260., 0., 5. ), osg::Vec3(50, 50, 5), texture1))
-            ->setPositionElasticity(20000.f,800.0f);
+    platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 100., 0., 10. ), osg::Vec3(30, 30, 5), texture1))
+            ->setPositionElasticity(260.f,4.0f);
+    platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 160., 0., 5. ), osg::Vec3(50, 50, 5), texture1))
+            ->setPositionElasticity(2600.f,400.0f);
 
     // SOME BOXES
-    osg::Image* image2 = osgDB::readImageFile("data/box.png");
+    osg::Image* image2 = osgDB::readImageFile("data/textures/box2.jpg");
     osg::Texture2D* texture2 = new osg::Texture2D;
     texture2->setImage(image2);
-    new Pyramid(moduleRegistry,1,1,7,400.0f,osg::Vec3(100,0,37),texture2);
-<<<<<<< HEAD
-    new Pyramid(moduleRegistry,10,4,7,1.0f,osg::Vec3(260,0,15),texture2);
-=======
-    new Pyramid(moduleRegistry,4,4,7,10.0f,osg::Vec3(260,0,15),texture2);
->>>>>>> f938b14245250d1054435d533d3df92d99b7ca3e
-
+    new Pyramid(moduleRegistry,1,1,7,10.0f,osg::Vec3(100,0,37),texture2);
+    new Pyramid(moduleRegistry,4,4,7,10.0f,osg::Vec3(160,0,15),texture2);
 
 #ifndef VRJUGGLER
     moduleRegistry->getSceneView()->setSceneData(rootNode);

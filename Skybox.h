@@ -40,13 +40,15 @@
 #include <osgDB/ReadFile>
 #include <osgUtil/SmoothingVisitor>
 #include <osgUtil/CullVisitor>
+#include <string>
 
 class Skybox
 {
 public:
-    Skybox(osg::Group *rootNode);
+    Skybox(osg::Group *rootNode, std::string directory);
 
 private:
+    std::string directory;
     osg::TextureCubeMap* readCubeMap();
     osg::Node* createSkyBox();
 

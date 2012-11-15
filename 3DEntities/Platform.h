@@ -24,7 +24,7 @@ public:
     Platform* setTranslatingPlatformParameters(const btVector3& endPoint, float movingSpeed);
     Platform* setUnstable(float platformUnstability);
     Platform* setMass(float mass);
-    Platform* setPositionElasticity(float elasticity = 300.0f, float resistance = 10.0f);
+    Platform* setPositionElasticity(float elasticity = 300.0f, float resistance = 1.0f);
     void update(double elapsed);
     void movePlatform(btVector3 movingVector);
     void rotatePlatform(float direction, float directionFactor);
@@ -33,15 +33,9 @@ private:
     btRigidBody *body;
     MyMotionState* platformMotionState;
     osg::PositionAttitudeTransform* platformPAT;
-<<<<<<< HEAD:Platform.h
-    osg::Vec3f endPoint;
-    osg::Vec3f startPoint;
-    osg::Vec3f desiredCurrentPos, currentPos;
-=======
     btVector3 endPoint;
     btVector3 startPoint;
     btVector3 desiredCurrentPos, currentPos;
->>>>>>> f938b14245250d1054435d533d3df92d99b7ca3e:3DEntities/Platform.h
     bool movesTowardEnd;
     bool isPlatformMoving, isUnstable;
     float movingSpeed;

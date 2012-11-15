@@ -5,6 +5,9 @@
 #include <osg/ShapeDrawable>
 #include <osg/Geode>
 #include <osg/MatrixTransform>
+#include <osg/Texture2D>
+#include <osgDB/ReadFile>
+
 
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>
