@@ -10,36 +10,38 @@
 #include <osgDB/ReadFile>
 #include <osg/Math>
 
-#include <osgbCollision/CollisionShapes.h>
-#include <osgbCollision/RefBulletObject.h>
-#include <osgbCollision/Utils.h>
-#include <osgbDynamics/RigidBody.h>
-#include <osgbDynamics/CreationRecord.h>
-#include <osgbDynamics/MotionState.h>
-
-#include "ModuleRegistry.h"
+#include "Abstract/ModuleRegistry.h"
 #include "Constants.h"
 #include "Ball.h"
+#include "Abstract/MyMotionState.h"
+
+#include "Utils.h"
 
 class Platform
 {
 public:
-    Platform(ModuleRegistry *moduleRegistry, const osg::Vec3& center, const osg::Vec3& lengths, osg::Texture2D *texture);
-    Platform* setTranslatingPlatformParameters(const osg::Vec3& endPoint, float movingSpeed);
+    Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center, const osg::Vec3f &lengths, osg::Texture2D *texture);
+    Platform* setTranslatingPlatformParameters(const btVector3& endPoint, float movingSpeed);
     Platform* setUnstable(float platformUnstability);
     Platform* setMass(float mass);
     Platform* setPositionElasticity(float elasticity = 300.0f, float resistance = 10.0f);
     void update(double elapsed);
-    void movePlatform(osg::Vec3 movingVector);
+    void movePlatform(btVector3 movingVector);
     void rotatePlatform(float direction, float directionFactor);
 private:
     ModuleRegistry* registry;
     btRigidBody *body;
-    osgbDynamics::MotionState* shakeMotion;
+    MyMotionState* platformMotionState;
     osg::PositionAttitudeTransform* platformPAT;
+<<<<<<< HEAD:Platform.h
     osg::Vec3f endPoint;
     osg::Vec3f startPoint;
     osg::Vec3f desiredCurrentPos, currentPos;
+=======
+    btVector3 endPoint;
+    btVector3 startPoint;
+    btVector3 desiredCurrentPos, currentPos;
+>>>>>>> f938b14245250d1054435d533d3df92d99b7ca3e:3DEntities/Platform.h
     bool movesTowardEnd;
     bool isPlatformMoving, isUnstable;
     float movingSpeed;

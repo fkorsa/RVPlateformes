@@ -35,12 +35,10 @@ enum CollisionGroups
 
 const float SDL_WALKING_DISTANCE = 2;
 
-const float BALL_SPEED_CONTROL = 25;
-const float BALL_SPEED_JUMP = 5;
-// speed(n+1) = speed(n)/BALL_SLOW_SPEED
-const float BALL_SLOW_SPEED = 1.01;
+const float BALL_HORIZONTAL_FORCE = 15000;
+const float BALL_JUMP_FORCE = 39000;
 
-const float PLATFORM_UNSTABLE_SMOOTHING = 1.1;
+const float PLATFORM_UNSTABLE_SMOOTHING = 110;
 const float PLATFORM_UNSTABLE_SMOOTHING_THRESHOLD = 10;
 const float PLATFORM_UNSTABLE_FALLING_THRESHOLD = 100;
 const float PLATFORM_UNSTABLE_ANGLE = 50;

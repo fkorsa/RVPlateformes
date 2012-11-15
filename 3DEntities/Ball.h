@@ -4,22 +4,19 @@
 #include "Constants.h"
 #include <osg/ShapeDrawable>
 #include <osg/Geode>
-#include <osgbDynamics/MotionState.h>
-#include <osgbCollision/CollisionShapes.h>
-#include <osgbDynamics/RigidBody.h>
-#include <osgbCollision/Utils.h>
-#include <osgbInteraction/SaveRestoreHandler.h>
-#include <osgbInteraction/DragHandler.h>
+#include <osg/MatrixTransform>
+
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>
 
 #include "Constants.h"
-#include "Module.h"
+#include "Abstract/ModuleRegistry.h"
+#include "Abstract/MyMotionState.h"
 
-class Ball : public Module
+class Ball
 {
 public:
-    Ball(osg::MatrixTransform* _rootNode,btDynamicsWorld * _dynamicsWorld);
+    Ball(osg::Vec3f center, float radius, ModuleRegistry *moduleRegistry);
 
     void moveLeft();
     void moveRight();
@@ -42,7 +39,6 @@ private:
     btPairCachingGhostObject* ghost; // Object use to detect collisions
 
     void* collisionObject;
-
 };
 
 #endif // BALL_H

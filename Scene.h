@@ -20,14 +20,14 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include "Module.h"
-#include "InputManager.h"
-#include "Ball.h"
+#include "Abstract/Module.h"
+#include "Abstract/InputManager.h"
+#include "3DEntities/Ball.h"
 #include "Text2d.h"
 #include "Text3d.h"
-#include "Platform.h"
+#include "3DEntities/Platform.h"
 #include "Skybox.h"
-#include "Pyramid.h"
+#include "3DEntities/Pyramid.h"
 
 class Scene : public Module
 {

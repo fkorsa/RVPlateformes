@@ -3,7 +3,7 @@
 
 #include "Module.h"
 #include "Constants.h"
-#include "Ball.h"
+#include "3DEntities/Ball.h"
 
 #include <osg/Math>
 
