@@ -41,6 +41,9 @@ public:
         const osg::Matrix scale = osg::Matrix::scale( _scale );
         const osg::Matrix t = scale * csMat * dt;
 
+        // LE PAT VEUT PAS FILER UNE MATRICE VALIDE
+        // :/ AVEC LES MATRIX TRANSFORM CA DOIT SUREMENT MARCHER
+        // IL EST 5H JE VAIS DODO
         if (mt.valid()) {
             mt->setMatrix(t);
         }
