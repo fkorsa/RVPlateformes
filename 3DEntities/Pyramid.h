@@ -6,13 +6,10 @@
 #include <osg/Geode>
 #include <osg/LightSource>
 #include <osg/BoundingSphere>
-#include <osgbCollision/CollisionShapes.h>
-#include <osgbCollision/RefBulletObject.h>
-#include <osgbDynamics/RigidBody.h>
 #include <osg/MatrixTransform>
-#include "Abstract/Module.h"
-#include "Abstract/MyMotionState.h"
-#include "Constants.h"
+#include "../Abstract/Module.h"
+#include "../Abstract/MyMotionState.h"
+#include "../Constants.h"
 
 /**
   Generates a pyramid of boxes and add it to the scene graph

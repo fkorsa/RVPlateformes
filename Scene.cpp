@@ -1,10 +1,10 @@
 #include "Scene.h"
 
+//#define VRJUGGLER
+
 Scene::Scene() :
-    Module(),
     numPlatforms(0)
 {
-
     // Bullet Engine initialisation
     // TODO: cleaning bullet before closing app.
     dynamicsWorld = initBulletEngine();
@@ -32,83 +32,13 @@ btDynamicsWorld* Scene::initBulletEngine()
     return( dynamicsWorld );
 }
 
-// Create a simple box with and add it to the physics engine
-osg::MatrixTransform* Scene::createBox(const osg::Vec3& center, const osg::Vec3& lengths, float mass,
-                                       osg::Texture2D* texture)
-{
-    osg::Box* box = new osg::Box(center, lengths.x(), lengths.y(), lengths.z());
-    osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
-    osg::StateSet* state = new osg::StateSet();
-    osg::Geode* geode = new osg::Geode();
-    shape->setColor(osg::Vec4(1., 1., 1., 1.));
-    state->setTextureAttributeAndModes(0,texture,osg::StateAttribute::ON);
-    geode->addDrawable(shape);
-    geode->setStateSet(state);
-    // We need a MatrixTransform to move the box around
-    osg::MatrixTransform* root = new osg::MatrixTransform;
-    root->addChild(geode);
-
-    // We add the box to the simulation
-    btCollisionShape* cs = osgbCollision::btBoxCollisionShapeFromOSG(geode);
-    osg::ref_ptr<osgbDynamics::CreationRecord> cr = new osgbDynamics::CreationRecord;
-    cr->_sceneGraph = root;
-    cr->_shapeType = BOX_SHAPE_PROXYTYPE;
-    cr->_mass = mass;
-    cr->_restitution = 1.f;
-    cr->_friction = 1.f;
-    btRigidBody* body = osgbDynamics::createRigidBody(cr.get(), cs);
-    dynamicsWorld->addRigidBody(body,COL_FLOOR,COL_BALL);
-
-    return root;
-}
-
-osg::PositionAttitudeTransform* Scene::createModel(const char *filename, const osg::Vec3 &center,
-                                                   const float scale, float mass,
-                                                   osg::ref_ptr<osgbInteraction::SaveRestoreHandler> srh)
-{
-    osg::Node* modelNode = osgDB::readNodeFile(filename);
-
-    // We need a MatrixTransform to move the box around
-    osg::MatrixTransform* matrixTransform = new osg::MatrixTransform;
-    matrixTransform->addChild(modelNode);
-
-    osg::PositionAttitudeTransform* root = new osg::PositionAttitudeTransform();
-    root->addChild(matrixTransform);
-    root->setScale(osg::Vec3(scale, scale, scale));
-    root->setPosition(center);
-
-    //btCollisionShape* cs = osgbCollision::btBoxCollisionShapeFromOSG(modelNode);
-    osg::ref_ptr< osgbDynamics::CreationRecord > cr = new osgbDynamics::CreationRecord;
-    cr->_sceneGraph = matrixTransform;
-    cr->_shapeType = BOX_SHAPE_PROXYTYPE;
-    cr->_mass = mass;
-    cr->_restitution = 1.f;
-    btRigidBody* body = osgbDynamics::createRigidBody(cr.get());
-    matrixTransform->setUserData(new osgbCollision::RefRigidBody(body));
-    dynamicsWorld->addRigidBody(body);
-    srh->add("", body);
-    return root;
-}
-
 void Scene::createScene()
 {
     rootNode = moduleRegistry->getRootNode();
 
     moduleRegistry->registerDynamicsWorld(dynamicsWorld);
 
-    // How to add a model to the scene
-    /*osg::Node *  model = osgDB::readNodeFile("data/starthing.obj");
-    osg::PositionAttitudeTransform * modelPAT = new osg::PositionAttitudeTransform();
-    modelPAT->setPosition(osg::Vec3d(0, 0, -200));
-    modelPAT->addChild(model);
-    rootNode->addChild(modelPAT);*/
-
     createLights();
-
-    osg::ref_ptr<osgbInteraction::SaveRestoreHandler> srh = new osgbInteraction::SaveRestoreHandler;
-
-    srh->capture();
-
     // SKYBOX !
     Skybox* skybox = new Skybox(rootNode,"skybox1");
 
@@ -169,39 +99,6 @@ void Scene::createLights()
     osg::LightSource* lightsource = new osg::LightSource();
     lightsource->setLight(light);
     rootNode->addChild(lightsource);
-
-    /*light = new osg::Light();
-    light->setLightNum(0);
-    light->setPosition(osg::Vec4f(50.0, -100.0, 0.0, 1.0));
-    light->setDiffuse(osg::Vec4f(1.0, 1.0, 1.0, 0.5));
-    light->setSpecular(osg::Vec4f(1.0, 1.0, 1.0, 1.0));
-    light->setAmbient(osg::Vec4f(0.0, 0.0, 0.0, 1.0));
-    lightsource = new osg::LightSource();
-    lightsource->setLight(light);
-    rootNode->addChild(lightsource);*/
-
-    /*light = new osg::Light();
-    light->setLightNum(2);
-    light->setPosition(osg::Vec4f(-1000.0, -1000.0, 200, 1.0));
-    light->setDiffuse(osg::Vec4f(0, 0, 1, 0.5));
-    light->setSpecular(osg::Vec4f(1.0, 1.0, 1.0, 1.0));
-    light->setAmbient(osg::Vec4f(0.0, 0.0, 0.0, 1.0));
-    lightsource = new osg::LightSource();
-    lightsource->setLight(light);
-    rootNode->addChild(lightsource);
-
-    light = new osg::Light();
-    light->setLightNum(3);
-    light->setPosition(osg::Vec4f(1000.0, 1000.0, 200, 1.0));
-    light->setDiffuse(osg::Vec4f(0, 1, 1, 0.5));
-    light->setSpecular(osg::Vec4f(1.0, 1.0, 1.0, 1.0));
-    light->setAmbient(osg::Vec4f(0.0, 0.0, 0.0, 1.0));
-    lightsource = new osg::LightSource();
-    lightsource->setLight(light);
-    rootNode->addChild(lightsource);
-
-    osg::StateSet* stateset = rootNode->getOrCreateStateSet();
-    lightsource->setStateSetModes(*stateset, osg::StateAttribute::ON);*/
 }
 
 void Scene::run(double elapsed)
@@ -215,5 +112,3 @@ void Scene::run(double elapsed)
     }
     dynamicsWorld->stepSimulation(elapsed,10,1./120.);
 }
-
-\

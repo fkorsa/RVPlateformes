@@ -1,9 +1,9 @@
 #ifndef SDLINPUTMANAGERSTRATEGY_H
 #define SDLINPUTMANAGERSTRATEGY_H
 
-#define SDL
+//#define VRJUGGLER
 
-#ifdef SDL
+#ifndef VRJUGGLER
 
 #include <SDL/SDL.h>
 
@@ -24,5 +24,5 @@ private:
     InputManager *inputManager;
 };
 
-#endif // SDL
+#endif // VRJUGGLER
 #endif // SDLINPUTMANAGERSTRATEGY_H

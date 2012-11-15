@@ -106,6 +106,12 @@ void OsgNav::myInit()
     // run optimization over the scene graph
     osgUtil::Optimizer optimizer;
     optimizer.optimize(mRootNode.get());
+    
+    osg::notify( osg::ALWAYS ) << "my init" << std::endl;
+   
+    moduleRegistry->registerSceneView(getSceneView());
+    moduleRegistry->registerRootNode(getScene());
+    moduleRegistry->getScene()->createScene();
 }
 
 #endif // VRJUGGLER

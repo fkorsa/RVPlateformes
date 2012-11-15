@@ -1,14 +1,14 @@
 #ifndef SDLWINDOW_H
 #define SDLWINDOW_H
 
-#define SDL
+//#define VRJUGGLER
 
-#ifdef SDL
+#ifndef VRJUGGLER
 
 #include <SDL/SDL.h>
 #include <osgUtil/SceneView>
 
-#include "Constants.h"
+#include "../Constants.h"
 #include "Module.h"
 
 class ModuleRegistry;
@@ -21,5 +21,5 @@ public:
     osg::ref_ptr<osgUtil::SceneView> sceneView;
 };
 
-#endif // SDL
+#endif // VRJUGGLER
 #endif // SDLWINDOW_H

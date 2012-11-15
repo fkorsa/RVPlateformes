@@ -1,6 +1,8 @@
 #ifndef _OSG_NAVIGATER_H
 #define _OSG_NAVIGATER_H
 
+//#define VRJUGGLER
+
 #ifdef VRJUGGLER
 
 #include <gmtl/EulerAngle.h>

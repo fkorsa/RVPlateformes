@@ -5,7 +5,7 @@
 #include <osg/MatrixTransform>
 #include <osg/PositionAttitudeTransform>
 
-#include "Utils.h"
+#include "../Utils.h"
 
 class MyMotionState : public btMotionState
 {

@@ -1,13 +1,14 @@
 # Le nom de l'application
-APP = RVPlatefromes
+APP = RVPlateformes
 
 # La liste des fichiers à compiler
-SRC = main.cpp Ball.cpp Controller.cpp InputManager.cpp Module.cpp ModuleRegistry.cpp Scene.cpp SDLInputStrategy.cpp SDLWindow.cpp Text2d.cpp
+SRC = Text2d.cpp 3DEntities/Platform.cpp 3DEntities/Ball.cpp 3DEntities/Pyramid.cpp Abstract/ModuleRegistry.cpp Abstract/Controller.cpp Abstract/SDLWindow.cpp Abstract/Module.cpp Abstract/SDLInputStrategy.cpp Abstract/InputManager.cpp Text3d.cpp Scene.cpp main.cpp VRJuggler/OsgNav.cpp Skybox.cpp
+
 OBJ = $(SRC:.cpp=.o)
 
 # Les options de compilation + répertoire des .h
 CXXFLAGS += -m32
-CXXFLAGS += -g -Wall -fexceptions -pthread -Wall -DHAVE_CONFIG_H -DJUGGLER_DEBUG
+CXXFLAGS += -g -Wall -fexceptions -pthread -Wall -DHAVE_CONFIG_H -DJUGGLER_DEBUG -Wno-deprecated
 CXXFLAGS += -I${VJ_BASE_DIR}/include/
 CXXFLAGS += -I${VJ_BASE_DIR}/include/vrjuggler-2.2/
 CXXFLAGS += -I${VJ_BASE_DIR}/include/gadgeteer-1.2/
@@ -15,13 +16,14 @@ CXXFLAGS += -I${VJ_BASE_DIR}/include/jccl-1.2/
 CXXFLAGS += -I${VJ_BASE_DIR}/include/vpr-2.0/
 CXXFLAGS += -I${VJ_BASE_DIR}/include/cppdom-0.7.10/
 CXXFLAGS += -I${VJ_BASE_DIR}/include/gmtl-0.5.4/
+CXXFLAGS += -I$//usr/include/bullet/
 #CXXFLAGS += -I${FMODROOT}/inc
 
 # Les options d'édition des liens + répertoires et noms des .so
 LDFLAGS += -m32
 LDFLAGS += -L$(VJ_BASE_DIR)/lib -lvrj-2_2 -lvrj_ogl-2_2 -lgadget-1_2 -ljccl-1_2 -lvpr-2_0
 LDFLAGS += -losg -losgDB -losgUtil -lOpenThreads
-LDFLAGS += -lGLU -lGL -lm -losg -losgUtil -losgDB -losgGA -losgViewer -losgText -lBulletDynamics -lBulletCollision -lLinearMath -losgbDynamics -losgbCollision -losgbInteraction -lOpenThreads
+LDFLAGS += -lGLU -lGL -lm -losgGA -losgViewer -losgText -lBulletDynamics -lBulletCollision -lLinearMath
 #LDFLAGS += -L$(FMODROOT)/lib -lfmodex
 
 # ( pour linker avec ${HOME}/plib/libplibssg.so et ${HOME}/plib/libplibnet.so
@@ -38,11 +40,11 @@ $(APP) : $(OBJ)
 #	$(CXX) -MM -MG $(SRC) >Dep.mk
 
 clean:
-	-\rm *.o $(APP)
+	-\rm -r *.o $(APP)
 
 run:
-	. site_init_vj2.2.0.sh; ./$(APP) cow.osg standalone.jconf
+	. site_init_vj2.2.0.sh; ./$(APP) standalone.jconf
 sim:
-	startSIM ./$(APP) cow.osg
+	startSIM ./$(APP)
 cave:
-	startCAVE ./$(APP) cow.osg
+	startCAVE ./$(APP)

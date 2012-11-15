@@ -1,9 +1,10 @@
 #include "Controller.h"
 
+//#define VRJUGGLER
+
 Controller::Controller(int argc, char *argv[])
 {    
     ModuleRegistry moduleRegistry;
-    int loopCnt = 0;
 
 #ifdef VRJUGGLER
     vrj::Kernel* kernel = vrj::Kernel::instance();
@@ -13,7 +14,7 @@ Controller::Controller(int argc, char *argv[])
     {
         std::cout << "\n\nUsage: " << argv[0]
                   << " vjconfigfile\n\n";
-        return 1;
+        return;
     }
 
     for (int i = 1; i < argc; ++i)
@@ -24,10 +25,8 @@ Controller::Controller(int argc, char *argv[])
     kernel->start();
 
     kernel->setApplication(application);
-
-    moduleRegistry.registerSceneView(application->getSceneView());
-    moduleRegistry.registerRootNode(application->getScene());
 #else
+    int loopCnt = 0;
     window = new SDLWindow(&moduleRegistry);
     moduleRegistry.registerWindow(window);
     window->setModuleRegistry(&moduleRegistry);
@@ -44,12 +43,12 @@ Controller::Controller(int argc, char *argv[])
     scene = new Scene();
     moduleRegistry.registerScene(scene);
     scene->setModuleRegistry(&moduleRegistry);
-    scene->createScene();
 
 #ifdef VRJUGGLER
     application->setModuleRegistry(&moduleRegistry);
     kernel->waitForKernelStop();
 #else
+    scene->createScene();
     while(true)
     {
         if(inputStrategy->handleInput() == RETURN_EXIT)

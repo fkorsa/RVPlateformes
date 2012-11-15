@@ -1,17 +1,22 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "SDLWindow.h"
+//#define VRJUGGLER
+
 #include "InputManager.h"
-#include "SDLInputStrategy.h"
-#include "Scene.h"
+#include "../Scene.h"
 #include "ModuleRegistry.h"
-#include "Constants.h"
+#include "../Constants.h"
+
+#include <osg/Timer>
 
 #ifdef VRJUGGLER
 #include <cstdlib>
-#include "VRJuggler/OsgNav.h"
+#include "../VRJuggler/OsgNav.h"
 #include <vrj/Kernel/Kernel.h>
+#else
+#include "SDLWindow.h"
+#include "SDLInputStrategy.h"
 #endif // VRJUGGLER
 
 class Controller
@@ -20,9 +25,11 @@ public:
     Controller(int argc, char * argv[]);
 
 private:
+#ifndef VRJUGGLER
     SDLWindow *window;
-    InputManager *inputManager;
     SDLInputStrategy *inputStrategy;
+#endif
+    InputManager *inputManager;    
     Scene *scene;
     osg::Timer osgTimer;
     osg::Timer_t currentTime;

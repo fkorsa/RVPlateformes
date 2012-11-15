@@ -1,7 +1,6 @@
 #ifndef BALL_H
 #define BALL_H
 
-#include "Constants.h"
 #include <osg/ShapeDrawable>
 #include <osg/Geode>
 #include <osg/MatrixTransform>
@@ -12,9 +11,9 @@
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>
 
-#include "Constants.h"
-#include "Abstract/ModuleRegistry.h"
-#include "Abstract/MyMotionState.h"
+#include "../Constants.h"
+#include "../Abstract/ModuleRegistry.h"
+#include "../Abstract/MyMotionState.h"
 
 class Ball
 {

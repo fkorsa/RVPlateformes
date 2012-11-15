@@ -10,12 +10,11 @@
 #include <osgDB/ReadFile>
 #include <osg/Math>
 
-#include "Abstract/ModuleRegistry.h"
-#include "Constants.h"
+#include "../Abstract/ModuleRegistry.h"
+#include "../Constants.h"
 #include "Ball.h"
-#include "Abstract/MyMotionState.h"
-
-#include "Utils.h"
+#include "../Abstract/MyMotionState.h"
+#include "../Utils.h"
 
 class Platform
 {

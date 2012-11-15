@@ -2,8 +2,8 @@
 #define INPUTMANAGER_H
 
 #include "Module.h"
-#include "Constants.h"
-#include "3DEntities/Ball.h"
+#include "../Constants.h"
+#include "../3DEntities/Ball.h"
 
 #include <osg/Math>
 

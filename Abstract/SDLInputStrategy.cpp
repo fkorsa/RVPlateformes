@@ -1,6 +1,6 @@
-#define SDL
+//#define VRJUGGLER
 
-#ifdef SDL
+#ifndef VRJUGGLER
 
 #include "SDLInputStrategy.h"
 
@@ -9,8 +9,8 @@ SDLInputStrategy::SDLInputStrategy() :
     godmode(false),
     inputManager(NULL)
 {
-    SDL_WM_GrabInput(SDL_GRAB_ON);
-    SDL_ShowCursor(SDL_DISABLE);
+    //SDL_WM_GrabInput(SDL_GRAB_ON);
+    //SDL_ShowCursor(SDL_DISABLE);
 }
 
 ReturnStatus SDLInputStrategy::handleInput()
@@ -140,4 +140,4 @@ void SDLInputStrategy::handleMouseMotion(SDL_Event event)
     }
 }
 
-#endif //SDL
+#endif //VRJUGGLER

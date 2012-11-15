@@ -1,6 +1,6 @@
-#define SDL
+//#define VRJUGGLER
 
-#ifdef SDL
+#ifndef VRJUGGLER
 
 #include "SDLWindow.h"
 
@@ -34,4 +34,4 @@ void SDLWindow::draw()
     SDL_GL_SwapBuffers();
 }
 
-#endif // SDL
+#endif // VRJUGGLER
