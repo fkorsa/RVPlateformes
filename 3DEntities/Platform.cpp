@@ -179,7 +179,6 @@ void Platform::update(double elapsed)
         body->applyCentralForce((desiredCurrentPos-position)*positionElasticity);
         if (body->getLinearVelocity().length()>10.0f) {
             body->applyCentralForce(-body->getLinearVelocity()*positionResistance);
-            osg::notify( osg::ALWAYS ) << "Force: " << body->getLinearVelocity().length() << std::endl;
         }
     }
 

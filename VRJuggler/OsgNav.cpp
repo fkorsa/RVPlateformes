@@ -46,18 +46,17 @@ void OsgNav::preFrame()
             moduleRegistry->getInputManager()->jump();
         }
 
-        if (mButton1->getData() == gadget::Digital::TOGGLE_ON)
+        if (mButton1->getData() == gadget::Digital::ON)
         {
             moduleRegistry->getInputManager()->moveLeft();
         }
 
-        if (mButton2->getData() == gadget::Digital::TOGGLE_ON)
+        if (mButton2->getData() == gadget::Digital::ON)
         {
             moduleRegistry->getInputManager()->moveRight();
         }
         moduleRegistry->getScene()->run(time_delta);
     }
-
     // Update the navigation using the time delta between
     mNavigator.update(time_delta);
 }
@@ -97,11 +96,12 @@ void OsgNav::myInit()
     mRootNode = new osg::Group();
     mNoNav    = new osg::Group();
     mNavTrans = new osg::MatrixTransform();
+    osg::ref_ptr<osg::MatrixTransform> myMT = new osg::MatrixTransform(); 
 
     mNavigator.init();
 
     mRootNode->addChild(mNoNav.get());
-    mRootNode->addChild(mNavTrans.get());
+    
 
     // run optimization over the scene graph
     osgUtil::Optimizer optimizer;
@@ -110,8 +110,15 @@ void OsgNav::myInit()
     osg::notify( osg::ALWAYS ) << "my init" << std::endl;
    
     moduleRegistry->registerSceneView(getSceneView());
-    moduleRegistry->registerRootNode(getScene());
+    moduleRegistry->registerRootNode(myMT.get());
     moduleRegistry->getScene()->createScene();
+    
+    osg::Matrix m;
+    m.makeLookAt(osg::Vec3f(140, -400, 50), osg::Vec3f(140, 0, 50), osg::Vec3f(0, 0, 1));
+    myMT->setMatrix(m);
+    
+    mNavTrans->addChild(myMT.get());
+    mRootNode->addChild(mNavTrans.get());
 }
 
 #endif // VRJUGGLER

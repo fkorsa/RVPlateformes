@@ -2,7 +2,7 @@
 APP = RVPlateformes
 
 # La liste des fichiers à compiler
-SRC = main.cpp Text2d.cpp 3DEntities/Platform.cpp 3DEntities/Ball.cpp 3DEntities/Pyramid.cpp Abstract/ModuleRegistry.cpp Abstract/Controller.cpp Abstract/SDLWindow.cpp Abstract/Module.cpp Abstract/SDLInputStrategy.cpp Abstract/InputManager.cpp Text3d.cpp Scene.cpp VRJuggler/OsgNav.cpp Skybox.cpp
+SRC = Text2d.cpp 3DEntities/Platform.cpp 3DEntities/Ball.cpp 3DEntities/Pyramid.cpp Abstract/ModuleRegistry.cpp Abstract/Controller.cpp Abstract/SDLWindow.cpp Abstract/Module.cpp Abstract/SDLInputStrategy.cpp Abstract/InputManager.cpp Text3d.cpp Scene.cpp main.cpp VRJuggler/OsgNav.cpp Skybox.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
@@ -16,7 +16,7 @@ CXXFLAGS += -I${VJ_BASE_DIR}/include/jccl-1.2/
 CXXFLAGS += -I${VJ_BASE_DIR}/include/vpr-2.0/
 CXXFLAGS += -I${VJ_BASE_DIR}/include/cppdom-0.7.10/
 CXXFLAGS += -I${VJ_BASE_DIR}/include/gmtl-0.5.4/
-CXXFLAGS += -I/usr/include/bullet/
+CXXFLAGS += -I$//usr/include/bullet/
 #CXXFLAGS += -I${FMODROOT}/inc
 
 # Les options d'édition des liens + répertoires et noms des .so

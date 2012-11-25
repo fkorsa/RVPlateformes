@@ -110,5 +110,8 @@ void Scene::run(double elapsed)
     {
         platforms[i]->update(elapsed);
     }
+    if(elapsed>1)
+      elapsed = 0.016;
     dynamicsWorld->stepSimulation(elapsed,10,1./120.);
+  
 }

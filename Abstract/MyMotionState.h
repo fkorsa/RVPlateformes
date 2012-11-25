@@ -43,7 +43,7 @@ public:
         // IL EST 5H JE VAIS DODO
         if (mt.valid())
         {
-            mt->setMatrix(t);
+            mt->setMatrix(dt);
         }
     }
 

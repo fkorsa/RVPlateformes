@@ -1,6 +1,6 @@
-#include "Abstract/Controller.h"
-
 //#define VRJUGGLER
+
+#include "Abstract/Controller.h"
 
 int main(int argc, char* argv[])
 {
