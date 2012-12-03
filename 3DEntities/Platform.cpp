@@ -222,8 +222,6 @@ Platform::~Platform()
 {
   registry->getDynamicsWorld()->removeRigidBody(body);
   delete body->getMotionState();
- 
-  
   delete body;
   registry->getRootNode()->removeChild(platformMT.get());
 }

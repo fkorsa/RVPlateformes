@@ -30,6 +30,7 @@ private:
     void createLights();
     void resetLevel();
     void createPlatforms();
+    void createPyramids();
 
     btDynamicsWorld* initBulletEngine(); // Initialise le moteur de physique
 

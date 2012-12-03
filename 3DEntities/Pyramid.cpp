@@ -11,6 +11,7 @@ Pyramid::Pyramid(ModuleRegistry *registry, int width, int depth, int size, float
     this->texture = texture;
     this->size = size;
     this->rootNode = new osg::Group;
+    numBodies = 0;
     addLayer(width,depth,0);
     registry->getRootNode()->addChild(rootNode);
 }
@@ -26,13 +27,13 @@ void Pyramid::createBox(const osg::Vec3& center)
     geode->addDrawable(shape);
     geode->setStateSet(state);
 
-    osg::ref_ptr<osg::MatrixTransform> boxMT = new osg::MatrixTransform;
-    boxMT->addChild(geode);
+    mtList[numBodies] = new osg::MatrixTransform;
+    mtList[numBodies]->addChild(geode);
     osg::Matrix m;
     m.makeTranslate(center);
-    boxMT->setMatrix( m );
+    mtList[numBodies]->setMatrix( m );
 
-    MyMotionState* boxMotionState = new MyMotionState(boxMT);
+    MyMotionState* boxMotionState = new MyMotionState(mtList[numBodies]);
 
     btVector3 inertia(0, 0, 0);
     btCompoundShape* cs = new btCompoundShape;
@@ -43,11 +44,12 @@ void Pyramid::createBox(const osg::Vec3& center)
     btRigidBody::btRigidBodyConstructionInfo rb(mass, boxMotionState, cs, inertia);
 
     btRigidBody* body = new btRigidBody(rb);
+    bodiesList[numBodies] = body;
     body->setRestitution(0.3f);
     body->setFriction(.1);
 
     registry->getDynamicsWorld()->addRigidBody(body,COL_OTHERS,COL_FLOOR|COL_BALL|COL_OTHERS);
-    rootNode->addChild(boxMT.get());
+    rootNode->addChild(mtList[numBodies++].get());
 }
 
 void Pyramid::addLayer(int width,int depth, int height)
@@ -64,4 +66,15 @@ void Pyramid::addLayer(int width,int depth, int height)
     }
     if ( width == 1 && depth == 1 ) return;
     addLayer(width>1?width-1:1,depth>1?depth-1:1,++height);
+}
+
+Pyramid::~Pyramid()
+{
+  for(int i = 0; i<numBodies; i++)
+  {
+      registry->getDynamicsWorld()->removeRigidBody(bodiesList[i]);
+      delete bodiesList[i]->getMotionState();
+      delete bodiesList[i];
+      rootNode->removeChild(mtList[i].get());
+  }
 }
