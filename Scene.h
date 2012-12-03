@@ -43,6 +43,7 @@ private:
     Platform *platforms[100];
     Pyramid *pyramids[100];
     int numPlatforms, numPyramids;
+    btVector3 *lastCheckpoint;
 };
 
 #endif // SCENE_H

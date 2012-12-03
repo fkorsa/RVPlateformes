@@ -38,6 +38,9 @@ void Scene::createScene()
 
     moduleRegistry->registerDynamicsWorld(dynamicsWorld);
 
+    lastCheckpoint = new btVector3();
+    moduleRegistry->registerLastCheckpoint(lastCheckpoint);
+    
     createLights();
     // SKYBOX !
     Skybox* skybox = new Skybox(rootNode,"skybox1");
@@ -105,7 +108,9 @@ void Scene::resetLevel()
 {
   int i;
   btVector3 ballPos = ball->getBody()->getWorldTransform().getOrigin(), platformPos;  
-  ball->getBody()->translate(-ballPos);
+  osg::notify(osg::ALWAYS) << lastCheckpoint->x() << " " << lastCheckpoint->y() << " " << lastCheckpoint->z() << std::endl;
+  ball->getBody()->setLinearVelocity(btVector3(0, 0, 0));
+  ball->getBody()->translate(*lastCheckpoint-ballPos);
   for(i=0; i<numPlatforms; i++)
   {
     delete platforms[i];
@@ -122,28 +127,38 @@ void Scene::createPlatforms()
 {
  numPlatforms = 0;
  // LEVEL 1
-    osg::Image* image1 = osgDB::readImageFile("data/textures/box3.jpg");
-    osg::Texture2D* texture1 = new osg::Texture2D;
-    texture1->setImage(image1);
- platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 0., 0., -25. ), osg::Vec3f(30, 30, 5), texture1));
-  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 60., 0., -15. ), osg::Vec3(30, 30, 5), texture1));
+    osg::Image* image;
+    osg::Texture2D *texture1 = new osg::Texture2D, *texture3 = new osg::Texture2D, *texture2 = new osg::Texture2D;
+    image = osgDB::readImageFile("data/textures/box1.jpg");
+    texture1->setImage(image);
+    image = osgDB::readImageFile("data/textures/box2.jpg");
+    texture2->setImage(image);
+    image = osgDB::readImageFile("data/textures/box3.jpg");
+    texture3->setImage(image);
+ platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 0., 0., -25. ), osg::Vec3f(30, 200, 5), texture1))
+ ->setCheckpoint();
+  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 60., 0., -15. ), osg::Vec3(30, 30, 5), texture2));
   platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 100., 0., 10. ), osg::Vec3(30, 30, 5), texture1))
 	  ->setPositionElasticity(260.f,4.0f);
-  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 160., 0., 5. ), osg::Vec3(50, 50, 5), texture1))
+  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 160., 0., 5. ), osg::Vec3(50, 50, 5), texture2))
 	  ->setPositionElasticity(2600.f,400.0f);
-  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 220, 0., 10 ), osg::Vec3(50, 50, 5), texture1))
+  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 220, 0., 10 ), osg::Vec3(50, 50, 5), texture3))
 	  ->setUnstable(0.1);
-  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 300, 0., 15 ), osg::Vec3(30, 30, 5), texture1))
+  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 300, 0., 15 ), osg::Vec3(30, 30, 5), texture2))
 	  ->setUnstable(0.2); 
-  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 360, 0., 15 ), osg::Vec3(20, 20, 5), texture1));
-  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 420, 0., 15 ), osg::Vec3(20, 20, 5), texture1))
+  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 360, 0., 15 ), osg::Vec3(20, 200, 5), texture1))
+  ->setCheckpoint();
+  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 420, 0., 15 ), osg::Vec3(20, 20, 5), texture2))
 	  ->setPositionElasticity(260.f,4.0f);;
   platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 480, 0., -10 ), osg::Vec3(20, 20, 5), texture1))
 	  ->setTranslatingPlatformParameters(btVector3(480, 0, 70), 30);
-  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 550, 0., 70 ), osg::Vec3(30, 30, 5), texture1))
+  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 550, 0., 70 ), osg::Vec3(30, 30, 5), texture2));
+  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 610, 0., 70 ), osg::Vec3(30, 30, 5), texture1))
 	  ->setUnstable(0.01)
-	  ->setTranslatingPlatformParameters(btVector3(600, 0, 70), 30);
-  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 660, 0., 70 ), osg::Vec3(30, 30, 5), texture1));
+	  ->setTranslatingPlatformParameters(btVector3(610, 0, 0), 30);
+  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 820, 0., 0 ), osg::Vec3(300, 30, 5), texture2));
+  platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3( 700, -80, 30), osg::Vec3(50, 50, 50), texture1))
+	  ->setTranslatingPlatformParameters(btVector3(700, 80, 30), 50);
 }
 
 void Scene::createPyramids()

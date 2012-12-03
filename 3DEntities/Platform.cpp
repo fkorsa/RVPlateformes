@@ -2,7 +2,7 @@
 
 Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center,
                    const osg::Vec3f &lengths, osg::Texture2D *texture) :
-    isPlatformMoving(false),positionElasticity(0),isUnstable(false),isFalling(false),isElastic(false)
+    isPlatformMoving(false),positionElasticity(0),isUnstable(false),isFalling(false),isElastic(false),isCheckpoint(false)
 {
     osg::Box* box = new osg::Box(osg::Vec3(), lengths.x(), lengths.y(), lengths.z());
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
@@ -180,6 +180,10 @@ void Platform::update(double elapsed)
 	      isFalling = false;
 	    }
         }
+        if(registry->getBall()->isOnTheFloor() == body && isCheckpoint)
+	{
+	  *lastCheckpoint = startPoint + btVector3(0, 0, 100);
+	}
     }
 
     if (positionElasticity > 0)
@@ -224,4 +228,11 @@ Platform::~Platform()
   delete body->getMotionState();
   delete body;
   registry->getRootNode()->removeChild(platformMT.get());
+}
+
+Platform* Platform::setCheckpoint()
+{
+  isCheckpoint = true;
+  lastCheckpoint = registry->getLastCheckpoint();
+  return this;
 }

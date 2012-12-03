@@ -83,3 +83,12 @@ Ball *ModuleRegistry::getBall()
 {
     return ball;
 }
+
+void ModuleRegistry::registerLastCheckpoint(btVector3 *lastCheckpoint)
+{
+  this->lastCheckpoint = lastCheckpoint;
+}
+btVector3* ModuleRegistry::getLastCheckpoint()
+{
+  return lastCheckpoint;
+}

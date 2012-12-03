@@ -37,6 +37,9 @@ public:
 
     void registerBall(Ball *ball);
     Ball* getBall();
+    
+    void registerLastCheckpoint(btVector3 *lastCheckpoint);
+    btVector3* getLastCheckpoint();
 
 private:
     SDLWindow *window;
@@ -47,6 +50,7 @@ private:
     osg::MatrixTransform *rootNode;
     osgUtil::SceneView *sceneView;
     btDynamicsWorld *dynamicsWorld;
+    btVector3 *lastCheckpoint;
 };
 
 #endif // MODULEREGISTRY_H
