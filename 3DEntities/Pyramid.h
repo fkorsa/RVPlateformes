@@ -18,13 +18,13 @@ class Pyramid
 {
 public:
     Pyramid(ModuleRegistry* registry, int width, int depth, int size, float mass, osg::Vec3 center, osg::Texture2D *texture);
-
+    void reset();
 private:
     void addLayer(int width,int depth, int height);
     void createBox(const osg::Vec3& center);
 
     float mass;
-    int size;
+    int size, width, depth;
     ModuleRegistry* registry;
     osg::Group* rootNode;
     osg::Texture2D* texture;

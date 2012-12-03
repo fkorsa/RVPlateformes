@@ -1,4 +1,4 @@
-//#define VRJUGGLER
+#define VRJUGGLER
 
 #ifndef VRJUGGLER
 

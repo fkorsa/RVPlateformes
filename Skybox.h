@@ -37,6 +37,7 @@
 #include <osg/TexEnv>
 #include <osg/TexEnvCombine>
 #include <osg/TextureCubeMap>
+#include <osg/MatrixTransform>
 #include <osgDB/Registry>
 #include <osgDB/ReadFile>
 #include <osgUtil/SmoothingVisitor>
@@ -49,7 +50,7 @@
 class Skybox
 {
 public:
-    Skybox(osg::Group *rootNode, std::string directory);
+    Skybox(osg::MatrixTransform *rootNode, std::string directory);
 
 private:
     std::string directory;

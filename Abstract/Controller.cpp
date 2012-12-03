@@ -1,6 +1,6 @@
 #include "Controller.h"
 
-//#define VRJUGGLER
+#define VRJUGGLER
 
 Controller::Controller(int argc, char *argv[])
 {    

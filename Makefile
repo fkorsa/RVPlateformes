@@ -40,7 +40,7 @@ $(APP) : $(OBJ)
 #	$(CXX) -MM -MG $(SRC) >Dep.mk
 
 clean:
-	-\rm -r *.o $(APP)
+	-\rm -r '*.o' $(APP)
 
 run:
 	. site_init_vj2.2.0.sh; ./$(APP) standalone.jconf

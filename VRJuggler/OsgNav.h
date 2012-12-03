@@ -1,7 +1,7 @@
 #ifndef OSGNAV_H
 #define OSGNAV_H
 
-//#define VRJUGGLER
+#define VRJUGGLER
 
 #include "../Abstract/Module.h"
 #include "../Scene.h"
@@ -102,6 +102,7 @@ private:
     osgUtil::SceneView                    *sceneView;
     OsgNavigator mNavigator;
     float time_passed;
+    osg::ref_ptr<osg::MatrixTransform> cameraMT;
 
     vpr::Interval mLastPreFrameTime;
 

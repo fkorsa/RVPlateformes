@@ -1,7 +1,7 @@
 #ifndef _OSG_NAVIGATER_H
 #define _OSG_NAVIGATER_H
 
-//#define VRJUGGLER
+#define VRJUGGLER
 
 #ifdef VRJUGGLER
 

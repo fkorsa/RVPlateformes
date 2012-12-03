@@ -1,7 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-//#define VRJUGGLER
+#define VRJUGGLER
 
 #include "InputManager.h"
 #include "../Scene.h"

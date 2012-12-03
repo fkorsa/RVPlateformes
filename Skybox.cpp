@@ -1,6 +1,6 @@
 #include "Skybox.h"
 
-Skybox::Skybox(osg::Group* rootNode,const std::string directory)
+Skybox::Skybox(osg::MatrixTransform* rootNode,const std::string directory)
 {
     this->directory = directory;
     rootNode->addChild(createSkyBox());

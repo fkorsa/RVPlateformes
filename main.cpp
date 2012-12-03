@@ -1,4 +1,4 @@
-//#define VRJUGGLER
+#define VRJUGGLER
 
 #include "Abstract/Controller.h"
 

@@ -20,14 +20,15 @@ class Platform
 {
 public:
     Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center, const osg::Vec3f &lengths, osg::Texture2D *texture);
+    ~Platform();
     Platform* setTranslatingPlatformParameters(const btVector3& endPoint, float movingSpeed);
     Platform* setUnstable(float platformUnstability);
     Platform* setMass(float mass);
     Platform* setPositionElasticity(float elasticity = 300.0f, float resistance = 1.0f);
     void update(double elapsed);
+private:
     void movePlatform(btVector3 movingVector);
     void rotatePlatform(float direction, float directionFactor);
-private:
     ModuleRegistry* registry;
     btRigidBody *body;
     MyMotionState* platformMotionState;
@@ -36,12 +37,11 @@ private:
     btVector3 startPoint;
     btVector3 desiredCurrentPos, currentPos;
     bool movesTowardEnd;
-    bool isPlatformMoving, isUnstable;
+    bool isPlatformMoving, isUnstable, isElastic, isFalling;
     float movingSpeed;
 
     // Variables used for unstable platforms
     float directionDelta, rotatingDirection, directionFactor, platformUnstability;
-    bool firstRotateDirection;
 
     // Variables used for oscillating platforms
     float positionElasticity,positionResistance;

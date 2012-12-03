@@ -2,7 +2,7 @@
 
 Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center,
                    const osg::Vec3f &lengths, osg::Texture2D *texture) :
-    isPlatformMoving(false),positionElasticity(0),isUnstable(false)
+    isPlatformMoving(false),positionElasticity(0),isUnstable(false),isFalling(false),isElastic(false)
 {
     osg::Box* box = new osg::Box(osg::Vec3(), lengths.x(), lengths.y(), lengths.z());
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
@@ -27,7 +27,7 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center,
     trans.setIdentity();
     cs->addChildShape(trans, boxShape);
     btRigidBody::btRigidBodyConstructionInfo rb(0.0f, platformMotionState, cs, inertia);
-
+    
     body = new btRigidBody(rb);
     body->setFriction(0.7f);
     body->setRestitution(0.5f);
@@ -60,6 +60,7 @@ Platform* Platform::setPositionElasticity(float elasticity, float resistance)
     //body->setDamping(0.9f,0.9f);
     positionElasticity = elasticity;
     positionResistance = resistance;
+    isElastic = true;
     return this;
 }
 
@@ -82,7 +83,6 @@ Platform* Platform::setTranslatingPlatformParameters(const btVector3 &endPoint, 
 Platform* Platform::setUnstable(float platformUnstability)
 {
     isUnstable = true;
-    firstRotateDirection = true;
     directionDelta = 0;
     rotatingDirection = 0;
     directionFactor = PLATFORM_UNSTABLE_SMOOTHING_THRESHOLD;
@@ -166,8 +166,19 @@ void Platform::update(double elapsed)
                 setMass(1.f);
                 body->setGravity(btVector3(0, 0, -1000));
                 positionElasticity = 0;
+		isFalling = true;
             }
             rotatePlatform(rotatingDirection, directionFactor);
+	    if(isFalling && body->getWorldTransform().getOrigin().z() < -200)
+	    {
+	      int flags = body->getCollisionFlags();
+	      registry->getDynamicsWorld()->removeCollisionObject(body);
+	      body->setCollisionFlags(flags | btCollisionObject::CF_KINEMATIC_OBJECT);
+	      body->setActivationState(DISABLE_DEACTIVATION);
+	      body->setMassProps(0,btVector3(0,0,0));
+	      registry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL|COL_OTHERS);
+	      isFalling = false;
+	    }
         }
     }
 
@@ -177,7 +188,8 @@ void Platform::update(double elapsed)
         platformMotionState->getWorldTransform(world);
         btVector3 position = world.getOrigin();
         body->applyCentralForce((desiredCurrentPos-position)*positionElasticity);
-        if (body->getLinearVelocity().length()>10.0f) {
+        if (body->getLinearVelocity().length()>10.0f)
+	{
             body->applyCentralForce(-body->getLinearVelocity()*positionResistance);
         }
     }
@@ -204,4 +216,14 @@ void Platform::rotatePlatform(float direction, float directionFactor)
                           PLATFORM_UNSTABLE_ANGLE, 0));
 
     platformMT->setMatrix( m );
+}
+
+Platform::~Platform()
+{
+  registry->getDynamicsWorld()->removeRigidBody(body);
+  delete body->getMotionState();
+ 
+  
+  delete body;
+  registry->getRootNode()->removeChild(platformMT.get());
 }

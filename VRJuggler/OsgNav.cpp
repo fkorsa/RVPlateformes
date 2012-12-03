@@ -1,4 +1,4 @@
-//#define VRJUGGLER
+#define VRJUGGLER
 
 #ifdef VRJUGGLER
 
@@ -96,7 +96,7 @@ void OsgNav::myInit()
     mRootNode = new osg::Group();
     mNoNav    = new osg::Group();
     mNavTrans = new osg::MatrixTransform();
-    osg::ref_ptr<osg::MatrixTransform> myMT = new osg::MatrixTransform(); 
+    cameraMT = new osg::MatrixTransform(); 
 
     mNavigator.init();
 
@@ -110,14 +110,14 @@ void OsgNav::myInit()
     osg::notify( osg::ALWAYS ) << "my init" << std::endl;
    
     moduleRegistry->registerSceneView(getSceneView());
-    moduleRegistry->registerRootNode(myMT.get());
+    moduleRegistry->registerRootNode(cameraMT.get());
     moduleRegistry->getScene()->createScene();
     
-    osg::Matrix m;
-    m.makeLookAt(osg::Vec3f(140, -400, 50), osg::Vec3f(140, 0, 50), osg::Vec3f(0, 0, 1));
-    myMT->setMatrix(m);
+    osg::Matrix cameraMatrix;
+    cameraMatrix.makeLookAt(osg::Vec3f(140, -400, 50), osg::Vec3f(140, 0, 50), osg::Vec3f(0, 0, 1));
+    cameraMT->setMatrix(cameraMatrix);
     
-    mNavTrans->addChild(myMT.get());
+    mNavTrans->addChild(cameraMT.get());
     mRootNode->addChild(mNavTrans.get());
 }
 

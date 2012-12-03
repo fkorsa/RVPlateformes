@@ -28,17 +28,20 @@ public:
     void run(double elapsed);
 private:
     void createLights();
+    void resetLevel();
+    void createPlatforms();
 
     btDynamicsWorld* initBulletEngine(); // Initialise le moteur de physique
 
-    btDynamicsWorld * dynamicsWorld;
-    osg::Group *rootNode;
+    btDynamicsWorld* dynamicsWorld;
+    osg::MatrixTransform *rootNode;
     btRigidBody *ballBody;
     Ball* ball;
     Text2D* text2d;
     Text3D* text3d;
     Platform *platforms[100];
-    int numPlatforms;
+    Pyramid *pyramids[100];
+    int numPlatforms, numPyramids;
 };
 
 #endif // SCENE_H

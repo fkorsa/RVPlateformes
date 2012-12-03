@@ -1,7 +1,7 @@
 #ifndef SDLWINDOW_H
 #define SDLWINDOW_H
 
-//#define VRJUGGLER
+#define VRJUGGLER
 
 #ifndef VRJUGGLER
 
