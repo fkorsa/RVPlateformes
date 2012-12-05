@@ -84,10 +84,22 @@ void Ball::update(double elapsed)
 void Ball::moveLeft()
 {
     if(allowJump)
-        body->applyCentralForce(btVector3(-BALL_HORIZONTAL_FORCE,0.,0.));
+        body->applyCentralForce(btVector3(0.,-BALL_HORIZONTAL_FORCE,0.));
 }
 
 void Ball::moveRight()
+{
+    if(allowJump)
+        body->applyCentralForce(btVector3(0.,BALL_HORIZONTAL_FORCE,0.));
+}
+
+void Ball::moveBehind()
+{
+    if(allowJump)
+        body->applyCentralForce(btVector3(-BALL_HORIZONTAL_FORCE,0.,0.));
+}
+
+void Ball::moveFront()
 {
     if(allowJump)
         body->applyCentralForce(btVector3(BALL_HORIZONTAL_FORCE,0.,0.));

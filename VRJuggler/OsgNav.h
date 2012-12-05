@@ -103,6 +103,7 @@ private:
     OsgNavigator mNavigator;
     float time_passed;
     osg::ref_ptr<osg::MatrixTransform> cameraMT;
+    std::string *debugText;
 
     vpr::Interval mLastPreFrameTime;
 

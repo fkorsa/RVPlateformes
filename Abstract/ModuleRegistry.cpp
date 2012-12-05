@@ -92,3 +92,12 @@ btVector3* ModuleRegistry::getLastCheckpoint()
 {
   return lastCheckpoint;
 }
+
+void ModuleRegistry::registerText2D(Text2D *text2D)
+{
+  this->text2D = text2D;
+}
+Text2D* ModuleRegistry::getText2D()
+{
+  return text2D;
+}

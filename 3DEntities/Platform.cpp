@@ -123,7 +123,7 @@ void Platform::update(double elapsed)
             }
             else
             {
-		if((desiredCurrentPos-startPoint).length() > localSpeed)
+                if((desiredCurrentPos-startPoint).length() > localSpeed)
                 {
                     movingVector = startPoint - endPoint;
                     movingVector.normalize();
@@ -161,29 +161,28 @@ void Platform::update(double elapsed)
                 }
             }
             // If the platform has been agitated for too long, it will fall
-            if(rotatingDirection>PLATFORM_UNSTABLE_FALLING_THRESHOLD)
+            if(rotatingDirection>PLATFORM_UNSTABLE_FALLING_THRESHOLD && !isFalling)
             {
                 setMass(1.f);
                 body->setGravity(btVector3(0, 0, -1000));
                 positionElasticity = 0;
-		isFalling = true;
+                isFalling = true;
             }
             rotatePlatform(rotatingDirection, directionFactor);
-	    if(isFalling && body->getWorldTransform().getOrigin().z() < -200)
-	    {
-	      int flags = body->getCollisionFlags();
-	      registry->getDynamicsWorld()->removeCollisionObject(body);
-	      body->setCollisionFlags(flags | btCollisionObject::CF_KINEMATIC_OBJECT);
-	      body->setActivationState(DISABLE_DEACTIVATION);
-	      body->setMassProps(0,btVector3(0,0,0));
-	      registry->getDynamicsWorld()->addRigidBody(body, COL_FLOOR, COL_BALL|COL_OTHERS);
-	      isFalling = false;
-	    }
+            if(isFalling && body->getWorldTransform().getOrigin().z() < -600)
+            {
+                body->setLinearVelocity(btVector3(0, 0, 0));
+                setMass(0.);
+                isFalling = false;
+            }
+            std::stringstream out;
+            out << "unstable";
+            *(registry->getText2D()->print()) = out.str();
         }
         if(registry->getBall()->isOnTheFloor() == body && isCheckpoint)
-	{
-	  *lastCheckpoint = startPoint + btVector3(0, 0, 100);
-	}
+        {
+            *lastCheckpoint = startPoint + btVector3(0, 0, 100);
+        }
     }
 
     if (positionElasticity > 0)
@@ -193,7 +192,7 @@ void Platform::update(double elapsed)
         btVector3 position = world.getOrigin();
         body->applyCentralForce((desiredCurrentPos-position)*positionElasticity);
         if (body->getLinearVelocity().length()>10.0f)
-	{
+        {
             body->applyCentralForce(-body->getLinearVelocity()*positionResistance);
         }
     }

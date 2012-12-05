@@ -10,6 +10,8 @@
 #include <osgDB/ReadFile>
 #include <osg/Math>
 
+#include "../Text2d.h"
+
 #include "../Abstract/ModuleRegistry.h"
 #include "../Constants.h"
 #include "Ball.h"

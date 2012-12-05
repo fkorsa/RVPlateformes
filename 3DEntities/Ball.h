@@ -22,6 +22,8 @@ public:
 
     void moveLeft();
     void moveRight();
+    void moveBehind();
+    void moveFront();
     void jump();
 
     void* isOnTheFloor();

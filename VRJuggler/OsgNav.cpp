@@ -40,31 +40,33 @@ void OsgNav::preFrame()
     // Get wand data
     gmtl::Matrix44f wandMatrix = mWand->getData();
     gmtl::Matrix44f headMatrix = mHead->getData();
-    osg::Matrix osgHeadMatrix, osgWandMatrix;
-    for(i = 0; i < 4; i++)
-    {
-        for(j = 0; j < 4; j++)
-        {
-            osgHeadMatrix(i, j) = headMatrix(j, i);
-            osgWandMatrix(i, j) = wandMatrix(j, i);
-        }
-    }
     
-    if(moduleRegistry!=NULL)
+    if(moduleRegistry!=NULL && wandMatrix(1,1)!=0 && wandMatrix(3,3)!=0)
     {
         if (mButton0->getData() == gadget::Digital::TOGGLE_ON)
         {
             moduleRegistry->getInputManager()->jump();
         }
-
-        if (mButton1->getData() == gadget::Digital::ON)
+        float alpha = wandMatrix(2,1)/wandMatrix(1,1);
+        float beta = wandMatrix(1,0);
+        if(alpha > 0.4)
         {
-            moduleRegistry->getInputManager()->moveLeft();
+            moduleRegistry->getInputManager()->moveBehind();
         }
 
-        if (mButton2->getData() == gadget::Digital::ON)
+        if(alpha < -0.4)
+        {
+            moduleRegistry->getInputManager()->moveFront();
+        }
+        
+        if(beta > 0.4)
         {
             moduleRegistry->getInputManager()->moveRight();
+        }
+
+        if(beta < -0.4)
+        {
+            moduleRegistry->getInputManager()->moveLeft();
         }
         moduleRegistry->getScene()->run(time_delta);
     }
@@ -130,6 +132,8 @@ void OsgNav::myInit()
     
     mNavTrans->addChild(cameraMT.get());
     mRootNode->addChild(mNavTrans.get());
+    
+    debugText = moduleRegistry->getText2D()->print();
 }
 
 #endif // VRJUGGLER

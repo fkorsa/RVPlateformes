@@ -14,14 +14,14 @@ Text2D::Text2D(osg::Group *rootNode)
     projectionMatrix->setMatrix(osg::Matrix::ortho2D(0,1280,0,1024));
     projectionMatrix->addChild(textGeode);
     textGeode->addDrawable(text);
-    text->setColor(osg::Vec4(0,0,0,1));
-    text->setPosition(osg::Vec3d(0, 0, 0));
+    text->setColor(osg::Vec4(1,0,0,1));
+    text->setPosition(osg::Vec3d(500, 500, 0));
 
     rootNode->addChild(matrixTransform);
 
 }
 
-std::ostringstream* Text2D::print()
+std::string* Text2D::print()
 {
     return &output;
 }
@@ -37,6 +37,6 @@ void Text2D::update(double elapsed)
         frameCount = 0;
         timer = 0;
     }
-    text->setText((fps+"\n"+output.str()).c_str());
-    output.flush();
+    text->setText((fps+"\n"+output).c_str());
+    output = "";
 }

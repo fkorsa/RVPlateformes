@@ -19,6 +19,16 @@ void InputManager::moveRight()
     ball->moveRight();
 }
 
+void InputManager::moveFront()
+{
+    ball->moveFront();
+}
+  
+void InputManager::moveBehind()
+{
+    ball->moveBehind();
+}
+
 void InputManager::jump()
 {
     ball->jump();

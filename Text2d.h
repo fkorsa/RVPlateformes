@@ -17,10 +17,10 @@ public:
     Text2D(osg::Group* rootNode);
 
     void update(double elapsed);
-    std::ostringstream* print();
+    std::string* print();
 
 private:
-    std::ostringstream output;
+    std::string output;
     osgText::Text* text;
     osg::Group* rootNode;
     double timer;

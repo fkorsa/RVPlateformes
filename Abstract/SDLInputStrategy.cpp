@@ -72,19 +72,19 @@ void SDLInputStrategy::handleKeyContinouslyPressed()
         {
             if(keystate[SDLK_a])
             {
-                inputManager->moveLeft();
+                inputManager->moveBehind();
             }
         }
         else
         {
             if(keystate[SDLK_q])
             {
-                inputManager->moveLeft();
+                inputManager->moveBehind();
             }   
         }
         if(keystate[SDLK_d])
         {
-            inputManager->moveRight();
+            inputManager->moveFront();
         }
         if(keystate[SDLK_SPACE])
         {

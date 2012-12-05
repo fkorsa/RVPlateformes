@@ -8,6 +8,7 @@ class SDLWindow;
 class InputManager;
 class Ball;
 class Scene;
+class Text2D;
 
 class ModuleRegistry
 {
@@ -40,6 +41,9 @@ public:
     
     void registerLastCheckpoint(btVector3 *lastCheckpoint);
     btVector3* getLastCheckpoint();
+    
+    void registerText2D(Text2D *text2D);
+    Text2D* getText2D();
 
 private:
     SDLWindow *window;
@@ -51,6 +55,7 @@ private:
     osgUtil::SceneView *sceneView;
     btDynamicsWorld *dynamicsWorld;
     btVector3 *lastCheckpoint;
+    Text2D *text2D;
 };
 
 #endif // MODULEREGISTRY_H
