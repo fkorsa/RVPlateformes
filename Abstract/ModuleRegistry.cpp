@@ -1,6 +1,7 @@
 #include "ModuleRegistry.h"
 
-ModuleRegistry::ModuleRegistry()
+ModuleRegistry::ModuleRegistry() :
+    playerReachedEnd(false)
 {
 }
 
@@ -100,4 +101,22 @@ void ModuleRegistry::registerText2D(Text2D *text2D)
 Text2D* ModuleRegistry::getText2D()
 {
   return text2D;
+}
+
+void ModuleRegistry::registerAllowMovement(bool *allowMovement)
+{
+    this->allowMovement = allowMovement;
+}
+bool* ModuleRegistry::getAllowMovement()
+{
+    return allowMovement;
+}
+
+void ModuleRegistry::registerCameraAngle(float *cameraAngle)
+{
+    this->cameraAngle = cameraAngle;
+}
+float* ModuleRegistry::getCameraAngle()
+{
+    return cameraAngle;
 }

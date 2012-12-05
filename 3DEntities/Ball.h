@@ -13,9 +13,10 @@
 
 #include "../Constants.h"
 #include "../Abstract/ModuleRegistry.h"
+#include "../Abstract/Module.h"
 #include "../Abstract/MyMotionState.h"
 
-class Ball
+class Ball : public Module
 {
 public:
     Ball(osg::Vec3f center, float radius, ModuleRegistry *moduleRegistry);

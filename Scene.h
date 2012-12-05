@@ -29,8 +29,8 @@ public:
 private:
     void createLights();
     void resetLevel();
-    void createPlatforms();
-    void createPyramids();
+    void createLevel(int level);
+    void setBallPos(btVector3 ballNewPos);
 
     btDynamicsWorld* initBulletEngine(); // Initialise le moteur de physique
 
@@ -42,8 +42,12 @@ private:
     Text3D* text3d;
     Platform *platforms[100];
     Pyramid *pyramids[100];
-    int numPlatforms, numPyramids;
+    int numPlatforms, numPyramids, currentLevel;
+    float time_elapsed_lost, time_elapsed_begin, time_elapsed_end, cameraAngle;
     btVector3 *lastCheckpoint;
+    bool allowMovement, hasStartedEndText;
+    const osg::Vec3f textOffset = osg::Vec3f(-10, 0, 0);
+    const int MAX_LEVEL = 2;
 };
 
 #endif // SCENE_H

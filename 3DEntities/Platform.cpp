@@ -2,7 +2,7 @@
 
 Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center,
                    const osg::Vec3f &lengths, osg::Texture2D *texture) :
-    isPlatformMoving(false),positionElasticity(0),isUnstable(false),isFalling(false),isElastic(false),isCheckpoint(false)
+    isPlatformMoving(false),positionElasticity(0),isUnstable(false),isFalling(false),isElastic(false),isCheckpoint(false),isLevelEnd(false)
 {
     osg::Box* box = new osg::Box(osg::Vec3(), lengths.x(), lengths.y(), lengths.z());
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
@@ -183,6 +183,10 @@ void Platform::update(double elapsed)
         {
             *lastCheckpoint = startPoint + btVector3(0, 0, 100);
         }
+        if(isLevelEnd && registry->getBall()->isOnTheFloor() == body)
+        {
+            registry->playerReachedEnd = true;
+        }
     }
 
     if (positionElasticity > 0)
@@ -233,4 +237,9 @@ Platform* Platform::setCheckpoint()
   isCheckpoint = true;
   lastCheckpoint = registry->getLastCheckpoint();
   return this;
+}
+
+Platform* Platform::setLevelEnd()
+{
+    isLevelEnd = true;
 }

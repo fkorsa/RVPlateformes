@@ -28,6 +28,7 @@ public:
     Platform* setMass(float mass);
     Platform* setPositionElasticity(float elasticity = 300.0f, float resistance = 1.0f);
     Platform* setCheckpoint();
+    Platform* setLevelEnd();
     void update(double elapsed);
 private:
     void movePlatform(btVector3 movingVector);
@@ -41,7 +42,7 @@ private:
     btVector3 desiredCurrentPos, currentPos;
     btVector3 *lastCheckpoint;
     bool movesTowardEnd;
-    bool isPlatformMoving, isUnstable, isElastic, isFalling, isCheckpoint;
+    bool isPlatformMoving, isUnstable, isElastic, isFalling, isCheckpoint, isLevelEnd;
     float movingSpeed;
 
     // Variables used for unstable platforms

@@ -41,33 +41,45 @@ void OsgNav::preFrame()
     gmtl::Matrix44f wandMatrix = mWand->getData();
     gmtl::Matrix44f headMatrix = mHead->getData();
     
-    if(moduleRegistry!=NULL && wandMatrix(1,1)!=0 && wandMatrix(3,3)!=0)
+    if(moduleRegistry!=NULL)
     {
-        if (mButton0->getData() == gadget::Digital::TOGGLE_ON)
+        if(wandMatrix(1,1)!=0 && wandMatrix(3,3)!=0 && *(moduleRegistry->getAllowMovement()))
         {
-            moduleRegistry->getInputManager()->jump();
-        }
-        float alpha = wandMatrix(2,1)/wandMatrix(1,1);
-        float beta = wandMatrix(1,0);
-        if(alpha > 0.4)
-        {
-            moduleRegistry->getInputManager()->moveBehind();
-        }
+            if (mButton0->getData() == gadget::Digital::TOGGLE_ON)
+            {
+                moduleRegistry->getInputManager()->jump();
+            }
+            float alpha = wandMatrix(2,1)/wandMatrix(1,1);
+            float beta = wandMatrix(1,0);
+            if(alpha > 0.4)
+            {
+                moduleRegistry->getInputManager()->moveBehind();
+            }
 
-        if(alpha < -0.4)
-        {
-            moduleRegistry->getInputManager()->moveFront();
+            if(alpha < -0.4)
+            {
+                moduleRegistry->getInputManager()->moveFront();
+            }
+            
+            if(beta > 0.4)
+            {
+                moduleRegistry->getInputManager()->moveRight();
+            }
+
+            if(beta < -0.4)
+            {
+                moduleRegistry->getInputManager()->moveLeft();
+            }
+            if (mButton1->getData() == gadget::Digital::ON)
+            {
+                *(moduleRegistry->getCameraAngle()) -= time_delta*2;
+            }
+            if (mButton2->getData() == gadget::Digital::ON)
+            {
+                *(moduleRegistry->getCameraAngle()) += time_delta*2;
+            }
         }
         
-        if(beta > 0.4)
-        {
-            moduleRegistry->getInputManager()->moveRight();
-        }
-
-        if(beta < -0.4)
-        {
-            moduleRegistry->getInputManager()->moveLeft();
-        }
         moduleRegistry->getScene()->run(time_delta);
     }
     // Update the navigation using the time delta between

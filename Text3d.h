@@ -15,11 +15,11 @@ class Text3D
 {
 public:
     Text3D(osg::MatrixTransform* rootNode);
-    void update(double elapsed);
-    std::ostringstream* print();
+    void setText(std::string str);
+    void setColor(osg::Vec4d color);
+    void setPosition(osg::Vec3d position);
 
 private:
-    std::ostringstream output;
     osgText::Text* text;
     osg::Node* rootNode;
     double timer;

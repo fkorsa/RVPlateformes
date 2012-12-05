@@ -44,6 +44,14 @@ public:
     
     void registerText2D(Text2D *text2D);
     Text2D* getText2D();
+    
+    void registerAllowMovement(bool *allowMovement);
+    bool* getAllowMovement();
+    
+    void registerCameraAngle(float *cameraAngle);
+    float* getCameraAngle();
+    
+    bool playerReachedEnd;
 
 private:
     SDLWindow *window;
@@ -56,6 +64,8 @@ private:
     btDynamicsWorld *dynamicsWorld;
     btVector3 *lastCheckpoint;
     Text2D *text2D;
+    bool *allowMovement;
+    float *cameraAngle;
 };
 
 #endif // MODULEREGISTRY_H
