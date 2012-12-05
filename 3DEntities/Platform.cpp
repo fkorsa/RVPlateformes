@@ -93,7 +93,7 @@ Platform* Platform::setUnstable(float platformUnstability)
 void Platform::update(double elapsed)
 {
     // If the time elapsed is too great, do nothing
-    if(elapsed < 1)
+    if(elapsed < 0.1)
     {
         // If the platform shall move between two points, as set by calling setTranslatingPlatformParameters(...)
         if(isPlatformMoving)
@@ -123,7 +123,7 @@ void Platform::update(double elapsed)
             }
             else
             {
-                if((desiredCurrentPos-startPoint).length() > localSpeed)
+		if((desiredCurrentPos-startPoint).length() > localSpeed)
                 {
                     movingVector = startPoint - endPoint;
                     movingVector.normalize();
@@ -197,7 +197,6 @@ void Platform::update(double elapsed)
             body->applyCentralForce(-body->getLinearVelocity()*positionResistance);
         }
     }
-
 }
 
 // Translates the platform by adding movingVector to its present coordinates

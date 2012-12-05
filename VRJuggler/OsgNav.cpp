@@ -25,7 +25,8 @@ void OsgNav::latePreFrame()
 
 void OsgNav::preFrame()
 {
-    vpr::Interval cur_time = mWand->getTimeStamp();
+  int i, j;  
+  vpr::Interval cur_time = mWand->getTimeStamp();
     vpr::Interval diff_time(cur_time - mLastPreFrameTime);
     if (mLastPreFrameTime.getBaseVal() >= cur_time.getBaseVal())
     {
@@ -38,7 +39,17 @@ void OsgNav::preFrame()
 
     // Get wand data
     gmtl::Matrix44f wandMatrix = mWand->getData();
-
+    gmtl::Matrix44f headMatrix = mHead->getData();
+    osg::Matrix osgHeadMatrix, osgWandMatrix;
+    for(i = 0; i < 4; i++)
+    {
+        for(j = 0; j < 4; j++)
+        {
+            osgHeadMatrix(i, j) = headMatrix(j, i);
+            osgWandMatrix(i, j) = wandMatrix(j, i);
+        }
+    }
+    
     if(moduleRegistry!=NULL)
     {
         if (mButton0->getData() == gadget::Digital::TOGGLE_ON)
