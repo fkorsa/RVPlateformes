@@ -23,16 +23,20 @@ class Platform
 public:
     Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center, const osg::Vec3f &lengths, osg::Texture2D *texture);
     ~Platform();
-    Platform* setTranslatingPlatformParameters(const btVector3& endPoint, float movingSpeed);
+    Platform* setTranslatingPlatformParameters(const btVector3& endPoint, float movingSpeedTowardEnd, float movingSpeedTowardStart);
     Platform* setUnstable(float platformUnstability);
     Platform* setMass(float mass);
     Platform* setPositionElasticity(float elasticity = 300.0f, float resistance = 1.0f);
     Platform* setCheckpoint();
     Platform* setLevelEnd();
+    Platform* setAngle(btVector3 direction, float angle);
     void update(double elapsed);
 private:
     void movePlatform(btVector3 movingVector);
     void rotatePlatform(float direction, float directionFactor);
+    
+    bool ballWasHereRecently;
+    float timeSinceLastContact;
     ModuleRegistry* registry;
     btRigidBody *body;
     MyMotionState* platformMotionState;
@@ -43,7 +47,7 @@ private:
     btVector3 *lastCheckpoint;
     bool movesTowardEnd;
     bool isPlatformMoving, isUnstable, isElastic, isFalling, isCheckpoint, isLevelEnd;
-    float movingSpeed;
+    float movingSpeedTowardEnd, movingSpeedTowardStart;
 
     // Variables used for unstable platforms
     float directionDelta, rotatingDirection, directionFactor, platformUnstability;

@@ -2,7 +2,8 @@
 
 Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center,
                    const osg::Vec3f &lengths, osg::Texture2D *texture) :
-    isPlatformMoving(false),positionElasticity(0),isUnstable(false),isFalling(false),isElastic(false),isCheckpoint(false),isLevelEnd(false)
+    isPlatformMoving(false),positionElasticity(0),isUnstable(false),isFalling(false),isElastic(false),isCheckpoint(false),isLevelEnd(false),
+    ballWasHereRecently(false), timeSinceLastContact(0)
 {
     osg::Box* box = new osg::Box(osg::Vec3(), lengths.x(), lengths.y(), lengths.z());
     osg::ShapeDrawable* shape = new osg::ShapeDrawable(box);
@@ -66,10 +67,11 @@ Platform* Platform::setPositionElasticity(float elasticity, float resistance)
 
 // Make the platform move between its creating point (startPoint) and the parameter endPoint, at
 // speed movingSpeed (which is in an arbitrary unit)
-Platform* Platform::setTranslatingPlatformParameters(const btVector3 &endPoint, float movingSpeed)
+Platform* Platform::setTranslatingPlatformParameters(const btVector3 &endPoint, float movingSpeedTowardEnd, float movingSpeedTowardStart)
 {
     this->endPoint = endPoint;
-    this->movingSpeed = movingSpeed;
+    this->movingSpeedTowardStart = movingSpeedTowardStart;
+    this->movingSpeedTowardEnd = movingSpeedTowardEnd;
     // Initialize the movement direction to be toward the endPoint
     movesTowardEnd = true;
     // Set the platform type to be a moving platform
@@ -95,15 +97,30 @@ void Platform::update(double elapsed)
     // If the time elapsed is too great, do nothing
     if(elapsed < 0.1)
     {
+        if(registry->getBall()->isOnTheFloor() == body)
+        {
+            ballWasHereRecently = true;
+            timeSinceLastContact = 0;
+        }
+        else
+        {
+            timeSinceLastContact += elapsed;
+            if(timeSinceLastContact > ALLOWING_MOVEMENT_LATENCY)
+            {
+                ballWasHereRecently = false;
+            }
+        }
+        
         // If the platform shall move between two points, as set by calling setTranslatingPlatformParameters(...)
         if(isPlatformMoving)
         {
             btVector3 movingVector;
-            // We scale the speed by the time elapsed since the last passage in the loop
-            double localSpeed = movingSpeed * elapsed;
+            
             // Test the direction the platform should move
             if(movesTowardEnd)
             {
+                // We scale the speed by the time elapsed since the last passage in the loop
+                double localSpeed = movingSpeedTowardEnd * elapsed;
                 // If the platform is not yet too close to the endPoint, move
                 if((desiredCurrentPos-endPoint).length() > localSpeed)
                 {
@@ -123,6 +140,8 @@ void Platform::update(double elapsed)
             }
             else
             {
+                // We scale the speed by the time elapsed since the last passage in the loop
+                double localSpeed = movingSpeedTowardStart * elapsed;
                 if((desiredCurrentPos-startPoint).length() > localSpeed)
                 {
                     movingVector = startPoint - endPoint;
@@ -143,7 +162,7 @@ void Platform::update(double elapsed)
         if(isUnstable)
         {
             // Test whether the ball is in contact with this platform
-            if(registry->getBall()->isOnTheFloor() == body)
+            if(ballWasHereRecently)
             {
                 directionDelta += platformUnstability * elapsed;
                 rotatingDirection += directionDelta;
@@ -175,9 +194,6 @@ void Platform::update(double elapsed)
                 setMass(0.);
                 isFalling = false;
             }
-            std::stringstream out;
-            out << "unstable";
-            *(registry->getText2D()->print()) = out.str();
         }
         if(registry->getBall()->isOnTheFloor() == body && isCheckpoint)
         {
@@ -242,4 +258,16 @@ Platform* Platform::setCheckpoint()
 Platform* Platform::setLevelEnd()
 {
     isLevelEnd = true;
+    return this;
+}
+Platform* Platform::setAngle(btVector3 direction, float angle)
+{
+    btTransform world;
+    world = body->getWorldTransform();
+    world.setRotation(btQuaternion(direction, angle));
+    body->setWorldTransform(world);
+    platformMotionState->getWorldTransform(world);
+    world.setRotation(btQuaternion(direction, angle));
+    platformMotionState->setWorldTransform(world);
+    return this;
 }
