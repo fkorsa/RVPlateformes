@@ -40,7 +40,7 @@ private:
     ModuleRegistry* registry;
     btRigidBody *body;
     MyMotionState* platformMotionState;
-    osg::ref_ptr<osg::MatrixTransform> platformMT;
+    osg::ref_ptr<osg::MatrixTransform> platformMT, unstableMT;
     btVector3 endPoint;
     btVector3 startPoint;
     btVector3 desiredCurrentPos, currentPos;

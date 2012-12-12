@@ -14,7 +14,9 @@ Platform::Platform(ModuleRegistry *moduleRegistry, const osg::Vec3f &center,
     geode->addDrawable(shape);
     geode->setStateSet(state);
     platformMT = new osg::MatrixTransform;
-    platformMT->addChild(geode);
+    unstableMT = new osg::MatrixTransform;
+    unstableMT->addChild(geode);
+    platformMT->addChild(unstableMT.get());
     osg::Matrix m;
     m.makeTranslate(center);
     platformMT->setMatrix( m );
@@ -233,11 +235,10 @@ void Platform::movePlatform(btVector3 movingVector)
 // Rotate the platform to make the impression of agitation (like it will fall soon...)
 void Platform::rotatePlatform(float direction, float directionFactor)
 {
-    osg::Matrix m = platformMT->getMatrix();
+    osg::Matrix m = unstableMT->getMatrix();
     m.setRotate(osg::Quat(cos(direction)/directionFactor, sin(direction)/directionFactor,
                           PLATFORM_UNSTABLE_ANGLE, 0));
-
-    platformMT->setMatrix( m );
+    unstableMT->setMatrix( m );
 }
 
 Platform::~Platform()

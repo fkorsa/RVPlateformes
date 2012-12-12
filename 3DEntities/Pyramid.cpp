@@ -35,7 +35,7 @@ void Pyramid::createBox(const osg::Vec3& center)
 
     MyMotionState* boxMotionState = new MyMotionState(mtList[numBodies]);
 
-    btVector3 inertia(0, 0, 0);
+    btVector3 inertia(5, 5, 5);
     btCompoundShape* cs = new btCompoundShape;
     btBoxShape* boxShape = new btBoxShape(btVector3(size, size, size)*0.5);
     btTransform trans;
@@ -45,8 +45,8 @@ void Pyramid::createBox(const osg::Vec3& center)
 
     btRigidBody* body = new btRigidBody(rb);
     bodiesList[numBodies] = body;
-    body->setRestitution(0.3f);
-    body->setFriction(0);
+    body->setRestitution(0.0f);
+    body->setFriction(0.8f);
 
     registry->getDynamicsWorld()->addRigidBody(body,COL_OTHERS,COL_FLOOR|COL_BALL|COL_OTHERS);
     rootNode->addChild(mtList[numBodies++].get());

@@ -120,3 +120,12 @@ float* ModuleRegistry::getCameraAngle()
 {
     return cameraAngle;
 }
+
+void ModuleRegistry::registerText3D(Text3D *text3D)
+{
+    this->text3D = text3D;
+}
+Text3D* ModuleRegistry::getText3D()
+{
+    return text3D;
+}

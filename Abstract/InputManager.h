@@ -21,8 +21,8 @@ public:
     // Déplace la balle
     void moveLeft();
     void moveRight();
-    void moveFront();
-    void moveBehind();
+    void moveFront(float force);
+    void moveBehind(float force);
     void jump();
 
     void setBall(Ball* _ball);

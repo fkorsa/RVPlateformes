@@ -43,11 +43,11 @@ private:
     Platform *platforms[100];
     Pyramid *pyramids[100];
     int numPlatforms, numPyramids, currentLevel;
-    float time_elapsed_lost, time_elapsed_begin, time_elapsed_end, cameraAngle;
+    float time_elapsed_lost, time_elapsed_begin, time_elapsed_end_level, cameraAngle, time_elapsed_end_game;
     btVector3 *lastCheckpoint;
     bool allowMovement, hasStartedEndText;
     const osg::Vec3f textOffset = osg::Vec3f(-10, 0, 0);
-    const int MAX_LEVEL = 3;
+    const int MAX_LEVEL = 5;
 };
 
 #endif // SCENE_H

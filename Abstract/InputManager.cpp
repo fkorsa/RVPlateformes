@@ -19,14 +19,14 @@ void InputManager::moveRight()
     ball->moveRight();
 }
 
-void InputManager::moveFront()
+void InputManager::moveFront(float force)
 {
-    ball->moveFront();
+    ball->moveFront(force);
 }
   
-void InputManager::moveBehind()
+void InputManager::moveBehind(float force)
 {
-    ball->moveBehind();
+    ball->moveBehind(force);
 }
 
 void InputManager::jump()

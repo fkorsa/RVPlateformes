@@ -9,6 +9,7 @@ class InputManager;
 class Ball;
 class Scene;
 class Text2D;
+class Text3D;
 
 class ModuleRegistry
 {
@@ -45,6 +46,9 @@ public:
     void registerText2D(Text2D *text2D);
     Text2D* getText2D();
     
+    void registerText3D(Text3D *text3D);
+    Text3D* getText3D();
+    
     void registerAllowMovement(bool *allowMovement);
     bool* getAllowMovement();
     
@@ -64,8 +68,10 @@ private:
     btDynamicsWorld *dynamicsWorld;
     btVector3 *lastCheckpoint;
     Text2D *text2D;
+    Text3D *text3D;
     bool *allowMovement;
     float *cameraAngle;
 };
 
 #endif // MODULEREGISTRY_H
+

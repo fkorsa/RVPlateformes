@@ -37,6 +37,7 @@ void Text2D::update(double elapsed)
         frameCount = 0;
         timer = 0;
     }
-    text->setText((fps+"\n"+output).c_str());
+    //debugging purpose
+    //text->setText((fps+"\n"+output).c_str());
     output = "";
 }

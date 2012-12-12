@@ -23,7 +23,7 @@ Ball::Ball(osg::Vec3f center, float radius, ModuleRegistry *moduleRegistry)
 
     MyMotionState* ballMotionState = new MyMotionState(ballMT);
 
-    btVector3 inertia(0, 0, 0);
+    btVector3 inertia(1, 1, 1);
     btCompoundShape* cs = new btCompoundShape;
     btSphereShape* sphereShape = new btSphereShape(7.);
     btTransform trans;
@@ -56,7 +56,7 @@ void Ball::update(double elapsed)
     for (int i=0;i<pairArray.size();i++)
     {
         const btBroadphasePair& pair = pairArray[i];
-        if (pair.m_pProxy1->m_collisionFilterGroup == COL_FLOOR)
+        if (pair.m_pProxy1->m_collisionFilterGroup == COL_FLOOR || pair.m_pProxy1->m_collisionFilterGroup == COL_OTHERS)
         {
             // Ball touche le sol
             allowJump = true;
@@ -64,6 +64,7 @@ void Ball::update(double elapsed)
             //osg::notify( osg::ALWAYS ) << "TOUCHE SOL" << std::endl;
             // Slow the ball down as it touches the ground
             body->applyCentralForce(body->getLinearVelocity()*-18.f);
+            body->applyTorque(btVector3(0, 0, body->getAngularVelocity().z()*-18.f));
             break;
         }
     }
@@ -93,16 +94,16 @@ void Ball::moveRight()
         body->applyCentralForce(btVector3(0.,BALL_HORIZONTAL_FORCE,0.).rotate(btVector3(0, 0, 1), -*(moduleRegistry->getCameraAngle())));
 }
 
-void Ball::moveBehind()
+void Ball::moveBehind(float force)
 {
     if(allowJump)
-        body->applyCentralForce(btVector3(-BALL_HORIZONTAL_FORCE,0.,0.).rotate(btVector3(0, 0, 1), -*(moduleRegistry->getCameraAngle())));
+        body->applyCentralForce(btVector3(-BALL_HORIZONTAL_FORCE*force,0.,0.).rotate(btVector3(0, 0, 1), -*(moduleRegistry->getCameraAngle())));
 }
 
-void Ball::moveFront()
+void Ball::moveFront(float force)
 {
     if(allowJump)
-        body->applyCentralForce(btVector3(BALL_HORIZONTAL_FORCE,0.,0.).rotate(btVector3(0, 0, 1), -*(moduleRegistry->getCameraAngle())));
+        body->applyCentralForce(btVector3(BALL_HORIZONTAL_FORCE*force,0.,0.).rotate(btVector3(0, 0, 1), -*(moduleRegistry->getCameraAngle())));
 }
 
 void Ball::jump()

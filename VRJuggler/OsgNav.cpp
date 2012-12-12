@@ -51,35 +51,61 @@ void OsgNav::preFrame()
             }
             float alpha = wandMatrix(2,1)/wandMatrix(1,1);
             float beta = wandMatrix(1,0);
-            if(alpha > 0.4)
+            if(alpha > 0.6)
             {
-                moduleRegistry->getInputManager()->moveBehind();
+                alpha = 0.6;
+            }
+            if(beta > 0.7)
+            {
+                beta = 0.7;
+            }
+            if(alpha < -0.6)
+            {
+                alpha = -0.6;
+            }
+            if(beta < -0.7)
+            {
+                beta = -0.7;
+            }
+            if(alpha > 0.1)
+            {
+                moduleRegistry->getInputManager()->moveBehind(2*alpha);
             }
 
-            if(alpha < -0.4)
+            if(alpha < -0.1)
             {
-                moduleRegistry->getInputManager()->moveFront();
+                moduleRegistry->getInputManager()->moveFront(-2*alpha);
             }
             
-            if(beta > 0.4)
+            if(beta > 0.1)
             {
-                moduleRegistry->getInputManager()->moveRight();
+                *(moduleRegistry->getCameraAngle()) -= beta*time_delta*4;
             }
 
-            if(beta < -0.4)
+            if(beta < -0.1)
             {
-                moduleRegistry->getInputManager()->moveLeft();
+                *(moduleRegistry->getCameraAngle()) += -beta*time_delta*4;
             }
-            if (mButton1->getData() == gadget::Digital::ON)
-            {
-                *(moduleRegistry->getCameraAngle()) -= time_delta*2;
-            }
-            if (mButton2->getData() == gadget::Digital::ON)
-            {
-                *(moduleRegistry->getCameraAngle()) += time_delta*2;
-            }
+//             if (mButton1->getData() == gadget::Digital::ON)
+//             {
+//                 *(moduleRegistry->getCameraAngle()) -= time_delta*2;
+//             }
+//             if (mButton2->getData() == gadget::Digital::ON)
+//             {
+//                 *(moduleRegistry->getCameraAngle()) += time_delta*2;
+//             }
+            
         }
-        
+        std::stringstream out;
+        for(i = 0; i<4; i++)
+        {
+            for(j = 0; j<4; j++)
+            {
+                out << wandMatrix(i,j) << " ";
+            }
+            out << std::endl;
+        }
+        *(moduleRegistry->getText2D()->print()) = out.str();
         moduleRegistry->getScene()->run(time_delta);
     }
     // Update the navigation using the time delta between

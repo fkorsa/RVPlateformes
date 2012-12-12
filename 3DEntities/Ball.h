@@ -23,8 +23,8 @@ public:
 
     void moveLeft();
     void moveRight();
-    void moveBehind();
-    void moveFront();
+    void moveBehind(float force);
+    void moveFront(float force);
     void jump();
 
     void* isOnTheFloor();
