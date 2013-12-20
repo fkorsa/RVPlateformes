@@ -69,22 +69,22 @@ void OsgNav::preFrame()
             }
             if(alpha > 0.1)
             {
-                moduleRegistry->getInputManager()->moveBehind(2*alpha);
+                moduleRegistry->getInputManager()->moveBehind(0.8*alpha*alpha);
             }
 
-            if(alpha < -0.1)
+            if(alpha < -0.2)
             {
-                moduleRegistry->getInputManager()->moveFront(-2*alpha);
+                moduleRegistry->getInputManager()->moveFront(2*alpha*alpha);
             }
             
             if(beta > 0.1)
             {
-                *(moduleRegistry->getCameraAngle()) -= beta*time_delta*4;
+                *(moduleRegistry->getCameraAngle()) -= beta*beta*time_delta*3;
             }
 
             if(beta < -0.1)
             {
-                *(moduleRegistry->getCameraAngle()) += -beta*time_delta*4;
+                *(moduleRegistry->getCameraAngle()) += beta*beta*time_delta*3;
             }
 //             if (mButton1->getData() == gadget::Digital::ON)
 //             {

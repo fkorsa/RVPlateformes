@@ -47,7 +47,7 @@ private:
     btVector3 *lastCheckpoint;
     bool allowMovement, hasStartedEndText;
     const osg::Vec3f textOffset = osg::Vec3f(-10, 0, 0);
-    const int MAX_LEVEL = 5;
+    const int MAX_LEVEL = 6;
 };
 
 #endif // SCENE_H

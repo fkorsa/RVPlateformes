@@ -372,6 +372,31 @@ void Scene::createLevel(int level)
             pyramids[numPyramids++] = new Pyramid(moduleRegistry,2,2,3,0.9f,osg::Vec3(90,0,-5),texture2);
 //             pyramids[numPyramids++] = new Pyramid(moduleRegistry,1,1,7,100.0f,osg::Vec3(600,0,75),texture2);
             break;
+        case 6:
+            //create platforms
+            platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 0., 0., -5 ), osg::Vec3f(40, 40, 10), texture1))
+                ->setCheckpoint();
+            platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 90, 0., -5 ), osg::Vec3f(40, 40, 10), texture3));
+            platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 180, 0., -5 ), osg::Vec3f(40, 40, 10), texture3));
+
+            //left path
+            platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 180, 90., 5 ), osg::Vec3f(40, 40, 10), texture3));
+            platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 240, 90., 5 ), osg::Vec3f(40, 40, 10), texture3))
+                ->setTranslatingPlatformParameters(btVector3(340, 180., 105), 30, 40);
+            platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 400, 180., 105 ), osg::Vec3f(40, 40, 10), texture1))
+                ->setCheckpoint();
+            platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 400, 255., 105 ), osg::Vec3f(30, 30, 10), texture3));
+            platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 475, 255., 85 ), osg::Vec3f(20, 20, 10), texture3));
+            platforms[numPlatforms++] = (new Platform(moduleRegistry,osg::Vec3f( 475, 310., 85 ), osg::Vec3f(10, 10, 10), texture2))
+                ->setLevelEnd();
+
+            // elasticity, resistance
+                //->setPositionElasticity(1500, 1);
+            //create pyramids
+            // width, depth, size, mass, center
+            pyramids[numPyramids++] = new Pyramid(moduleRegistry,2,2,3,0.9f,osg::Vec3(90,0,-5),texture2);
+    //             pyramids[numPyramids++] = new Pyramid(moduleRegistry,1,1,7,100.0f,osg::Vec3(600,0,75),texture2);
+            break;
     }
 }
 void Scene::setBallPos(btVector3 ballNewPos)

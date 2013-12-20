@@ -4,7 +4,7 @@
 #include <osg/Vec3f>
 #include <osg/Quat>
 
-#include <bullet/btBulletDynamicsCommon.h>
+#include <BulletDynamics/btBulletDynamicsCommon.h>
 
 class Utils
 {
